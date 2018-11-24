@@ -2,6 +2,7 @@ package com.example.nagyjahel.sapiads.Database;
 
 public class Ad {
 
+    private int mId;
     private String mTitle;
     private String mImageUrl;
     private String mContent;
@@ -44,5 +45,13 @@ public class Ad {
 
     public void setmPublishingUser(User mPublishingUser) {
         this.mPublishingUser = mPublishingUser;
+    }
+
+    public int getmId() {
+        return mId;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
     }
 }

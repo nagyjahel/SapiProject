@@ -1,6 +1,10 @@
 package com.example.nagyjahel.sapiads.Main;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,10 +28,12 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
     private static final String TAG = "AdRecyclerViewAdapter";
     private ArrayList<User> mUsers;
     private ArrayList<Ad> mAds;
+    private FragmentActivity mFragmentActivity;
 
-    public AdRecyclerViewAdapter(ArrayList<User> Users, ArrayList<Ad> Ads) {
+    public AdRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Ad> Ads) {
         this.mAds = Ads;
         this.mUsers = Users;
+        this.mFragmentActivity = fragmentActivity;
     }
 
     @NonNull
@@ -40,6 +46,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+        final Ad currentAd = mAds.get(i);
         Log.d(TAG, "onBindViewHolder: called");
         Glide.with(viewHolder.itemView.getContext())
                 .asBitmap()
@@ -47,7 +54,6 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
                 .into(viewHolder.userImage);
 
         Glide.with(viewHolder.itemView.getContext())
-                .asBitmap()
                 .load(mAds.get(i).getmImageUrl())
                 .into(viewHolder.adImage);
 
@@ -57,8 +63,14 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // Here goes the sending to the detail page
+            public void onClick(View view) {
+                AdDetailFragment detailFragment = new AdDetailFragment();
+                Bundle fragmentArgs = new Bundle();
+                fragmentArgs.putInt("adId",currentAd.getmId());
+                detailFragment.setArguments(fragmentArgs);
+                FragmentTransaction ft = mFragmentActivity.getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.ad_list_fragment, detailFragment);
+                ft.commit();
             }
         });
 
