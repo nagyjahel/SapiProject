@@ -22,7 +22,7 @@
             android:label="@string/title_activity_authentication" />
         <activity
             android:name=".Main.MainActivity"
-            android:label="@string/title_activity_main">
+            android:label="Newsfeed">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

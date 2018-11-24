@@ -69,7 +69,8 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
                 fragmentArgs.putInt("adId",currentAd.getmId());
                 detailFragment.setArguments(fragmentArgs);
                 FragmentTransaction ft = mFragmentActivity.getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.ad_list_fragment, detailFragment);
+                ft.replace(R.id.fragment_placeholder, detailFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
