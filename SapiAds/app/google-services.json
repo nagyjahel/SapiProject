@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "799855020452",
+    "firebase_url": "https://sapiadvertising-12700.firebaseio.com",
+    "project_id": "sapiadvertising-12700",
+    "storage_bucket": "sapiadvertising-12700.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799855020452:android:0432a366c8205647",
+        "android_client_info": {
+          "package_name": "com.example.nagyjahel.sapiads"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799855020452-bqf7fsjb0a3lt3tui6658fv2hqebof8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR4nR0YdJK-dbMp_vLQEeBq4z2q75U-8Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
