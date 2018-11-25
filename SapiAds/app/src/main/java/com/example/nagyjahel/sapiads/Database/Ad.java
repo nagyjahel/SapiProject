@@ -2,56 +2,77 @@ package com.example.nagyjahel.sapiads.Database;
 
 public class Ad {
 
-    private int mId;
-    private String mTitle;
-    private String mImageUrl;
-    private String mContent;
-    private User mPublishingUser;
+    private int id;
+    private String title;
+    private String imageUrl;
+    private String content;
+    private String publishingUserId;
+    private int isReported;
+    private int viewed;
 
-    public Ad(String mTitle, String mImageUrl, String mContent, User mPublishingUser) {
-        this.mTitle = mTitle;
-        this.mImageUrl = mImageUrl;
-        this.mContent = mContent;
-        this.mPublishingUser = mPublishingUser;
+    public Ad(String title, String imageUrl, String content, String publishingUserId, int isReported, int viewed) {
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.content = content;
+        this.publishingUserId = publishingUserId;
+        this.isReported = isReported;
+        this.viewed = viewed;
     }
 
-    public String getmTitle() {
-        return mTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getmImageUrl() {
-        return mImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setmImageUrl(String mImageUrl) {
-        this.mImageUrl = mImageUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getmContent() {
-        return mContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setmContent(String mContent) {
-        this.mContent = mContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public User getmPublishingUser() {
-        return mPublishingUser;
+    public String getPublishingUserId() {
+        return publishingUserId;
     }
 
-    public void setmPublishingUser(User mPublishingUser) {
-        this.mPublishingUser = mPublishingUser;
+    public void setPublishingUserId(String publishingUserId) {
+        this.publishingUserId = publishingUserId;
     }
 
-    public int getmId() {
-        return mId;
+    public int getId() {
+        return id;
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public int isReported() {
+        return isReported;
+    }
+
+    public void setReported(int reported) {
+        isReported = reported;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 }
