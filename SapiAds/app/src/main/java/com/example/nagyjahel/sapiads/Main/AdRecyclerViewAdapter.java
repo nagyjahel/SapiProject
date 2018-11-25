@@ -1,68 +1,48 @@
 package com.example.nagyjahel.sapiads.Main;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.nagyjahel.sapiads.Database.Ad;
-import com.example.nagyjahel.sapiads.Database.User;
+import com.example.nagyjahel.sapiads.Main.AdListFragment.OnListFragmentInteractionListener;
+import com.example.nagyjahel.sapiads.Main.DummyData.DummyContent.DummyItem;
 import com.example.nagyjahel.sapiads.R;
 
-import com.bumptech.glide.Glide;
-import de.hdodenhof.circleimageview.CircleImageView;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * specified {@link OnListFragmentInteractionListener}.
+ * TODO: Replace the implementation with code for your data type.
+ */
 public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAdapter.ViewHolder> {
 
+    private final List<DummyItem> mValues;
+    private final OnListFragmentInteractionListener mListener;
 
-    private static final String TAG = "AdRecyclerViewAdapter";
-    private ArrayList<User> mUsers;
-    private ArrayList<Ad> mAds;
-    private FragmentActivity mFragmentActivity;
-
-    public AdRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Ad> Ads) {
-        this.mAds = Ads;
-        this.mUsers = Users;
-        this.mFragmentActivity = fragmentActivity;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_item, viewGroup, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+    public AdRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+        mValues = items;
+        mListener = listener;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        final Ad currentAd = mAds.get(i);
-        Log.d(TAG, "onBindViewHolder: called");
-        Glide.with(viewHolder.itemView.getContext())
-                .asBitmap()
-                .load(mUsers.get(i).getmPhotoUrl())
-                .into(viewHolder.userImage);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.fragment_item, parent, false);
+        return new ViewHolder(view);
+    }
 
-        Glide.with(viewHolder.itemView.getContext())
-                .load(mAds.get(i).getmImageUrl())
-                .into(viewHolder.adImage);
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.mItem = mValues.get(position);
+        holder.mIdView.setText(mValues.get(position).id);
+        holder.mContentView.setText(mValues.get(position).content);
 
-        viewHolder.userName.setText(mUsers.get(i).getmFirstName() + mUsers.get(i).getmLastName());
-        viewHolder.adTitle.setText(mAds.get(i).getmTitle());
-        viewHolder.adContent.setText(mAds.get(i).getmContent());
-
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
+<<<<<<< HEAD
             public void onClick(View view) {
                 AdDetailFragment detailFragment = new AdDetailFragment();
                 Bundle fragmentArgs = new Bundle();
@@ -71,32 +51,39 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
                 FragmentTransaction ft = mFragmentActivity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.ad_list_fragment, detailFragment);
                 ft.commit();
+=======
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem);
+                }
+>>>>>>> 7e00523b6ba2aba9bbe7f18942de49544600c8dc
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-        return mAds.size();
+        return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mIdView;
+        public final TextView mContentView;
+        public DummyItem mItem;
 
-        CircleImageView userImage;
-        TextView userName;
-        TextView adTitle;
-        TextView adContent;
-        ImageView adImage;
+        public ViewHolder(View view) {
+            super(view);
+            mView = view;
+            mIdView = (TextView) view.findViewById(R.id.item_number);
+            mContentView = (TextView) view.findViewById(R.id.content);
+        }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            userImage = itemView.findViewById(R.id.user_image);
-            userName = itemView.findViewById(R.id.user_name);
-            adTitle = itemView.findViewById(R.id.ad_title);
-            adContent = itemView.findViewById(R.id.ad_content);
-            adImage = itemView.findViewById(R.id.ad_image);
-
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
 }

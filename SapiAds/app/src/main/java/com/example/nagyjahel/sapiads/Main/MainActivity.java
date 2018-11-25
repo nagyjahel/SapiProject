@@ -3,10 +3,13 @@ package com.example.nagyjahel.sapiads.Main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+<<<<<<< HEAD
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+=======
+>>>>>>> 7e00523b6ba2aba9bbe7f18942de49544600c8dc
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -39,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         AdListFragment fragment = new AdListFragment();
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
         /*
+=======
+>>>>>>> 7e00523b6ba2aba9bbe7f18942de49544600c8dc
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);*/

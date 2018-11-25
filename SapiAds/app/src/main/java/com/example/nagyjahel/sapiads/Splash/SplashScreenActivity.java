@@ -22,7 +22,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7e00523b6ba2aba9bbe7f18942de49544600c8dc
         Log.d(TAG, "Splash created");
         Button startApp = findViewById(R.id.startApplicationButton);
         startApp.setOnClickListener(new View.OnClickListener()
@@ -39,7 +42,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
         });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7e00523b6ba2aba9bbe7f18942de49544600c8dc
     }
 
 

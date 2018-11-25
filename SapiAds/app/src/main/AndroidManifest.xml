@@ -15,21 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Splash.SplashScreenActivity">
-            android:label="Splash Screen"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Authentication.AuthenticationActivity"
             android:label="@string/title_activity_authentication" />
         <activity
             android:name=".Main.MainActivity"
-            android:label="Newsfeed">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:label="@string/title_activity_main"></activity>
     </application>
 
 </manifest>
