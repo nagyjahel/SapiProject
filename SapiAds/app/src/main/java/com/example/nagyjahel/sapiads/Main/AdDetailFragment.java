@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.example.nagyjahel.sapiads.Database.Ad;
 import com.example.nagyjahel.sapiads.R;
@@ -16,7 +15,6 @@ import com.example.nagyjahel.sapiads.R;
 public class AdDetailFragment extends Fragment {
 
     private Ad mSelectedAd;
-    private ImageView mReport;
     public AdDetailFragment() {
         // Required empty public constructor
     }
@@ -25,8 +23,8 @@ public class AdDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        // Inflate the layout for this fragment
         Bundle args = getArguments();
-        return inflater.inflate(R.layout.fragment_item, container, false);
+        return inflater.inflate(R.layout.fragment_ad_detail, container, false);
     }
 }
