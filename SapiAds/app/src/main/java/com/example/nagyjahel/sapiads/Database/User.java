@@ -4,50 +4,52 @@ import java.util.ArrayList;
 
 public class User {
 
-    private String mTelephone;
-    private String mFirstName;
-    private String mLastName;
-    private String mPhotoUrl;
+    private String telephone;
+    private String firstName;
+    private String lastName;
+    private String photoUrl;
     private ArrayList<Ad> mPublishedAds;
 
-
-    public User(String mTelephone, String mFirstName, String mLastName, String mPhotoUrl) {
-        this.mTelephone = mTelephone;
-        this.mFirstName = mFirstName;
-        this.mLastName = mLastName;
-        this.mPhotoUrl = mPhotoUrl;
+    public User() {
     }
 
-    public String getmTelephone() {
-        return mTelephone;
+    public User(String telephone, String firstName, String lastName, String photoUrl) {
+        this.telephone = telephone;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.photoUrl = photoUrl;
     }
 
-    public void setmTelephone(String mTelephone) {
-        this.mTelephone = mTelephone;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public String getmFirstName() {
-        return mFirstName;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
-    public void setmFirstName(String mFirstName) {
-        this.mFirstName = mFirstName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getmLastName() {
-        return mLastName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setmLastName(String mLastName) {
-        this.mLastName = mLastName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getmPhotoUrl() {
-        return mPhotoUrl;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setmPhotoUrl(String mPhotoUrl) {
-        this.mPhotoUrl = mPhotoUrl;
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public ArrayList<Ad> getmPublishedAds() {
