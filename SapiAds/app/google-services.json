@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "799855020452-hejqeibiroh15j3f9et9leo6egl4trer.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nagyjahel.sapiads",
+            "certificate_hash": "54a024b8048a02f23e1fdd74c40068e20da0f1b8"
+          }
+        },
+        {
           "client_id": "799855020452-bqf7fsjb0a3lt3tui6658fv2hqebof8v.apps.googleusercontent.com",
           "client_type": 3
         }

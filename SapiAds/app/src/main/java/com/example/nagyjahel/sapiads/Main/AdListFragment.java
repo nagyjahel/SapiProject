@@ -35,6 +35,7 @@ public class AdListFragment extends Fragment {
     private static final String TAG = "AdListFragment";
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Ad> advertisements = new ArrayList<>();
+    private AdRecyclerViewAdapter adapter;
 
     public AdListFragment() {
     }
@@ -45,39 +46,39 @@ public class AdListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         initRecyclerView(view);
-        downloadAdvertisements();
-        downloadUsers();
+        downloadData();
         return view;
     }
 
     private void initRecyclerView(View view) {
         //Log.d(TAG, "initRecyclerView: init recycler view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        AdRecyclerViewAdapter adapter = new AdRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
+        adapter = new AdRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
     }
 
-    private void downloadAdvertisements() {
-        AdvertisementManager.getAdvertisements(new RetrieveDataListener<ArrayList<Ad>>() {
-            @Override
-            public void onSucces(ArrayList<Ad> data) {
-                advertisements.addAll(data);
-            }
 
-            @Override
-            public void onFailure(String message) {
-
-            }
-        });
-    }
-
-    private void downloadUsers() {
+    private void downloadData() {
         UserManager.getUsers(new RetrieveDataListener<ArrayList<User>>() {
             @Override
             public void onSucces(ArrayList<User> data) {
                 users.addAll(data);
+
+                AdvertisementManager.getAdvertisements(new RetrieveDataListener<ArrayList<Ad>>() {
+                    @Override
+                    public void onSucces(ArrayList<Ad> data) {
+                        advertisements.addAll(data);
+                        Log.d(TAG, "Advertisements nr:" + advertisements.size());
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+
+                    }
+                });
             }
 
             @Override
