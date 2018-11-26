@@ -3,6 +3,7 @@ package com.example.nagyjahel.sapiads.Authentication;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,8 +22,12 @@ import com.example.nagyjahel.sapiads.Main.AdListFragment;
 import com.example.nagyjahel.sapiads.Main.MainActivity;
 import com.example.nagyjahel.sapiads.R;
 import com.example.nagyjahel.sapiads.Splash.SplashScreenActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuthException;
-//import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -41,25 +46,24 @@ public class AuthenticationActivity extends AppCompatActivity {
     private EditText mLastName;
     private boolean mRegistration = false;
 
-    //private FirebaseAuthException mAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         Log.d(TAG, "Created");
 
-
-
-        Log.d(TAG, "Created2");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
-        mPhoneNumber = (EditText) findViewById(R.id.input_phone);
+        mPhoneNumber = findViewById(R.id.input_phone);
         mPasswordText = findViewById(R.id.input_password);
         mFirstName = findViewById(R.id.input_firstname);
         mLastName = findViewById(R.id.input_lastname);
         mLoginButton = findViewById(R.id.btn_login);
         mSignupLink = findViewById(R.id.link_signup);
+
+        mAuth = FirebaseAuth.getInstance();
 
         mLoginButton = findViewById(R.id.btn_login);
         mLoginButton.setOnClickListener(new View.OnClickListener()
@@ -122,12 +126,36 @@ public class AuthenticationActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String phone = mPhoneNumber.getText().toString();
-        String password = mPasswordText.getText().toString();
-        String lastName = mLastName.getText().toString();
-        String firstName = mFirstName.getText().toString();
+        final String phone = mPhoneNumber.getText().toString();
+        final String password = mPasswordText.getText().toString();
+        final String lastName = mLastName.getText().toString();
+        final String firstName = mFirstName.getText().toString();
 
-        User user = new User(phone, firstName, lastName, "");
+        Task<com.google.firebase.auth.AuthResult> users = mAuth.createUserWithEmailAndPassword("palmarozalia.osztian@gmail.com", password)
+                .addOnCompleteListener(new OnCompleteListener<com.google.firebase.auth.AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<com.google.firebase.auth.AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            User user = new User(phone, firstName, lastName, "");
+                            FirebaseDatabase.getInstance().getReference("users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(AuthenticationActivity.this, "Registration succes".toString(), Toast.LENGTH_LONG);
+                                    } else {
+                                        Toast.makeText(AuthenticationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        } else {
+
+                            Toast.makeText(AuthenticationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
         Intent mainActivity = new Intent(AuthenticationActivity.this, MainActivity.class);
         startActivity(mainActivity);
         finish();
