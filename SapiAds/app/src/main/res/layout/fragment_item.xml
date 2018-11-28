@@ -105,7 +105,7 @@
         android:background="?android:attr/listDivider" />
 
     <ImageView
-        android:id="@+id/report"
+        android:id="@+id/more_button"
         android:layout_width="31dp"
         android:layout_height="65dp"
         android:layout_alignParentStart="true"

@@ -44,6 +44,7 @@ public class AdListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("CreateView:", "comes in");
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         initRecyclerView(view);
         downloadData();
@@ -51,7 +52,7 @@ public class AdListFragment extends Fragment {
     }
 
     private void initRecyclerView(View view) {
-        //Log.d(TAG, "initRecyclerView: init recycler view");
+        Log.d(TAG, "initRecyclerView: init recycler view");
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         adapter = new AdRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
         recyclerView.setAdapter(adapter);
@@ -65,7 +66,6 @@ public class AdListFragment extends Fragment {
             @Override
             public void onSucces(ArrayList<User> data) {
                 users.addAll(data);
-
                 AdvertisementManager.getAdvertisements(new RetrieveDataListener<ArrayList<Ad>>() {
                     @Override
                     public void onSucces(ArrayList<Ad> data) {
@@ -76,14 +76,14 @@ public class AdListFragment extends Fragment {
 
                     @Override
                     public void onFailure(String message) {
-
+                        Log.d("Download data:", "Error downloading advertisements from the database");
                     }
                 });
             }
 
             @Override
             public void onFailure(String message) {
-
+                Log.d("Download data:", "Error downloading users from the database");
             }
         });
     }

@@ -27,7 +27,7 @@ public class AdvertisementManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot adSnapshot : dataSnapshot.getChildren()) {
-                    int id = Integer.parseInt(adSnapshot.getKey());
+                    String id = adSnapshot.getKey();
                     String title = (String)adSnapshot.child("title").getValue();
                     String photoUrl = (String)adSnapshot.child("imageUrl").getValue();
                     String content = (String)adSnapshot.child("content").getValue();
@@ -38,7 +38,7 @@ public class AdvertisementManager {
 
                     String publishingUserId = (String)adSnapshot.child("publishingUserId").getValue();
                     Log.d(TAG, "new ad: " + title + " " + photoUrl + " " + content + " " + publishingUserId);
-                    ads.add(new Ad(id,title, photoUrl, content, publishingUserId, isReported, viewed));
+                    ads.add(new Ad(title, photoUrl, content, publishingUserId, isReported, viewed));
                 }
 
                 listener.onSucces(ads);

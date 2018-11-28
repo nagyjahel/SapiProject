@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Ad {
 
-    private int id;
+    private String id;
     private String title;
     private String imageUrl;
     private String content;
@@ -19,8 +19,7 @@ public class Ad {
     private int isReported;
     private int viewed;
 
-    public Ad(int id, String title, String imageUrl, String content, String publishingUserId, int isReported, int viewed) {
-        this.id = id;
+    public Ad(String title, String imageUrl, String content, String publishingUserId, int isReported, int viewed) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.content = content;
@@ -61,11 +60,11 @@ public class Ad {
         this.publishingUserId = publishingUserId;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -85,4 +84,6 @@ public class Ad {
     public void setViewed(int viewed) {
         this.viewed = viewed;
     }
+
+    public void incrementViewed() {this.viewed++;}
 }
