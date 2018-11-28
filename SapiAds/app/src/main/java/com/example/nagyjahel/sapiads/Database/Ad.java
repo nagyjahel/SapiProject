@@ -1,5 +1,8 @@
 package com.example.nagyjahel.sapiads.Database;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.example.nagyjahel.sapiads.Main.RetrieveDataListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -9,9 +12,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class Ad {
+public class Ad{
 
-    private String id;
+    private long id;
     private String title;
     private String imageUrl;
     private String content;
@@ -19,7 +22,8 @@ public class Ad {
     private int isReported;
     private int viewed;
 
-    public Ad(String title, String imageUrl, String content, String publishingUserId, int isReported, int viewed) {
+    public Ad(long id, String title, String imageUrl, String content, String publishingUserId, int isReported, int viewed) {
+        this.id = id;
         this.title = title;
         this.imageUrl = imageUrl;
         this.content = content;
@@ -60,11 +64,11 @@ public class Ad {
         this.publishingUserId = publishingUserId;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -86,4 +90,5 @@ public class Ad {
     }
 
     public void incrementViewed() {this.viewed++;}
+
 }

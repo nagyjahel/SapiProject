@@ -48,6 +48,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final Ad currentAd = mAds.get(i);
+        Log.d(TAG, "Current ad id: "+currentAd.getId());
         Log.d(TAG,"CURRENT ad: " + currentAd.getPublishingUserId());
         Log.d(TAG,"Users array length: " + mAds.size());
 
@@ -66,10 +67,10 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
                 .load(currentAd.getImageUrl())
                 .into(viewHolder.adImage);
 
-        viewHolder.userName.setText(currentUser.getFirstName() +currentUser.getLastName());
+        viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
         viewHolder.adTitle.setText(currentAd.getTitle());
         viewHolder.adContent.setText(currentAd.getContent());
-
+        viewHolder.nrViews.setText(String.valueOf( currentAd.getViewed()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +115,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
         TextView adTitle;
         TextView adContent;
         ImageView adImage;
+        TextView nrViews;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -122,7 +124,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
             adTitle = itemView.findViewById(R.id.ad_title);
             adContent = itemView.findViewById(R.id.ad_content);
             adImage = itemView.findViewById(R.id.ad_image);
-
+            nrViews = itemView.findViewById(R.id.viewed_nr);
         }
     }
 }

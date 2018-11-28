@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="20dp"
     android:id="@+id/parent_layout"
     >
 
@@ -127,19 +127,19 @@
         android:layout_below="@+id/ad_image"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
         android:text="TextView" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_below="@+id/ad_image"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:layout_toStartOf="@+id/viewed_nr"
         android:layout_toLeftOf="@+id/viewed_nr"
         app:srcCompat="@mipmap/eyes" />

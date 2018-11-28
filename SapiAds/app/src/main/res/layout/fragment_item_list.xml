@@ -6,8 +6,7 @@
     android:name="com.example.nagyjahel.sapiads.Main.AdListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginBottom="80dp"
     app:layoutManager="android.support.v7.widget.GridLayoutManager"
     tools:context=".Main.AdListFragment"
     tools:listitem="@layout/fragment_item" />

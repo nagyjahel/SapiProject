@@ -67,7 +67,7 @@ public class AdDetailFragment extends Fragment {
 
     }
 
-    private void initView(View view, Ad currentAd, User currentUser) {
+    private void initView(View view, final Ad currentAd, User currentUser) {
 
         title = view.findViewById(R.id.ad_title);
         content = view.findViewById(R.id.ad_content);
@@ -124,10 +124,11 @@ public class AdDetailFragment extends Fragment {
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference ad = database.getReference("ads/"+currentAd.getId()+"/viewed");
-        ad.setValue(currentAd.getViewed()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        Log.d("Add:","ads/"+currentAd.getContent()+"/viewed");
+        ad.setValue(String.valueOf(currentAd.getViewed())).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("AdDetailFragment:", "Nr of viewed incremented");
+                Log.d("AdDetailFragment:", "Nr of viewed incremented" +  currentAd.getViewed());
             }});
 
         Glide.with(view.getContext())
