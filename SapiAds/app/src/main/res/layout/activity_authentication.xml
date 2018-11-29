@@ -25,74 +25,110 @@
             android:layout_height="134dp"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:padding="15dp"
+            android:padding="10dp"
             app:srcCompat="@drawable/common_full_open_on_phone" />
 
-        <EditText
-            android:id="@+id/phoneNumber"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/verificationButton"
-            android:layout_below="@+id/loginIcon"
-            android:background="@android:color/transparent"
-            android:digits="+0123456789"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="phone"
-            android:paddingTop="25dp"
-            android:text="Phone"
-            android:hint="Phone"
-            android:textStyle="italic"
-            android:textColor="@android:color/white"
-            android:textSize="25dp" />
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/phoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:hint="Phone"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="20dp"
+                android:textStyle="italic" />
+
+        </android.support.design.widget.TextInputLayout>
+
 
         <Button
             android:id="@+id/verificationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_margin="5dp"
             android:background="@android:color/darker_gray"
             android:layout_above="@+id/verificationCode"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:text="Get Verification Code"
             android:textAllCaps="false" />
 
-        <EditText
-            android:id="@+id/verificationCode"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/verificationCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter code received"
+                android:gravity="center"
+                android:textSize="15dp"
+                android:textStyle="italic"
+                android:textColorHint="@android:color/white"
+                android:textColor="@android:color/white"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/signinButton"
-            android:background="@android:color/transparent"
-            android:textStyle="italic"
-            android:digits="0123456789"
-            android:gravity="center"
-            android:inputType="number"
-            android:paddingTop="30dp"
-            android:text="Enter code received"
-            android:textColor="@android:color/white"
-            android:textSize="25dp" />
+            android:id="@+id/firstName">
 
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/firstNameValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:hint="Firstname"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="15dp"
+                android:textStyle="italic" />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastName">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/lastNameValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:hint="Lastname"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="15dp"
+                android:textStyle="italic" />
+
+        </android.support.design.widget.TextInputLayout>
         <Button
             android:id="@+id/signinButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_margin="5dp"
             android:background="@android:color/darker_gray"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:text="Sign In" />
 
         <TextView
             android:id="@+id/register"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="20dp"
             android:text="Register here!"
             android:layout_margin="@dimen/activity_vertical_margin"
             android:textColor="@android:color/white"
             android:gravity="center"
-            android:padding="5dp"
-            android:textSize="20dp" />
+            android:padding="0dp"
+            android:textSize="15dp" />
 
     </LinearLayout>
 

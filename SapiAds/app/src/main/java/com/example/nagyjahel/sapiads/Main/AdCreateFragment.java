@@ -62,7 +62,7 @@ public class AdCreateFragment extends Fragment {
                     map.put("content", adContent.getText().toString());
                     map.put("imageUrl", "");
                     map.put("isReported", "0");
-                    map.put("publishingUserId", "0755589536");
+                    map.put("publishingUserId", user.getCurrentUser().getPhoneNumber());
                     map.put("viewed", "1");
                     ad.setValue(map)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {

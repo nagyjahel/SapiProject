@@ -54,13 +54,21 @@ import static android.media.AudioTrack.STATE_INITIALIZED;
 public class AuthenticationActivity extends AppCompatActivity {
 
 
-    private EditText mPhoneNumber;
-    private EditText mVerificationCode;
+    private android.support.design.widget.TextInputEditText mPhoneNumber;
+    private android.support.design.widget.TextInputEditText mVerificationCode;
+    private android.support.design.widget.TextInputLayout mFirstName;
+    private android.support.design.widget.TextInputEditText mFirstNameValue;
+    private android.support.design.widget.TextInputEditText mLastNameValue;
+    private android.support.design.widget.TextInputLayout mLastName;
     private TextView mRegister;
+    private Button mSignInButton;
+    private int registeredUser = 0;
 
     private FirebaseAuth mAuth;
     private String codeSent;
     private String userCode;
+
+    private static final String TAG = "AuthActivity";
 
     private boolean mExist;
 
@@ -72,11 +80,21 @@ public class AuthenticationActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mVerificationCode = findViewById(R.id.verificationCode);
         mPhoneNumber = findViewById(R.id.phoneNumber);
+        mFirstName = findViewById(R.id.firstName);
+        mFirstNameValue = findViewById(R.id.firstNameValue);
+        mLastNameValue = findViewById(R.id.lastNameValue);
+        mLastName = findViewById(R.id.lastName);
         mRegister = findViewById(R.id.register);
+        mSignInButton = findViewById(R.id.signinButton);
+        registeredUser = 0;
+
+        mFirstName.setVisibility(View.INVISIBLE);
+        mLastName.setVisibility(View.INVISIBLE);
 
         findViewById(R.id.verificationButton).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+                    Log.d(TAG, "Verification button pressed");
                     sendVerificationCode();
                 }
         });
@@ -84,7 +102,25 @@ public class AuthenticationActivity extends AppCompatActivity {
         findViewById(R.id.signinButton).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                verifySignInCode();
+                Log.d(TAG, "Sign in button pressed");
+                if(mPhoneNumber.getText().toString() != null && codeSent != null)
+                {
+                    verifySignInCode();
+                }
+
+
+            }
+        });
+
+        findViewById(R.id.register).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d(TAG, "Sign in button pressed");
+                mFirstName.setVisibility(View.VISIBLE);
+                mLastName.setVisibility(View.VISIBLE);
+                mRegister.setVisibility(View.INVISIBLE);
+                mSignInButton.setText("Register");
+                registeredUser = 1;
 
             }
         });
@@ -92,7 +128,10 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void verifySignInCode(){
 
+
+
         userCode = mVerificationCode.getText().toString();
+        Log.d(TAG, "Code:" + userCode);
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, userCode);
         signInWithPhoneAuthCredential(credential);
     }
@@ -103,24 +142,46 @@ public class AuthenticationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull final Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if(registeredUser == 1)
+                            {
+                                Log.d(TAG, "Task succesfull");
+                                String firstName = mFirstNameValue.getText().toString();
+                                String lastName = mLastNameValue.getText().toString();
+                                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                String key = Long.toString(System.currentTimeMillis());
+                                final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
+                                Map<String,String > map = new HashMap<>();
+                                map.put("firstName", firstName);
+                                map.put("lastName", lastName);
+                                map.put("photoUrl", "https://scontent.fotp3-2.fna.fbcdn.net/v/t1.0-9/45669376_2031047590289015_5687033769354067968_o.jpg?_nc_cat=106&_nc_ht=scontent.fotp3-2.fna&oh=0269a86d62af533fbc0e8dc1f3e627b5&oe=5C69F883");
 
-                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            String key = Long.toString(System.currentTimeMillis());
-                            final DatabaseReference users = database.getReference("users/" + key);
-                                        Map<String,String > map = new HashMap<>();
-                                        map.put("phoneNumber", mPhoneNumber.getText().toString());
-                                        map.put("firstName", "Jahel");
-                                        map.put("lastName", "Nagy");
-                                        map.put("photoUrl", "https://scontent.fotp3-2.fna.fbcdn.net/v/t1.0-9/45669376_2031047590289015_5687033769354067968_o.jpg?_nc_cat=106&_nc_ht=scontent.fotp3-2.fna&oh=0269a86d62af533fbc0e8dc1f3e627b5&oe=5C69F883");
+                                users.setValue(map)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(),
+                                                        "You logged in!", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Task succesfull");
+                                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                String key = Long.toString(System.currentTimeMillis());
+                                final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
+                                Map<String,String > map = new HashMap<>();
+                                /*
+                                users.setValue(map)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(),
+                                                        "You logged in!", Toast.LENGTH_LONG).show();
+                                            }
+                                        });*/
+                            }
 
-                                        users.setValue(map)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                          @Override
-                                                                          public void onSuccess(Void aVoid) {
-                                                                              Toast.makeText(getApplicationContext(),
-                                                                                      "You logged in!", Toast.LENGTH_LONG).show();
-                                                                          }
-                                                                      });
                                 //here we can open a new activity
                             /*Toast.makeText(getApplicationContext(),
                             "Login succesfull", Toast.LENGTH_LONG).show();*/
@@ -142,6 +203,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void sendVerificationCode() {
 
         String phone = mPhoneNumber.getText().toString();
+        Log.d(TAG, "Phonenumber " + phone);
         if (phone.isEmpty()) {
             mPhoneNumber.setError("Phone number is required");
             mPhoneNumber.requestFocus();
@@ -154,6 +216,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             return;
         }
 
+        Log.d(TAG, "Phonenumber1 " + phone);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phone,        // Phone number to verify
                 60,                 // Timeout duration
@@ -177,6 +240,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 codeSent = s;
+                Log.d(TAG, "Code " + codeSent);
             }
         };
 
