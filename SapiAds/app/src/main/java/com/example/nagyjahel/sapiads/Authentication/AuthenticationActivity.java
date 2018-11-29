@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,11 +24,28 @@ import com.example.nagyjahel.sapiads.Main.MainActivity;
 import com.example.nagyjahel.sapiads.R;
 import com.example.nagyjahel.sapiads.Splash.SplashScreenActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static android.media.AudioTrack.STATE_INITIALIZED;
 
 
 /**
@@ -35,173 +53,132 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 public class AuthenticationActivity extends AppCompatActivity {
 
-    private static final String TAG = "AuthenticationActivity";
-    //private static final int REQUEST_SIGNUP = 0;
 
     private EditText mPhoneNumber;
-    private EditText mPasswordText;
-    private Button mLoginButton;
-    private TextView mSignupLink;
-    private EditText mFirstName;
-    private EditText mLastName;
-    private boolean mRegistration = false;
+    private EditText mVerificationCode;
+    private TextView mRegister;
 
     private FirebaseAuth mAuth;
+    private String codeSent;
+    private String userCode;
+
+    private boolean mExist;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        Log.d(TAG, "Created");
-
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
-        mPhoneNumber = findViewById(R.id.input_phone);
-        mPasswordText = findViewById(R.id.input_password);
-        mFirstName = findViewById(R.id.input_firstname);
-        mLastName = findViewById(R.id.input_lastname);
-        mLoginButton = findViewById(R.id.btn_login);
-        mSignupLink = findViewById(R.id.link_signup);
-
         mAuth = FirebaseAuth.getInstance();
+        mVerificationCode = findViewById(R.id.verificationCode);
+        mPhoneNumber = findViewById(R.id.phoneNumber);
+        mRegister = findViewById(R.id.register);
 
-        mLoginButton = findViewById(R.id.btn_login);
-        mLoginButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Click detected");
-                if(mRegistration)
-                {
-                    signUp();
+        findViewById(R.id.verificationButton).setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    sendVerificationCode();
                 }
-                else
-                {
-                    Intent authentication = new Intent(AuthenticationActivity.this, MainActivity.class);
-                    startActivity(authentication);
-                    finish();
-                    Log.d(TAG, "End app");
-                }
-
-            }
-
-
-
         });
 
-        mSignupLink = findViewById(R.id.link_signup);
-        mSignupLink.setOnClickListener(new View.OnClickListener()
-        {
+        findViewById(R.id.signinButton).setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Click detected");
+            public void onClick(View v){
+                verifySignInCode();
 
-                mRegistration = true;
-                mFirstName.setVisibility(View.VISIBLE);
-                mLastName.setVisibility(View.VISIBLE);
-                mLoginButton.setText("Sign Up");
-                Log.d(TAG, "End app");
-                //signUp();
             }
-
-
         });
+    }
 
+    private void verifySignInCode(){
+
+        userCode = mVerificationCode.getText().toString();
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, userCode);
+        signInWithPhoneAuthCredential(credential);
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            String key = Long.toString(System.currentTimeMillis());
+                            final DatabaseReference users = database.getReference("users/" + key);
+                                        Map<String,String > map = new HashMap<>();
+                                        map.put("phoneNumber", mPhoneNumber.getText().toString());
+                                        map.put("firstName", "Jahel");
+                                        map.put("lastName", "Nagy");
+                                        map.put("photoUrl", "https://scontent.fotp3-2.fna.fbcdn.net/v/t1.0-9/45669376_2031047590289015_5687033769354067968_o.jpg?_nc_cat=106&_nc_ht=scontent.fotp3-2.fna&oh=0269a86d62af533fbc0e8dc1f3e627b5&oe=5C69F883");
+
+                                        users.setValue(map)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                          @Override
+                                                                          public void onSuccess(Void aVoid) {
+                                                                              Toast.makeText(getApplicationContext(),
+                                                                                      "You logged in!", Toast.LENGTH_LONG).show();
+                                                                          }
+                                                                      });
+                                //here we can open a new activity
+                            /*Toast.makeText(getApplicationContext(),
+                            "Login succesfull", Toast.LENGTH_LONG).show();*/
+                            Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Incorrect verification code", Toast.LENGTH_LONG).show();
+                                // The verification code entered was invalid
+                                }
+                            }
+                        }
+                });
     }
 
 
-    public void signUp() {
-        Log.d(TAG, "Login");
+    private void sendVerificationCode() {
 
-        if (!validate()) {
-            onLoginFailed();
+        String phone = mPhoneNumber.getText().toString();
+        if (phone.isEmpty()) {
+            mPhoneNumber.setError("Phone number is required");
+            mPhoneNumber.requestFocus();
             return;
         }
 
-        mLoginButton.setEnabled(false);
+        if (phone.length() < 10) {
+            mPhoneNumber.setError("Please use a valid phone");
+            mPhoneNumber.requestFocus();
+            return;
+        }
 
-        final ProgressDialog progressDialog = new ProgressDialog(AuthenticationActivity.this,
-                R.style.ThemeOverlay_AppCompat_Dark);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-
-        final String phone = mPhoneNumber.getText().toString();
-        final String password = mPasswordText.getText().toString();
-        final String lastName = mLastName.getText().toString();
-        final String firstName = mFirstName.getText().toString();
-
-        Task<com.google.firebase.auth.AuthResult> users = mAuth.createUserWithEmailAndPassword("palmarozalia.osztian@gmail.com", password)
-                .addOnCompleteListener(new OnCompleteListener<com.google.firebase.auth.AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<com.google.firebase.auth.AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            User user = new User(phone, firstName, lastName, "");
-                            FirebaseDatabase.getInstance().getReference("users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(AuthenticationActivity.this, "Registration succes".toString(), Toast.LENGTH_LONG);
-                                    } else {
-                                        Toast.makeText(AuthenticationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                        } else {
-
-                            Toast.makeText(AuthenticationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-
-        Intent mainActivity = new Intent(AuthenticationActivity.this, MainActivity.class);
-        startActivity(mainActivity);
-        finish();
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phone,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                this,               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
     }
 
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
 
-        mLoginButton.setEnabled(true);
-    }
+            }
 
-    public boolean validate() {
-        boolean valid = true;
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
 
-        String phone = mPhoneNumber.getText().toString();
-        String password = mPasswordText.getText().toString();
-        String lastName = mLastName.getText().toString();
-        String firstName = mFirstName.getText().toString();
+            }
 
-        if (phone.isEmpty() || !Patterns.PHONE.matcher(phone).matches()) {
-            mPhoneNumber.setError("enter a valid phone number");
-            valid = false;
-        } else {
-            mPhoneNumber.setError(null);
-        }
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            mPasswordText.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            mPasswordText.setError(null);
-        }
-        if (lastName.isEmpty()) {
-            mLastName.setError("You must type your last name");
-            valid = false;
-        } else {
-            mLastName.setError(null);
-        }
-        if (firstName.isEmpty()) {
-            mFirstName.setError("You must type your last name");
-            valid = false;
-        } else {
-            mFirstName.setError(null);
-        }
-        return valid;
-    }
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                codeSent = s;
+            }
+        };
 
 
 }
