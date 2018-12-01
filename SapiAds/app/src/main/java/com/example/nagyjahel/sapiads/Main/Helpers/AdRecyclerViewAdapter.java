@@ -1,5 +1,6 @@
-package com.example.nagyjahel.sapiads.Main;
+package com.example.nagyjahel.sapiads.Main.Helpers;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,15 +17,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.nagyjahel.sapiads.Database.Ad;
-import com.example.nagyjahel.sapiads.Database.User;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+import com.example.nagyjahel.sapiads.Database.Models.Ad;
+import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Fragments.AdDetailFragment;
 import com.example.nagyjahel.sapiads.R;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAdapter.ViewHolder> {
@@ -76,9 +83,10 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
         final Ad currentAd = mAds.get(i);
         final User currentUser = getUserById(currentAd.getPublishingUserId());
         if(currentUser == null) {
-            Log.d(TAG, "the user does not exists in the database.");
+            Log.d(TAG, "User" +currentAd.getPublishingUserId()+ " does not exists in the database.");
             return;
         }
+        Log.d("ViewHolderInit: ", currentUser.getFirstName() + ":"  +currentAd.getTitle());
         initViewHolder(viewHolder,currentUser,currentAd);
     }
 
@@ -104,7 +112,6 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
      *****************************************************************************************************/
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount method called");
         return mAds.size();
     }
 
@@ -146,8 +153,10 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
                 .load(currentUser.getPhotoUrl())
                 .into(viewHolder.userImage);
 
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("ads/" + currentAd.getId());
+
         Glide.with(viewHolder.itemView.getContext())
-                .load(currentAd.getImageUrl())
+                .load(storageReference)
                 .into(viewHolder.adImage);
 
         viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
@@ -185,4 +194,5 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
             nrViews = itemView.findViewById(R.id.viewed_nr);
         }
     }
+
 }

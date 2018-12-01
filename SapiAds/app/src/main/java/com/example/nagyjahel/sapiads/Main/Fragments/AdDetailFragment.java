@@ -1,12 +1,6 @@
 package com.example.nagyjahel.sapiads.Main.Fragments;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,25 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.nagyjahel.sapiads.Database.Ad;
-import com.example.nagyjahel.sapiads.Database.User;
+import com.example.nagyjahel.sapiads.Database.Models.Ad;
+import com.example.nagyjahel.sapiads.Database.Models.User;
+import com.example.nagyjahel.sapiads.Main.Helpers.AdvertisementReportDeleteDialog;
+import com.example.nagyjahel.sapiads.Main.Helpers.SelectPhotoDialog;
 import com.example.nagyjahel.sapiads.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.support.constraint.Constraints.TAG;
 
 
 public class AdDetailFragment extends Fragment {
@@ -98,14 +86,17 @@ public class AdDetailFragment extends Fragment {
         viewed = view.findViewById(R.id.viewed_nr);
         moreButton = view.findViewById(R.id.more_button);
 
-        moreButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override  public void onClick(View v) {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId());
+                dialog.show(getFragmentManager(),getString(R.string.dialog_manage_advertisement ));
+                dialog.setTargetFragment(AdDetailFragment.this,1);
+                return true;
             }
         });
 
     }
-
 
     /*****************************************************************************************************
      The fillViewWithCorrespondingData method of the Advertisement detail fragment

@@ -1,11 +1,15 @@
 package com.example.nagyjahel.sapiads.Main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private BottomNavigationView navigation;
+    private static final int REQUEST_CODE = 123;
+
+
     /*****************************************************************************************************
      The BottomNavigationView listener
      - Checks if the user clicked on one of the navigation buttons
@@ -38,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Home item from the navigation bar selected.");
                     mToolbar.setTitle("News feed");
                     changeFragment(new AdListFragment());
-
                     return true;
                 case R.id.navigation_new_ad:
                     Log.d(TAG, "Plus item from the navigation bar selected.");
+                    verifyPermissions();
                     mToolbar.setTitle("Create a new ad");
                     changeFragment(new AdCreateFragment());
                     return true;
@@ -99,7 +106,29 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "initMemberVariables method called.");
         mToolbar = getSupportActionBar();
         fragmentManager = getSupportFragmentManager();
+    }
 
+    /*****************************************************************************************************
+     The verifyPermissions method of the Main Activity
+     - Asking the user for permissions
+     *****************************************************************************************************/
+    private void verifyPermissions(){
+        Log.d(TAG, "verifyPermissions method called.");
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
 
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED ){
+        }
+        else{
+            ActivityCompat.requestPermissions(MainActivity.this, permissions, REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        verifyPermissions();
     }
 }

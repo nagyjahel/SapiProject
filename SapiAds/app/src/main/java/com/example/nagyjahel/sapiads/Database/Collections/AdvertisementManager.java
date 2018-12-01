@@ -1,8 +1,9 @@
-package com.example.nagyjahel.sapiads.Main;
+package com.example.nagyjahel.sapiads.Database.Collections;
 
 import android.util.Log;
 
-import com.example.nagyjahel.sapiads.Database.Ad;
+import com.example.nagyjahel.sapiads.Database.Models.Ad;
+import com.example.nagyjahel.sapiads.Main.Interfaces.RetrieveDataListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

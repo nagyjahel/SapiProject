@@ -1,10 +1,8 @@
 package com.example.nagyjahel.sapiads.Main.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,25 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.nagyjahel.sapiads.Database.Ad;
-import com.example.nagyjahel.sapiads.Database.User;
-import com.example.nagyjahel.sapiads.Main.AdRecyclerViewAdapter;
-import com.example.nagyjahel.sapiads.Main.AdvertisementManager;
-import com.example.nagyjahel.sapiads.Main.RetrieveDataListener;
-import com.example.nagyjahel.sapiads.Main.UserManager;
+import com.example.nagyjahel.sapiads.Database.Models.Ad;
+import com.example.nagyjahel.sapiads.Database.Models.User;
+import com.example.nagyjahel.sapiads.Main.Helpers.AdRecyclerViewAdapter;
+import com.example.nagyjahel.sapiads.Database.Collections.AdvertisementManager;
+import com.example.nagyjahel.sapiads.Main.Interfaces.RetrieveDataListener;
+import com.example.nagyjahel.sapiads.Database.Collections.UserManager;
 import com.example.nagyjahel.sapiads.R;
-import com.example.nagyjahel.sapiads.Main.DummyData.DummyContent;
-import com.example.nagyjahel.sapiads.Main.DummyData.DummyContent.DummyItem;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static android.support.constraint.Constraints.TAG;
 
 
 public class AdListFragment extends Fragment {

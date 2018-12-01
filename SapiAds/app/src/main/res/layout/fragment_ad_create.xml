@@ -61,7 +61,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/new_ad_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@mipmap/image" />

@@ -2,24 +2,34 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="30dp">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="Choose photo from memory"
-        android:textSize="15dp"
         android:id="@+id/photo_from_gallery"
-        android:gravity="center_vertical"
-        />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Take photo"
-        android:textSize="15dp"
-        android:id="@+id/take_photo"
         android:gravity="center_vertical"
+        android:text="Choose photo from memory"
+        android:textColor="@color/black"
+        android:textSize="15dp" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@+id/photo_from_gallery"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/take_photo"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_below="@+id/photo_from_gallery"
-        />
+        android:gravity="center_vertical"
+        android:text="Take photo"
+        android:textColor="@color/black"
+        android:textSize="15dp" />
+
 </RelativeLayout>
