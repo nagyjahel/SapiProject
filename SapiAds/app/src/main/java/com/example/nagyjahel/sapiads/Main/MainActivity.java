@@ -4,69 +4,102 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.example.nagyjahel.sapiads.Main.Fragments.AdCreateFragment;
+import com.example.nagyjahel.sapiads.Main.Fragments.AdListFragment;
 import com.example.nagyjahel.sapiads.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
-    private ActionBar mToolbar;
 
+    private ActionBar mToolbar;
+    private static final String TAG = "MainActivity";
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
+    private BottomNavigationView navigation;
+    /*****************************************************************************************************
+     The BottomNavigationView listener
+     - Checks if the user clicked on one of the navigation buttons
+     - Redirects the user to the corresponding fragment
+     *****************************************************************************************************/
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mToolbar.setTitle("Newsfeed");
-                    AdListFragment listFragment = new AdListFragment();
-                    fragmentTransaction.replace(R.id.fragment_placeholder, listFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    Log.d(TAG, "Home item from the navigation bar selected.");
+                    mToolbar.setTitle("News feed");
+                    changeFragment(new AdListFragment());
+
                     return true;
                 case R.id.navigation_new_ad:
+                    Log.d(TAG, "Plus item from the navigation bar selected.");
                     mToolbar.setTitle("Create a new ad");
-                    AdCreateFragment createFragment = new AdCreateFragment();
-                    fragmentTransaction.replace(R.id.fragment_placeholder, createFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    changeFragment(new AdCreateFragment());
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.title_notifications);
+                    Log.d(TAG, "Profile item from the navigation bar selected.");
+                    mToolbar.setTitle("Profile");
                     return true;
             }
             return false;
         }
     };
 
+
+    /*****************************************************************************************************
+     The onCreate method of the Main Activity
+     - Initiates everything what is necessary for further steps - like database, references, etc.
+     - Redirects automatically to the list of the advertisements
+     *****************************************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        mToolbar = getSupportActionBar();
+        Log.d(TAG, "onCreate method called.");
+        initMemberVariables();
         setContentView(R.layout.activity_main);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        AdListFragment fragment = new AdListFragment();
-        fragmentTransaction.add(R.id.fragment_placeholder, fragment);
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_placeholder, new AdListFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+
+    /*****************************************************************************************************
+     The changeFragment method of the Main Activity
+     - Changes the actual fragment with another selected one
+     *****************************************************************************************************/
+    private void changeFragment(Fragment fragment){
+        Log.d(TAG, "changeFragment method called.");
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
+    /*****************************************************************************************************
+     The initMemberVariables method of the Main Activity
+     - Initiates all necessary data for further steps, like database, fragmentManager, etc.
+     *****************************************************************************************************/
+    private void initMemberVariables(){
+        Log.d(TAG, "initMemberVariables method called.");
+        mToolbar = getSupportActionBar();
+        fragmentManager = getSupportFragmentManager();
+
+
+    }
 }

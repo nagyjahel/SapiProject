@@ -1,51 +1,32 @@
 package com.example.nagyjahel.sapiads.Authentication;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
-import com.example.nagyjahel.sapiads.Database.User;
-import com.example.nagyjahel.sapiads.Main.AdCreateFragment;
-import com.example.nagyjahel.sapiads.Main.AdListFragment;
 import com.example.nagyjahel.sapiads.Main.MainActivity;
 import com.example.nagyjahel.sapiads.R;
-import com.example.nagyjahel.sapiads.Splash.SplashScreenActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static android.media.AudioTrack.STATE_INITIALIZED;
 
 
 /**
@@ -94,6 +75,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         findViewById(R.id.verificationButton).setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+                    //mVerificationButton.setClickable(false);
                     Log.d(TAG, "Verification button pressed");
                     sendVerificationCode();
                 }
@@ -102,6 +84,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         findViewById(R.id.signinButton).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+               // mSignInButton.setClickable(false);
                 Log.d(TAG, "Sign in button pressed");
                 if(mPhoneNumber.getText().toString() != null && codeSent != null)
                 {
@@ -127,9 +110,6 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void verifySignInCode(){
-
-
-
         userCode = mVerificationCode.getText().toString();
         Log.d(TAG, "Code:" + userCode);
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, userCode);
@@ -160,26 +140,20 @@ public class AuthenticationActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(getApplicationContext(),
-                                                        "You logged in!", Toast.LENGTH_LONG).show();
+                                                        "Your sign up was successful!", Toast.LENGTH_LONG).show();
                                             }
                                         });
                             }
                             else
                             {
                                 Log.d(TAG, "Task succesfull");
+                                Toast.makeText(getApplicationContext(),
+                                        "You logged in!", Toast.LENGTH_LONG).show();
                                 final FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 String key = Long.toString(System.currentTimeMillis());
                                 final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
                                 Map<String,String > map = new HashMap<>();
-                                /*
-                                users.setValue(map)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(getApplicationContext(),
-                                                        "You logged in!", Toast.LENGTH_LONG).show();
-                                            }
-                                        });*/
+
                             }
 
                                 //here we can open a new activity

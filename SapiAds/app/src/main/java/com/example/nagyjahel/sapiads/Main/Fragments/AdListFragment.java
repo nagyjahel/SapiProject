@@ -1,4 +1,4 @@
-package com.example.nagyjahel.sapiads.Main;
+package com.example.nagyjahel.sapiads.Main.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 
 import com.example.nagyjahel.sapiads.Database.Ad;
 import com.example.nagyjahel.sapiads.Database.User;
+import com.example.nagyjahel.sapiads.Main.AdRecyclerViewAdapter;
+import com.example.nagyjahel.sapiads.Main.AdvertisementManager;
+import com.example.nagyjahel.sapiads.Main.RetrieveDataListener;
+import com.example.nagyjahel.sapiads.Main.UserManager;
 import com.example.nagyjahel.sapiads.R;
 import com.example.nagyjahel.sapiads.Main.DummyData.DummyContent;
 import com.example.nagyjahel.sapiads.Main.DummyData.DummyContent.DummyItem;
@@ -36,24 +40,41 @@ public class AdListFragment extends Fragment {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Ad> advertisements = new ArrayList<>();
     private AdRecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
 
+    /*****************************************************************************************************
+     The constructor of the Advertisement list fragment
+     *****************************************************************************************************/
     public AdListFragment() {
+
+        Log.d(TAG, "constructor called");
     }
 
 
+    /*****************************************************************************************************
+     The onCreateView method of the Advertisement list fragment
+     - Initiation of the view
+     - Getting the data from the database for the list which is going to be shown
+     *****************************************************************************************************/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("CreateView:", "comes in");
+        Log.d(TAG, "onCreateView method called");
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         initRecyclerView(view);
         downloadData();
         return view;
     }
 
+
+    /*****************************************************************************************************
+     The initRecyclerView method of the Advertisement list fragment
+     - Finding the recycler view in layout
+     - Setting its' adapter and layout manager.
+     *****************************************************************************************************/
     private void initRecyclerView(View view) {
-        Log.d(TAG, "initRecyclerView: init recycler view");
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        Log.d(TAG, "initRecyclerView method called");
+        recyclerView = view.findViewById(R.id.recycler_view);
         adapter = new AdRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -61,29 +82,35 @@ public class AdListFragment extends Fragment {
     }
 
 
+    /*****************************************************************************************************
+     The downloadData method of the Advertisement list fragment
+     - Getting the necessary collections of datas for realising the list: the advertisements and their publishers.
+     *****************************************************************************************************/
     private void downloadData() {
+        Log.d(TAG, "downloadData method called");
         UserManager.getUsers(new RetrieveDataListener<ArrayList<User>>() {
             @Override
             public void onSucces(ArrayList<User> data) {
+                Log.d(TAG, "Get users from database: success.");
                 users.addAll(data);
                 AdvertisementManager.getAdvertisements(new RetrieveDataListener<ArrayList<Ad>>() {
                     @Override
                     public void onSucces(ArrayList<Ad> data) {
+                        Log.d(TAG, "Get advertisements from database: success.");
                         advertisements.addAll(data);
-                        Log.d(TAG, "Advertisements nr:" + advertisements.size());
                         adapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        Log.d("Download data:", "Error downloading advertisements from the database");
+                        Log.d(TAG, "Get advertisements from database: failure.");
                     }
                 });
             }
 
             @Override
             public void onFailure(String message) {
-                Log.d("Download data:", "Error downloading users from the database");
+                Log.d(TAG, "Get users from database: failure.");
             }
         });
     }

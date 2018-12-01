@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".Main.AdCreateFragment">
+    tools:context=".Main.Fragments.AdCreateFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -70,7 +70,7 @@
             android:id="@+id/new_ad_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:text="SAVE" />
     </LinearLayout>
 </FrameLayout>
