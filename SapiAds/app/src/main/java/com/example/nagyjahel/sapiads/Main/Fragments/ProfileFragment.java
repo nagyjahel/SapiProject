@@ -1,4 +1,4 @@
-package com.example.nagyjahel.sapiads.Main;
+package com.example.nagyjahel.sapiads.Main.Fragments;
 
 import android.content.Context;
 import android.net.Uri;

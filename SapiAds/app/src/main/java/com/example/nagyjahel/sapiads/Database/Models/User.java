@@ -1,4 +1,6 @@
-package com.example.nagyjahel.sapiads.Database;
+package com.example.nagyjahel.sapiads.Database.Models;
+
+import com.example.nagyjahel.sapiads.Database.Models.Ad;
 
 import java.util.ArrayList;
 

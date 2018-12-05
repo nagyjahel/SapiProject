@@ -1,16 +1,4 @@
-package com.example.nagyjahel.sapiads.Database;
-
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
-import com.example.nagyjahel.sapiads.Main.RetrieveDataListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
+package com.example.nagyjahel.sapiads.Database.Models;
 
 public class Ad{
 
