@@ -22,34 +22,53 @@ import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Interfaces.OnPhotoSelectedListener;
 import com.example.nagyjahel.sapiads.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AdvertisementReportDeleteDialog extends DialogFragment {
 
-    private static final String TAG = "AdvertisementReportDeleteDialog";
+    private static final String TAG = "AdReportDeleteDialog";
     private TextView reportAdvertisement;
     private TextView deleteAdvertisement;
     private TextView editAdvertisement;
-    private FirebaseAuth loggedUser;
+    private FirebaseAuth auth;
+    private FirebaseUser loggedUser;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private long currentAdId;
 
-
+    /*****************************************************************************************************
+     The default constructor of the AdvertisementReportDeleteDialog class
+     *****************************************************************************************************/
     public AdvertisementReportDeleteDialog(){
 
     }
 
+
+    /*****************************************************************************************************
+     The constructor of the AdvertisementReportDeleteDialog class
+     - gets the advertisement Id as parameter
+     - initiates the member variables
+     *****************************************************************************************************/
     @SuppressLint("ValidFragment")
     public AdvertisementReportDeleteDialog(long adId){
         currentAdId = adId;
-        loggedUser = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
+        loggedUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("ads/" + adId);
     }
 
+
+    /*****************************************************************************************************
+     The onCreateView method of the AdvertisementReportDeleteDialog class
+     - Sets the listeners to the views.
+     *****************************************************************************************************/
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,44 +78,51 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
         deleteAdvertisement = view.findViewById(R.id.dialog_delete_ad);
         editAdvertisement = view.findViewById(R.id.dialog_edit_ad);
 
-        reportAdvertisement.setClickable(false);
-        deleteAdvertisement.setClickable(false);
-        editAdvertisement.setClickable(false);
 
+        databaseReference.child("publishingUserId").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String publishingUserId = (String)dataSnapshot.getValue();
 
-        if(loggedUser.getUid().equals(databaseReference.child("publisherUserId"))){
-            editAdvertisement.setClickable(true);
-            editAdvertisement.setTextColor(getResources().getColor(R.color.black));
-            editAdvertisement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(),"Edit advertisement", Toast.LENGTH_SHORT).show();
-                    getDialog().dismiss();
+                if(loggedUser.getPhoneNumber().equals(publishingUserId)){
+                    editAdvertisement.setVisibility(View.VISIBLE);
+                    editAdvertisement.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(),"Edit advertisement", Toast.LENGTH_SHORT).show();
+                            getDialog().dismiss();
+                        }
+                    });
+
+                    deleteAdvertisement.setVisibility(View.VISIBLE);
+                    deleteAdvertisement.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(),"Delete advertisement", Toast.LENGTH_SHORT).show();
+                            getDialog().dismiss();
+                        }
+                    });
+
                 }
-            });
-
-            deleteAdvertisement.setClickable(true);
-            deleteAdvertisement.setTextColor(getResources().getColor(R.color.black));
-            deleteAdvertisement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(),"Delete advertisement", Toast.LENGTH_SHORT).show();
-                    getDialog().dismiss();
+                else {
+                    reportAdvertisement.setVisibility(View.VISIBLE);
+                    reportAdvertisement.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(),"Thank you for reporting an inappropiate content!", Toast.LENGTH_SHORT).show();
+                            getDialog().dismiss();
+                        }
+                    });
                 }
-            });
+            }
 
-        }
-        else {
-            reportAdvertisement.setClickable(true);
-            reportAdvertisement.setTextColor(getResources().getColor(R.color.black));
-            reportAdvertisement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(),"Thank you for reporting an inappropiate content!", Toast.LENGTH_SHORT).show();
-                    getDialog().dismiss();
-                }
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
 
 
         return view;

@@ -63,6 +63,7 @@
         <android.support.design.widget.TextInputLayout
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
+            android:layout_alignBottom="@+id/verificationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
@@ -71,12 +72,12 @@
                 android:id="@+id/verificationCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter received code"
                 android:gravity="center"
-                android:textSize="15dp"
+                android:hint="Enter received code"
+                android:textColor="@android:color/white"
 
                 android:textColorHint="@android:color/white"
-                android:textColor="@android:color/white"/>
+                android:textSize="15dp" />
 
         </android.support.design.widget.TextInputLayout>
 

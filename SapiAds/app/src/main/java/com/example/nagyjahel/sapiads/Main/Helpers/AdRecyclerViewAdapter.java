@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Registry;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.nagyjahel.sapiads.Database.Models.Ad;
 import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Fragments.AdDetailFragment;
@@ -148,18 +149,19 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
     private void initViewHolder(ViewHolder viewHolder, final User currentUser, final Ad currentAd){
 
         Log.d(TAG, "initViewHolder method called");
+
         Glide.with(viewHolder.itemView.getContext())
                 .asBitmap()
                 .load(currentUser.getPhotoUrl())
                 .into(viewHolder.userImage);
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("ads/" + currentAd.getId());
-
         Glide.with(viewHolder.itemView.getContext())
-                .load(storageReference)
+                .load(currentAd.getImageUrl())
                 .into(viewHolder.adImage);
 
         viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
+        Log.d(TAG, "Ad title: " + currentAd.getTitle());
+        Log.d(TAG, "Ad content: " + currentAd.getContent());
         viewHolder.adTitle.setText(currentAd.getTitle());
         viewHolder.adContent.setText(currentAd.getContent());
         viewHolder.nrViews.setText(String.valueOf( currentAd.getViewed()));

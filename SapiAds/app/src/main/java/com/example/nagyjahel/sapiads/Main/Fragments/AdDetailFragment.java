@@ -16,6 +16,8 @@ import com.example.nagyjahel.sapiads.Main.Helpers.AdvertisementReportDeleteDialo
 import com.example.nagyjahel.sapiads.Main.Helpers.SelectPhotoDialog;
 import com.example.nagyjahel.sapiads.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
@@ -37,7 +39,8 @@ public class AdDetailFragment extends Fragment {
     private TextView viewed;
     private ImageView moreButton;
     private Ad selectedAd;
-
+    private FirebaseAuth auth;
+    private FirebaseUser loggedUser;
 
     /*****************************************************************************************************
      The constructor of the Advertisement detail fragment
@@ -45,6 +48,8 @@ public class AdDetailFragment extends Fragment {
     public AdDetailFragment() {
         Log.d(TAG, "Constructor called");
         database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
+        loggedUser = auth.getCurrentUser();
     }
 
 

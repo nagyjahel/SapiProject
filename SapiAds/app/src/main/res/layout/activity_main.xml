@@ -8,12 +8,16 @@
     tools:context=".Main.MainActivity">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.example.nagyjahel.sapiads.Main.AdListFragment"
         android:id="@+id/fragment_placeholder"
-  />
+        android:name="com.example.nagyjahel.sapiads.Main.AdListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="455dp"
+        android:orientation="horizontal"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <android.support.design.widget.BottomNavigationView

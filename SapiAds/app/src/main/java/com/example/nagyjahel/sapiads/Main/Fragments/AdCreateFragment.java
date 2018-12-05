@@ -1,5 +1,6 @@
 package com.example.nagyjahel.sapiads.Main.Fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.nagyjahel.sapiads.Main.Helpers.SelectPhotoDialog;
@@ -24,6 +26,7 @@ import com.example.nagyjahel.sapiads.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,7 +46,8 @@ import static android.text.TextUtils.isEmpty;
 public class AdCreateFragment extends Fragment implements OnPhotoSelectedListener {
 
     private static final String TAG = "AdCreateFragment";
-    private FirebaseAuth loggedUser;
+    private FirebaseAuth auth;
+    private FirebaseUser loggedUser;
     private FirebaseDatabase database;
     private TextInputEditText adTitle;
     private TextInputEditText adContent;
@@ -54,7 +58,8 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
     private Bitmap selectedImageBitmap;
     private Uri selectedUri;
     private byte[] uploadedBytes;
-    private double progress = 0;
+    private ProgressDialog progressDialog;
+    private Uri downloadUrl;
     private String photoToUpload;
 
     /*****************************************************************************************************
@@ -65,7 +70,9 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         database = FirebaseDatabase.getInstance();
         newKey = Long.toString(System.currentTimeMillis());
         advertisement = database.getReference("ads/" + newKey);
-        loggedUser = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
+        loggedUser = auth.getCurrentUser();
+
     }
 
 
@@ -75,6 +82,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate method called.");
+        progressDialog = new ProgressDialog(getActivity());
         super.onCreate(savedInstanceState);
     }
 
@@ -100,7 +108,9 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
             @Override
             public void onClick(View v) {
                 if (allRequiredDataExist()) {
-
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    progressDialog.setTitle("Uploading your advertisement ... ");
+                    progressDialog.show();
                     if(selectedImageBitmap != null && selectedUri == null){
                         uploadPhoto(selectedImageBitmap);
                     }
@@ -148,7 +158,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
      *****************************************************************************************************/
     private boolean allRequiredDataExist() {
         Log.d(TAG, "allRequiredDataExist method called.");
-        return !isEmpty(adTitle.getText().toString()) && !isEmpty(adContent.getText().toString());
+       return true;
     }
 
 
@@ -170,17 +180,24 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
      - Prepares the entered data to be added into the database
      *****************************************************************************************************/
     private Map<String,String> prepareData(){
+
         Log.d(TAG, "prepareData method called.");
+        Log.d("Preparedata", "Title: " + adTitle.getText().toString() + " Content: " + adContent.getText().toString());
         Map<String, String> map = new HashMap<>();
         map.put("title", adTitle.getText().toString());
         map.put("content", adContent.getText().toString());
-        map.put("imageUrl", photoToUpload);
+        map.put("imageUrl", downloadUrl.toString());
         map.put("isReported", "0");
-        map.put("publishingUserId", loggedUser.getCurrentUser().getPhoneNumber());
+        map.put("publishingUserId", loggedUser.getPhoneNumber());
         map.put("viewed", "1");
         return map;
     }
 
+
+    /*****************************************************************************************************
+     The getImagePath method of the Advertisement create fragment
+     - Gets the uri of the selected photo, applies it to the imageview
+     *****************************************************************************************************/
     @Override
     public void getImagePath(Uri imagePath) {
         adImage.setImageURI(null);
@@ -189,6 +206,11 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         selectedImageBitmap = null;
     }
 
+
+    /*****************************************************************************************************
+     The getImageBitMap method of the Advertisement create fragment
+     - Displays the taken photo in the imageview
+     *****************************************************************************************************/
     @Override
     public void getImageBitMap(Bitmap bitmap) {
         adImage.setImageBitmap(bitmap);
@@ -196,7 +218,13 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         selectedImageBitmap = bitmap;
     }
 
+
+    /*****************************************************************************************************
+     The uploadPhoto method of the Advertisement create fragment
+     - Will start the upload of the photo - even if it was selected, or taken with camera
+     *****************************************************************************************************/
     private void uploadPhoto(Bitmap bitmap){
+        progressDialog.incrementProgressBy(10);
         Log.d(TAG, "Upload new image bitmap to storage");
         BackgroundImageResize resize = new BackgroundImageResize(bitmap);
         Uri uri = null;
@@ -204,45 +232,57 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
     }
 
     private void uploadPhoto(Uri imagePath){
-
+        progressDialog.incrementProgressBy(10);
         Log.d(TAG, "Upload new photo uri to storage");
         BackgroundImageResize resize = new BackgroundImageResize(null);
         resize.execute(imagePath);
     }
 
+
+    /*****************************************************************************************************
+     The executeUploadTask method of the Advertisement create fragment
+     - Will upload the advertisement to the database
+     *****************************************************************************************************/
     private void executeUploadTask(){
-        Toast.makeText(getActivity(), "Uploading image",Toast.LENGTH_SHORT).show();
+        progressDialog.incrementProgressBy(15);
         final StorageReference storageReference  = FirebaseStorage.getInstance().getReference().child("ads/"+ newKey + "/imageUrl");
         UploadTask uploadTask = storageReference.putBytes(uploadedBytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getActivity(), "Image successfully uploaded!", Toast.LENGTH_SHORT).show();
-                        Uri firebaseUri = taskSnapshot.getUploadSessionUri();
-                        photoToUpload = firebaseUri.toString();
-                        Log.d(TAG, "OnSucces: firebase download url: " + firebaseUri.toString());
+
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                downloadUrl = uri;
+                                Log.d(TAG, "OnSucces: firebase download url: " + photoToUpload);
+                                advertisement.setValue(prepareData())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "advertisement uploaded.");
+                                                Toast toast = Toast.makeText(getActivity(), "Your advertisement has been successfully uploaded!", Toast.LENGTH_LONG);
+                                                toast.show();
+                                                progressDialog.dismiss();
+                                                changeFragment();
+
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "failure during advertisement uploading.");
+                                                Toast toast = Toast.makeText(getActivity(), "An error occured during the upload of your advertisement. Please try again later!", Toast.LENGTH_LONG);
+                                                toast.show();
+                                                progressDialog.dismiss();
+                                            }
+                                        });
+
+                            }
+                        });
 
 
-                        advertisement.setValue(prepareData())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "advertisement uploaded.");
-                                        Toast toast = Toast.makeText(getActivity(), "Your advertisement has been successfully uploaded!", Toast.LENGTH_LONG);
-                                        toast.show();
-                                        changeFragment();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "failure during advertisement uploading.");
-                                        Toast toast = Toast.makeText(getActivity(), "An error occured during the upload of your advertisement. Please try again later!", Toast.LENGTH_LONG);
-                                        toast.show();
-                                    }
-                                });
 
-                        resetFields();
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -253,20 +293,19 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double currentProgess = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        if(currentProgess > (progress + 15)){
-                            progress = currentProgess;
-                            Log.d(TAG, "OnProgress: upload is: " + progress + "% done");
-                        }
+                        double currentProgess = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        Log.d(TAG,"Current progress: " + currentProgess);
+                        progressDialog.incrementProgressBy((int)currentProgess);
                     }
                 });
+
+
     }
 
-    public void resetFields(){
-        adTitle.setText("");
-        adContent.setText("");
-    }
-
+    /*****************************************************************************************************
+     The BackgroundImageResize inner class of the Advertisement create fragment
+     - Will compress the image in the background
+     *****************************************************************************************************/
     private class BackgroundImageResize extends AsyncTask<Uri, Integer, byte[]> {
 
         private static final String TAG = "BackgroundImageResize";
@@ -282,6 +321,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.incrementProgressBy(5);
             Toast.makeText(getActivity(),"Compressing image", Toast.LENGTH_SHORT).show();
 
         }
@@ -292,6 +332,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
             Log.d(TAG, "DoInBackground: started");
             if(bitmap == null){
                 try{
+                    progressDialog.incrementProgressBy(10);
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uris[0]);
                 }catch (IOException e){
                     Log.e(TAG, "DoInBackground: IOException: " + e.getMessage());
@@ -306,6 +347,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         @Override
         protected void onPostExecute(byte[] bytes) {
             super.onPostExecute(bytes);
+            progressDialog.incrementProgressBy(10);
             uploadedBytes = bytes;
             executeUploadTask();
 
