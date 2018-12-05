@@ -42,7 +42,11 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.title_notifications);
+                    mToolbar.setTitle("My profile page");
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    fragmentTransaction.replace(R.id.fragment_placeholder, profileFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                     return true;
             }
             return false;
