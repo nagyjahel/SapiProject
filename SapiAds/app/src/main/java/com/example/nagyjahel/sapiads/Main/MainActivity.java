@@ -55,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_profile:
                     mToolbar.setTitle("My profile page");
-                    ProfileFragment profileFragment = new ProfileFragment();
-                    fragmentTransaction.replace(R.id.fragment_placeholder, profileFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    changeFragment(new ProfileFragment());
                     Log.d(TAG, "Profile item from the navigation bar selected.");
                     mToolbar.setTitle("Profile");
                     return true;
