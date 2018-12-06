@@ -58,5 +58,7 @@ dependencies {
     api 'com.google.firebase:firebase-messaging:17.3.4'
 
     api 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    api 'com.firebase:firebase-client-android:2.5.0'
 }
 apply plugin: 'com.google.gms.google-services'
