@@ -48,7 +48,8 @@ public class AdvertisementManager {
                 for (DataSnapshot adSnapshot : dataSnapshot.getChildren()) {
                     if(adSnapshot.exists()){
                         int isReported = Integer.parseInt((String) adSnapshot.child("isReported").getValue());
-                        if (isReported == 0){
+                        int isVisible = Integer.parseInt((String) adSnapshot.child("isVisible").getValue());
+                        if (isReported == 0 && isVisible == 1){
                             ads.add(getDataFromSnapshot(adSnapshot));
                         }
                     }
@@ -73,13 +74,15 @@ public class AdvertisementManager {
         Log.d(TAG, "getDataFromSnapshot method of the eventlistener called.");
         long id = Long.parseLong(dataSnapshot.getKey());
         int viewed = Integer.parseInt((String) dataSnapshot.child("viewed").getValue());
+        int isReported = Integer.parseInt((String) dataSnapshot.child("isReported").getValue());
+        int isVisible = Integer.parseInt((String) dataSnapshot.child("isVisible").getValue());
         String title = (String) dataSnapshot.child("title").getValue();
         String photoUrl = (String) dataSnapshot.child("imageUrl").getValue();
         String content = (String) dataSnapshot.child("content").getValue();
         String publishingUserId = (String) dataSnapshot.child("publishingUserId").getValue();
         Log.d(TAG, "new ad: " + title + " " + photoUrl + " " + content + " " + publishingUserId);
 
-        return new Ad(id, title,photoUrl, content,publishingUserId, 0, viewed);
+        return new Ad(id, title,photoUrl, content,publishingUserId, isReported, isVisible, viewed);
     }
 
 

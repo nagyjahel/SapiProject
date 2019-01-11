@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SapiAds</string>
+    <string name="app_name">Sapvertiser</string>
     <string name="title_activity_authentication">Sign in</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

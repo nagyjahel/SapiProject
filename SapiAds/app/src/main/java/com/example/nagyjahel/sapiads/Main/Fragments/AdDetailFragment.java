@@ -2,18 +2,21 @@ package com.example.nagyjahel.sapiads.Main.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nagyjahel.sapiads.Database.Models.Ad;
 import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Helpers.AdvertisementReportDeleteDialog;
 import com.example.nagyjahel.sapiads.Main.Helpers.SelectPhotoDialog;
+import com.example.nagyjahel.sapiads.Main.Interfaces.OnDialogButtonClicked;
 import com.example.nagyjahel.sapiads.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +44,7 @@ public class AdDetailFragment extends Fragment {
     private Ad selectedAd;
     private FirebaseAuth auth;
     private FirebaseUser loggedUser;
+    private OnDialogButtonClicked listener;
 
     /*****************************************************************************************************
      The constructor of the Advertisement detail fragment
@@ -94,7 +98,7 @@ public class AdDetailFragment extends Fragment {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId());
+                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener);
                 dialog.show(getFragmentManager(),getString(R.string.dialog_manage_advertisement ));
                 dialog.setTargetFragment(AdDetailFragment.this,1);
                 return true;
@@ -140,4 +144,6 @@ public class AdDetailFragment extends Fragment {
                 Log.d("AdDetailFragment:", "Nr of viewed incremented" +  selectedAd.getViewed());
             }});
     }
+
+
 }

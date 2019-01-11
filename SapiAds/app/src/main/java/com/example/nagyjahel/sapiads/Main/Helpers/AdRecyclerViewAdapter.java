@@ -24,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.nagyjahel.sapiads.Database.Models.Ad;
 import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Fragments.AdDetailFragment;
+import com.example.nagyjahel.sapiads.Main.Interfaces.OnDialogButtonClicked;
 import com.example.nagyjahel.sapiads.R;
 
 import com.bumptech.glide.Glide;

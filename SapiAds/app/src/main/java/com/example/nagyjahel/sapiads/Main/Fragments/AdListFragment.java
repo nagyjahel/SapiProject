@@ -3,17 +3,21 @@ package com.example.nagyjahel.sapiads.Main.Fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.nagyjahel.sapiads.Database.Models.Ad;
 import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Helpers.AdRecyclerViewAdapter;
 import com.example.nagyjahel.sapiads.Database.Collections.AdvertisementManager;
+import com.example.nagyjahel.sapiads.Main.Interfaces.OnDialogButtonClicked;
+import com.example.nagyjahel.sapiads.Main.Interfaces.OnPhotoSelectedListener;
 import com.example.nagyjahel.sapiads.Main.Interfaces.RetrieveDataListener;
 import com.example.nagyjahel.sapiads.Database.Collections.UserManager;
 import com.example.nagyjahel.sapiads.R;
@@ -21,7 +25,7 @@ import com.example.nagyjahel.sapiads.R;
 import java.util.ArrayList;
 
 
-public class AdListFragment extends Fragment {
+public class AdListFragment extends Fragment implements OnDialogButtonClicked {
 
 
     private static final String TAG = "AdListFragment";
@@ -29,6 +33,21 @@ public class AdListFragment extends Fragment {
     private ArrayList<Ad> advertisements = new ArrayList<>();
     private AdRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
+
+
+        @Override
+        public void deleteAdvertisementResult() {
+            changeFragment(new AdListFragment());
+            Toast.makeText(getContext(), "Your advertisement has been deleted!", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void reportAdvertisementResult() {
+            changeFragment(new AdListFragment());
+            Toast.makeText(getContext(), "Thank you for reporting inappropiate advertisement!", Toast.LENGTH_SHORT).show();
+        }
+
+
 
     /*****************************************************************************************************
      The constructor of the Advertisement list fragment
@@ -101,6 +120,17 @@ public class AdListFragment extends Fragment {
                 Log.d(TAG, "Get users from database: failure.");
             }
         });
+    }
+
+    /*****************************************************************************************************
+     The changeFragment method of the Main Activity
+     - Changes the actual fragment with another selected one
+     *****************************************************************************************************/
+    private void changeFragment(Fragment fragment){
+        Log.d(TAG, "changeFragment method called.");
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
+        fragmentTransaction.commit();
     }
 
 }

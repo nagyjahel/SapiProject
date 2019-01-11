@@ -8,15 +8,17 @@ public class Ad{
     private String content;
     private String publishingUserId;
     private int isReported;
+    private int isVisible;
     private int viewed;
 
-    public Ad(long id, String title, String imageUrl, String content, String publishingUserId, int isReported, int viewed) {
+    public Ad(long id, String title, String imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {
         this.id = id;
         this.title = title;
         this.imageUrl = imageUrl;
         this.content = content;
         this.publishingUserId = publishingUserId;
         this.isReported = isReported;
+        this.isVisible = isVisible;
         this.viewed = viewed;
     }
 
@@ -61,14 +63,6 @@ public class Ad{
     }
 
 
-    public int isReported() {
-        return isReported;
-    }
-
-    public void setReported(int reported) {
-        isReported = reported;
-    }
-
     public int getViewed() {
         return viewed;
     }
@@ -79,4 +73,19 @@ public class Ad{
 
     public void incrementViewed() {this.viewed++;}
 
+    public int getIsReported() {
+        return isReported;
+    }
+
+    public void setIsReported(int isReported) {
+        this.isReported = isReported;
+    }
+
+    public int getIsVisible() {
+        return isVisible;
+    }
+
+    public void setIsVisible(int isVisible) {
+        this.isVisible = isVisible;
+    }
 }

@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.nagyjahel.sapiads.Database.Models.Ad;
+import com.example.nagyjahel.sapiads.Database.Models.User;
 import com.example.nagyjahel.sapiads.Main.Helpers.SelectPhotoDialog;
 import com.example.nagyjahel.sapiads.Main.Interfaces.OnPhotoSelectedListener;
 import com.example.nagyjahel.sapiads.R;
@@ -33,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.ByteArrayOutputStream;
@@ -61,6 +64,8 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
     private ProgressDialog progressDialog;
     private Uri downloadUrl;
     private String photoToUpload;
+    private Ad selectedAd;
+    private User publisher;
 
     /*****************************************************************************************************
     The constructor of the Advertisement create fragment
@@ -102,7 +107,16 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreate method called.");
         final View view = inflater.inflate(R.layout.fragment_ad_create, container, false);
+        Log.d(TAG, "onCreateView method called.");
+        Bundle args = getArguments();
         initView(view);
+
+        if(!args.isEmpty()){
+            String selectedAdId= args.getString("adId");
+            fillWithData();
+        }
+
+
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +202,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         map.put("content", adContent.getText().toString());
         map.put("imageUrl", downloadUrl.toString());
         map.put("isReported", "0");
+        map.put("isVisible", "1");
         map.put("publishingUserId", loggedUser.getPhoneNumber());
         map.put("viewed", "1");
         return map;
@@ -352,5 +367,10 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
             executeUploadTask();
 
         }
+    }
+
+
+    public void fillWithData(){
+
     }
 }
