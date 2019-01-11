@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nagyjahel.sapiads">
+    package="ro.sapientia.ms.sapvertiser">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -19,7 +19,7 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Splash.SplashScreenActivity"
+        <activity android:name="ro.sapientia.ms.sapvertiser.Splash.SplashScreenActivity"
             android:theme="@style/SplashTheme">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,10 +28,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Authentication.AuthenticationActivity"
+            android:name="ro.sapientia.ms.sapvertiser.Authentication.AuthenticationActivity"
             android:label="@string/title_activity_authentication" />
         <activity
-            android:name=".Main.MainActivity"
+            android:name="ro.sapientia.ms.sapvertiser.Main.MainActivity"
             android:label="@string/title_activity_main"></activity>
     </application>
 
