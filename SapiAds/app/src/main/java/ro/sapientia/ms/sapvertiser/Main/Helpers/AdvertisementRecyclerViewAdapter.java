@@ -37,14 +37,15 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
     private ArrayList<User> mUsers;
     private ArrayList<Advertisement> mAds;
     private FragmentActivity fragmentActivity;
-
+    private RetrieveDataListener<String> onDeleteListener;
     /*****************************************************************************************************
      The constructor of the Advertisement Recycler View Adapter
      *****************************************************************************************************/
-    public AdvertisementRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Advertisement> Ads) {
+    public AdvertisementRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Advertisement> Ads, RetrieveDataListener<String> onDeleteListener) {
         this.mAds = Ads;
         this.mUsers = Users;
         this.fragmentActivity = fragmentActivity;
+        this.onDeleteListener = onDeleteListener;
     }
 
 
@@ -126,7 +127,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.getNavigationInstance().changeFragment(fragmentActivity.getSupportFragmentManager(), new AdvertisementDetailFragment(),true, createArguments(currentAd,currentUser));
+                Navigation.getNavigationInstance().changeFragment(fragmentActivity.getSupportFragmentManager(), new AdvertisementDetailFragment(onDeleteListener),true, createArguments(currentAd,currentUser));
             }
         });
     }

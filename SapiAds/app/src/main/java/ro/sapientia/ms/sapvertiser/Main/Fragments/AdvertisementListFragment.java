@@ -79,7 +79,17 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
     private void initRecyclerView(View view) {
         Log.d(TAG, "initRecyclerView method called");
         recyclerView = view.findViewById(R.id.recycler_view);
-        adapter = new AdvertisementRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
+        adapter = new AdvertisementRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements, new RetrieveDataListener<String>() {
+            @Override
+            public void onSucces(String data) {
+                Toast.makeText(getContext(),"Successfull delete", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(getContext(),"Unsuccessfull delete", Toast.LENGTH_SHORT).show();
+            }
+        });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 

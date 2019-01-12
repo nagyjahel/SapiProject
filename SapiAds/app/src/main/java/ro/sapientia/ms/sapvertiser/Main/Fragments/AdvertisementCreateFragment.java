@@ -110,31 +110,33 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
 
         if(args != null && !args.isEmpty()){
             fillWithData(args.getLong("adId"));
+            addButton.setText("Update");
         }
 
+        else{
+            addButton.setText("Save");
+            addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (allRequiredDataExist()) {
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        progressDialog.setTitle("Uploading your advertisement ... ");
+                        progressDialog.show();
+                        if(selectedImageBitmap != null && selectedUri == null){
+                            uploadPhoto(selectedImageBitmap);
+                        }
+                        else if(selectedImageBitmap == null && selectedUri != null){
+                            uploadPhoto(selectedUri);
+                        }
 
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (allRequiredDataExist()) {
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progressDialog.setTitle("Uploading your advertisement ... ");
-                    progressDialog.show();
-                    if(selectedImageBitmap != null && selectedUri == null){
-                        uploadPhoto(selectedImageBitmap);
                     }
-                    else if(selectedImageBitmap == null && selectedUri != null){
-                        uploadPhoto(selectedUri);
+                    else {
+                        Toast toast = Toast.makeText(view.getContext(), "Please, fill all the fields!", Toast.LENGTH_LONG);
+                        toast.show();
                     }
-
                 }
-                else {
-                    Toast toast = Toast.makeText(view.getContext(), "Please, fill all the fields!", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            }
-        });
+            });
+        }
 
         adImage.setOnClickListener(new View.OnClickListener() {
 

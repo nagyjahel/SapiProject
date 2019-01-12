@@ -2,6 +2,7 @@ package ro.sapientia.ms.sapvertiser.Data.Remote;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,15 +59,17 @@ public class DataHandler implements IDataHandler {
     }
 
     private static Advertisement getAdvertisementFromSnapshot(DataSnapshot dataSnapshot) {
-        long id = Long.parseLong(dataSnapshot.getKey());
-        int viewed = Integer.parseInt((String) dataSnapshot.child("viewed").getValue());
-        int isReported = Integer.parseInt((String) dataSnapshot.child("isReported").getValue());
-        int isVisible = Integer.parseInt((String) dataSnapshot.child("isVisible").getValue());
-        String title = (String) dataSnapshot.child("title").getValue();
-        String photoUrl = (String) dataSnapshot.child("imageUrl").getValue();
-        String content = (String) dataSnapshot.child("content").getValue();
-        String publishingUserId = (String) dataSnapshot.child("publishingUserId").getValue();
-        return new Advertisement(id, title, photoUrl, content, publishingUserId, isReported, isVisible, viewed);
+
+            long id = Long.parseLong(dataSnapshot.getKey());
+            int viewed = Integer.parseInt((String) dataSnapshot.child("viewed").getValue());
+            int isReported = Integer.parseInt((String) dataSnapshot.child("isReported").getValue());
+            int isVisible = Integer.parseInt((String) dataSnapshot.child("isVisible").getValue());
+            String title = (String) dataSnapshot.child("title").getValue();
+            String photoUrl = (String) dataSnapshot.child("imageUrl").getValue();
+            String content = (String) dataSnapshot.child("content").getValue();
+            String publishingUserId = (String) dataSnapshot.child("publishingUserId").getValue();
+            return new Advertisement(id, title, photoUrl, content, publishingUserId, isReported, isVisible, viewed);
+
     }
 
     @Override
@@ -143,6 +146,7 @@ public class DataHandler implements IDataHandler {
         firebaseDatabase.getReference("ads/" + advertisementId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("DataHandler", "Advertisement id: " + advertisementId);
                 callback.onSucces(getAdvertisementFromSnapshot(dataSnapshot));
             }
 
@@ -198,6 +202,23 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
+    public void deleteAdvertisement(final long advertisementId, final RetrieveDataListener<String> callback) {
+        firebaseDatabase.getReference("ads/" + advertisementId + "/isVisible").setValue("0")
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.onSucces(Long.toString(advertisementId));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
+    }
+
+    @Override
     public void incrementViewedNumberOnAd(long advertisementId, int actualNumber, final RetrieveDataListener<String> callback) {
         firebaseDatabase.getReference("ads/" + advertisementId + "/viewed").setValue(String.valueOf(actualNumber + 1)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -207,8 +228,9 @@ public class DataHandler implements IDataHandler {
         });
     }
 
+
     private boolean hasToBeShown(DataSnapshot dataSnapshot) {
-        if(hasAllTheProperties(dataSnapshot)){
+        if (hasAllTheProperties(dataSnapshot)) {
             if (Integer.parseInt((String) dataSnapshot.child("isReported").getValue()) == 0 && Integer.parseInt((String) dataSnapshot.child("isVisible").getValue()) == 1) {
                 return true;
             }
@@ -216,11 +238,12 @@ public class DataHandler implements IDataHandler {
         return false;
     }
 
-    private boolean hasAllTheProperties(DataSnapshot dataSnapshot){
-        if(dataSnapshot.child("content") != null && dataSnapshot.child("isReported") != null && dataSnapshot.child("isVisible") != null && dataSnapshot.child("publishingUser") != null && dataSnapshot.child("viewed") != null){
+    private boolean hasAllTheProperties(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.child("content") != null && dataSnapshot.child("isReported") != null && dataSnapshot.child("isVisible") != null && dataSnapshot.child("publishingUser") != null && dataSnapshot.child("viewed") != null) {
             return true;
         }
         return false;
     }
+
 
 }

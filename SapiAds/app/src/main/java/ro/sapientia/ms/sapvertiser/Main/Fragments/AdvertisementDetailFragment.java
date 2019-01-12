@@ -1,5 +1,6 @@
 package ro.sapientia.ms.sapvertiser.Main.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -42,14 +43,17 @@ public class AdvertisementDetailFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseUser loggedUser;
     private OnDialogButtonClicked listener;
+    private RetrieveDataListener<String> onDeleteListener;
 
     /*****************************************************************************************************
      The constructor of the Advertisement detail fragment
      *****************************************************************************************************/
-    public AdvertisementDetailFragment() {
+    @SuppressLint("ValidFragment")
+    public AdvertisementDetailFragment(RetrieveDataListener<String> onDeleteListener) {
         Log.d(TAG, "Constructor called");
-        auth = FirebaseAuth.getInstance();
-        loggedUser = auth.getCurrentUser();
+        this.auth = FirebaseAuth.getInstance();
+        this.loggedUser = auth.getCurrentUser();
+        this.onDeleteListener = onDeleteListener;
     }
 
 
@@ -104,12 +108,11 @@ public class AdvertisementDetailFragment extends Fragment {
         userImage = view.findViewById(R.id.ad_user_image);
         userName = view.findViewById(R.id.ad_user_name);
         viewed = view.findViewById(R.id.viewed_nr);
-        moreButton = view.findViewById(R.id.more_button);
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener);
+                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener, onDeleteListener);
                 dialog.show(getFragmentManager(),getString(R.string.dialog_manage_advertisement ));
                 dialog.setTargetFragment(AdvertisementDetailFragment.this,1);
                 return true;

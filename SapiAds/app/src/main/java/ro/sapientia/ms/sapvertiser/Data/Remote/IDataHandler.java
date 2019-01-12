@@ -17,6 +17,6 @@ public interface IDataHandler {
     void getAdvertisement(long advertisementId, RetrieveDataListener<Advertisement> callback);
     void uploadAdvertisement(Map<String,String> values, RetrieveDataListener<Advertisement> callback);
     void uploadAdvertisementWithPhotos(Map<String,String> values, RetrieveDataListener<Advertisement> callback, byte[] bytes, String path);
-
+    void deleteAdvertisement(long advertisementId, RetrieveDataListener<String> callback);
     void incrementViewedNumberOnAd(long advertisementId, int actualNumber,final RetrieveDataListener<String> callback);
 }
