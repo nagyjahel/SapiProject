@@ -15,9 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
-import com.sapientia.ms.sapvertiser.R;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
+import ro.sapientia.ms.sapvertiser.R;
 
 public class SelectPhotoDialog extends DialogFragment {
 

@@ -10,11 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sapientia.ms.sapvertiser.Database.Models.Ad;
-import com.sapientia.ms.sapvertiser.Database.Models.User;
-import com.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementReportDeleteDialog;
-import com.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
-import com.sapientia.ms.sapvertiser.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,11 +18,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementReportDeleteDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
+import ro.sapientia.ms.sapvertiser.R;
 
 
-public class AdDetailFragment extends Fragment {
+public class AdvertisementDetailFragment extends Fragment {
 
     private static final String TAG = "AdDetailFragment";
     private FirebaseDatabase database;
@@ -40,7 +38,7 @@ public class AdDetailFragment extends Fragment {
     private ImageView image;
     private TextView viewed;
     private ImageView moreButton;
-    private Ad selectedAd;
+    private Advertisement selectedAd;
     private FirebaseAuth auth;
     private FirebaseUser loggedUser;
     private OnDialogButtonClicked listener;
@@ -48,7 +46,7 @@ public class AdDetailFragment extends Fragment {
     /*****************************************************************************************************
      The constructor of the Advertisement detail fragment
      *****************************************************************************************************/
-    public AdDetailFragment() {
+    public AdvertisementDetailFragment() {
         Log.d(TAG, "Constructor called");
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -67,7 +65,7 @@ public class AdDetailFragment extends Fragment {
         Log.d(TAG, "onCreateView method called.");
         Bundle args = getArguments();
         Gson gson = new Gson();
-        selectedAd= gson.fromJson(args.getString("currentAd"), Ad.class);
+        selectedAd= gson.fromJson(args.getString("currentAd"), Advertisement.class);
         publisher = gson.fromJson(args.getString("currentUser"), User.class);
         advertisementReference = database.getReference("ads/"+selectedAd.getId()+"/viewed");
         View view = inflater.inflate(R.layout.fragment_item, container, false);
@@ -99,7 +97,7 @@ public class AdDetailFragment extends Fragment {
             public boolean onLongClick(View v) {
                 AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener);
                 dialog.show(getFragmentManager(),getString(R.string.dialog_manage_advertisement ));
-                dialog.setTargetFragment(AdDetailFragment.this,1);
+                dialog.setTargetFragment(AdvertisementDetailFragment.this,1);
                 return true;
             }
         });

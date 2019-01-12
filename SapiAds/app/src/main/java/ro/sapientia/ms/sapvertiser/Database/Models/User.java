@@ -8,7 +8,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String photoUrl;
-    private ArrayList<Ad> mPublishedAds;
+    private ArrayList<Advertisement> mPublishedAds;
 
     public User() {
     }
@@ -52,7 +52,7 @@ public class User {
         this.photoUrl = photoUrl;
     }
 
-    public ArrayList<Ad> getmPublishedAds() {
+    public ArrayList<Advertisement> getmPublishedAds() {
         return mPublishedAds;
     }
 

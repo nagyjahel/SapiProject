@@ -11,42 +11,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.sapientia.ms.sapvertiser.Database.Models.Ad;
-import com.sapientia.ms.sapvertiser.Database.Models.User;
-import com.sapientia.ms.sapvertiser.Main.Helpers.AdRecyclerViewAdapter;
-import com.sapientia.ms.sapvertiser.Database.Collections.AdvertisementManager;
-import com.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
-import com.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
-import com.sapientia.ms.sapvertiser.Database.Collections.UserManager;
-import com.sapientia.ms.sapvertiser.R;
-
 import java.util.ArrayList;
 
-import ro.sapientia.ms.sapvertiser.Database.Collections.UserManager;
+import ro.sapientia.ms.sapvertiser.Database.Remote.DataHandler;
+import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementRecyclerViewAdapter;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
+import ro.sapientia.ms.sapvertiser.R;
 
 
-public class AdListFragment extends Fragment implements OnDialogButtonClicked {
+public class AdvertisementListFragment extends Fragment implements OnDialogButtonClicked {
 
 
     private static final String TAG = "AdListFragment";
     private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<Ad> advertisements = new ArrayList<>();
-    private AdRecyclerViewAdapter adapter;
+    private ArrayList<Advertisement> advertisements = new ArrayList<>();
+    private AdvertisementRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
 
 
         @Override
         public void deleteAdvertisementResult() {
-            changeFragment(new AdListFragment());
+            changeFragment(new AdvertisementListFragment());
             Toast.makeText(getContext(), "Your advertisement has been deleted!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void reportAdvertisementResult() {
-            changeFragment(new AdListFragment());
+            changeFragment(new AdvertisementListFragment());
             Toast.makeText(getContext(), "Thank you for reporting inappropiate advertisement!", Toast.LENGTH_SHORT).show();
         }
 
@@ -55,7 +49,7 @@ public class AdListFragment extends Fragment implements OnDialogButtonClicked {
     /*****************************************************************************************************
      The constructor of the Advertisement list fragment
      *****************************************************************************************************/
-    public AdListFragment() {
+    public AdvertisementListFragment() {
 
         Log.d(TAG, "constructor called");
     }
@@ -85,7 +79,7 @@ public class AdListFragment extends Fragment implements OnDialogButtonClicked {
     private void initRecyclerView(View view) {
         Log.d(TAG, "initRecyclerView method called");
         recyclerView = view.findViewById(R.id.recycler_view);
-        adapter = new AdRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
+        adapter = new AdvertisementRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
@@ -98,14 +92,14 @@ public class AdListFragment extends Fragment implements OnDialogButtonClicked {
      *****************************************************************************************************/
     private void downloadData() {
         Log.d(TAG, "downloadData method called");
-        UserManager.getUsers(new RetrieveDataListener<ArrayList<User>>() {
+        DataHandler.getDataHandlerInstance().getUsers(new RetrieveDataListener<ArrayList<User>>() {
             @Override
             public void onSucces(ArrayList<User> data) {
                 Log.d(TAG, "Get users from database: success.");
                 users.addAll(data);
-                AdvertisementManager.getAdvertisements(new RetrieveDataListener<ArrayList<Ad>>() {
+                DataHandler.getDataHandlerInstance().getAdvertisements(new RetrieveDataListener<ArrayList<Advertisement>>() {
                     @Override
-                    public void onSucces(ArrayList<Ad> data) {
+                    public void onSucces(ArrayList<Advertisement> data) {
                         Log.d(TAG, "Get advertisements from database: success.");
                         advertisements.addAll(data);
                         adapter.notifyDataSetChanged();
