@@ -16,10 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.sapientia.ms.sapvertiser.Main.Fragments.AdCreateFragment;
-import com.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
-import com.sapientia.ms.sapvertiser.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import ro.sapientia.ms.sapvertiser.Main.Fragments.AdCreateFragment;
+import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementCreateFragment;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
 import ro.sapientia.ms.sapvertiser.R;
 
@@ -98,7 +94,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
                             getDialog().dismiss();
                             Bundle bundle = new Bundle();
                             bundle.putString("adId", String.valueOf(currentAdId));
-                            changeFragment(new AdCreateFragment(), bundle);
+                            changeFragment(new AdvertisementCreateFragment(), bundle);
                         }
                     });
 

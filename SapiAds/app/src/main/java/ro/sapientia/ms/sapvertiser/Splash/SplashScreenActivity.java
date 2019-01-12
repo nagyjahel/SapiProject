@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-
-import com.sapientia.ms.sapvertiser.Authentication.AuthenticationActivity;
-import com.sapientia.ms.sapvertiser.R;
-
+import ro.sapientia.ms.sapvertiser.Authentication.AuthenticationActivity;
+import ro.sapientia.ms.sapvertiser.R;
 
 
 public class SplashScreenActivity extends AppCompatActivity {

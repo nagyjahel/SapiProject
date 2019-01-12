@@ -1,6 +1,6 @@
 package ro.sapientia.ms.sapvertiser.Database.Models;
 
-public class Ad{
+public class Advertisement {
 
     private long id;
     private String title;
@@ -11,7 +11,7 @@ public class Ad{
     private int isVisible;
     private int viewed;
 
-    public Ad(long id, String title, String imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {
+    public Advertisement(long id, String title, String imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {
         this.id = id;
         this.title = title;
         this.imageUrl = imageUrl;
@@ -88,4 +88,5 @@ public class Ad{
     public void setIsVisible(int isVisible) {
         this.isVisible = isVisible;
     }
+
 }

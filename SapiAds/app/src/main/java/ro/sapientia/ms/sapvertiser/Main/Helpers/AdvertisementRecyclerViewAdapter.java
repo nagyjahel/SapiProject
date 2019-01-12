@@ -16,27 +16,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sapientia.ms.sapvertiser.Database.Models.Ad;
-import com.sapientia.ms.sapvertiser.Database.Models.User;
-import com.sapientia.ms.sapvertiser.Main.Fragments.AdDetailFragment;
-import com.sapientia.ms.sapvertiser.R;
-
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ro.sapientia.ms.sapvertiser.Database.Models.Ad;
+import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Database.Models.User;
-import ro.sapientia.ms.sapvertiser.Main.Fragments.AdDetailFragment;
+import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementDetailFragment;
+import ro.sapientia.ms.sapvertiser.R;
 
 import java.util.ArrayList;
 
-public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAdapter.ViewHolder> {
+public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<AdvertisementRecyclerViewAdapter.ViewHolder> {
 
 
-    private static final String TAG = "AdRecyclerViewAdapter";
+    private static final String TAG = "AdvRecyclerViewAdapter";
     private ArrayList<User> mUsers;
-    private ArrayList<Ad> mAds;
+    private ArrayList<Advertisement> mAds;
     private FragmentActivity fragmentActivity;
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
@@ -45,8 +41,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
     /*****************************************************************************************************
      The constructor of the Advertisement Recycler View Adapter
      *****************************************************************************************************/
-    public AdRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Ad> Ads) {
-        Log.d(TAG, "Constructor called");
+    public AdvertisementRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Advertisement> Ads) {
         this.mAds = Ads;
         this.mUsers = Users;
         this.fragmentActivity = fragmentActivity;
@@ -76,7 +71,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         Log.d(TAG, "onBindViewHolder method called");
-        final Ad currentAd = mAds.get(i);
+        final Advertisement currentAd = mAds.get(i);
         final User currentUser = getUserById(currentAd.getPublishingUserId());
         if(currentUser == null) {
             Log.d(TAG, "User" +currentAd.getPublishingUserId()+ " does not exists in the database.");
@@ -117,7 +112,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
      - Prepares the values that have to be passed to the next fragment
      - Changes the current fragment with another selected one
      *****************************************************************************************************/
-    private void changeFragment(Ad currentAd, User currentUser, Fragment fragment)
+    private void changeFragment(Advertisement currentAd, User currentUser, Fragment fragment)
     {
         Log.d(TAG, "changeFragment method called");
         Gson gson = new Gson();
@@ -141,7 +136,7 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
      - Fills the viewHolder with actual data
      - Sets various listeners
      *****************************************************************************************************/
-    private void initViewHolder(ViewHolder viewHolder, final User currentUser, final Ad currentAd){
+    private void initViewHolder(ViewHolder viewHolder, final User currentUser, final Advertisement currentAd){
 
         Log.d(TAG, "initViewHolder method called");
 
@@ -155,15 +150,15 @@ public class AdRecyclerViewAdapter extends RecyclerView.Adapter<AdRecyclerViewAd
                 .into(viewHolder.adImage);
 
         viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
-        Log.d(TAG, "Ad title: " + currentAd.getTitle());
-        Log.d(TAG, "Ad content: " + currentAd.getContent());
+        Log.d(TAG, "Advertisement title: " + currentAd.getTitle());
+        Log.d(TAG, "Advertisement content: " + currentAd.getContent());
         viewHolder.adTitle.setText(currentAd.getTitle());
         viewHolder.adContent.setText(currentAd.getContent());
         viewHolder.nrViews.setText(String.valueOf( currentAd.getViewed()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeFragment(currentAd, currentUser, new AdDetailFragment());
+                changeFragment(currentAd, currentUser, new AdvertisementDetailFragment());
             }
         });
     }

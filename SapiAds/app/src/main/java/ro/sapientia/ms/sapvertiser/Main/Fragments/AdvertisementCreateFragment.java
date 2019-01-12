@@ -18,12 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.sapientia.ms.sapvertiser.Database.Models.Ad;
-import com.sapientia.ms.sapvertiser.Database.Models.User;
-import com.sapientia.ms.sapvertiser.Main.Helpers.SelectPhotoDialog;
-import com.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
-import com.sapientia.ms.sapvertiser.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,12 +34,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import ro.sapientia.ms.sapvertiser.Database.Models.Ad;
+import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Database.Models.User;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.SelectPhotoDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
+import ro.sapientia.ms.sapvertiser.R;
 
-public class AdCreateFragment extends Fragment implements OnPhotoSelectedListener {
+public class AdvertisementCreateFragment extends Fragment implements OnPhotoSelectedListener {
 
     private static final String TAG = "AdCreateFragment";
     private FirebaseAuth auth;
@@ -63,13 +58,13 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
     private ProgressDialog progressDialog;
     private Uri downloadUrl;
     private String photoToUpload;
-    private Ad selectedAd;
+    private Advertisement selectedAd;
     private User publisher;
 
     /*****************************************************************************************************
     The constructor of the Advertisement create fragment
      *****************************************************************************************************/
-    public AdCreateFragment() {
+    public AdvertisementCreateFragment() {
         Log.d(TAG, "Constructor called.");
         database = FirebaseDatabase.getInstance();
         newKey = Long.toString(System.currentTimeMillis());
@@ -111,8 +106,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
         initView(view);
 
         if(!args.isEmpty()){
-            String selectedAdId= args.getString("adId");
-            fillWithData();
+            fillWithData(args.getLong("adId"));
         }
 
 
@@ -146,7 +140,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
                 Log.d(TAG, "opening dialog to choose new photo");
                 SelectPhotoDialog selectPhotoDialog = new SelectPhotoDialog();
                 selectPhotoDialog.show(getFragmentManager(),getString(R.string.dialog_select_photo ));
-                selectPhotoDialog.setTargetFragment(AdCreateFragment.this,1);
+                selectPhotoDialog.setTargetFragment(AdvertisementCreateFragment.this,1);
             }
         });
 
@@ -181,7 +175,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
      *****************************************************************************************************/
     private void changeFragment(){
         Log.d(TAG, "changeFragment method called.");
-        AdListFragment listFragment = new AdListFragment();
+        AdvertisementListFragment listFragment = new AdvertisementListFragment();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_placeholder, listFragment);
@@ -369,7 +363,7 @@ public class AdCreateFragment extends Fragment implements OnPhotoSelectedListene
     }
 
 
-    public void fillWithData(){
-
+    public void fillWithData(long selectedAdId){
+        
     }
 }

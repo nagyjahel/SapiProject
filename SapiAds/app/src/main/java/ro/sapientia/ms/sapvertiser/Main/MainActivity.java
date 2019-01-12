@@ -15,12 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.sapientia.ms.sapvertiser.Main.Fragments.AdCreateFragment;
-import com.sapientia.ms.sapvertiser.Main.Fragments.AdListFragment;
-import com.sapientia.ms.sapvertiser.Main.Fragments.ProfileFragment;
-import com.sapientia.ms.sapvertiser.R;
-
+import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementCreateFragment;
+import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementListFragment;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.ProfileFragment;
+import ro.sapientia.ms.sapvertiser.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     Log.d(TAG, "Home item from the navigation bar selected.");
                     mToolbar.setTitle("News feed");
-                    changeFragment(new AdListFragment());
+                    changeFragment(new AdvertisementListFragment());
                     return true;
                 case R.id.navigation_new_ad:
                     Log.d(TAG, "Plus item from the navigation bar selected.");
                     verifyPermissions();
                     mToolbar.setTitle("Create a new ad");
-                    changeFragment(new AdCreateFragment());
+                    changeFragment(new AdvertisementCreateFragment());
                     return true;
                 case R.id.navigation_profile:
                     mToolbar.setTitle("My profile page");
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_placeholder, new AdListFragment());
+        fragmentTransaction.add(R.id.fragment_placeholder, new AdvertisementListFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
