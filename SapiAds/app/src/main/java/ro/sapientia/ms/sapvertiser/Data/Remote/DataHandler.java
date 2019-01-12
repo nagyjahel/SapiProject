@@ -70,6 +70,11 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
+    public void userExists(RetrieveDataListener<ArrayList<User>> callback) {
+
+    }
+
+    @Override
     public void getUsers(final RetrieveDataListener<ArrayList<User>> callback) {
         firebaseDatabase.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

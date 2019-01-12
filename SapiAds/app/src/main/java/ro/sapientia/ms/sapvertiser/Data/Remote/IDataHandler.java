@@ -9,6 +9,7 @@ import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 
 public interface IDataHandler {
 
+    void userExists(RetrieveDataListener<ArrayList<User>> callback);
     void getUsers(RetrieveDataListener<ArrayList<User>> callback);
     void getUser(String userId, RetrieveDataListener<User> callback);
 

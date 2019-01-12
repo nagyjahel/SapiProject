@@ -36,8 +36,10 @@ import java.util.Map;
 
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.SelectPhotoDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
@@ -351,6 +353,18 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
 
 
     public void fillWithData(long selectedAdId){
+        DataHandler.getDataHandlerInstance().getAdvertisement(selectedAdId, new RetrieveDataListener<Advertisement>() {
+            @Override
+            public void onSucces(Advertisement advertisement) {
+                adTitle.setText(advertisement.getTitle());
+                adContent.setText(advertisement.getContent());
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+            }
+        });
         
     }
 }
