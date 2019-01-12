@@ -2,6 +2,10 @@ package ro.sapientia.ms.sapvertiser.Authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import ro.sapientia.ms.sapvertiser.Main.Fragments.AdListFragment;
+import ro.sapientia.ms.sapvertiser.Main.MainActivity;
+import ro.sapientia.ms.sapvertiser.R;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.sapientia.ms.sapvertiser.Main.MainActivity;
-import com.sapientia.ms.sapvertiser.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -154,12 +156,16 @@ public class AuthenticationActivity extends AppCompatActivity {
             public void onClick(View v){
                 //mVerificationButton.setClickable(false);
                 Log.d(TAG, "Sign in button pressed");
+                Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 /**ViewFlipper signIn = findViewById( R.id.signInLayout );
                 authentication.setOutAnimation(slide_out_left);
                 signIn.setInAnimation(slide_in_left);
                 signIn.setVisibility(View.VISIBLE);
                 authentication.setVisibility(View.INVISIBLE);
                 signIn.showNext();**/
+
 
             }
         });
