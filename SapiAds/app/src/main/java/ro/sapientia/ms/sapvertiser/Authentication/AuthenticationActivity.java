@@ -2,13 +2,26 @@ package ro.sapientia.ms.sapvertiser.Authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+
+import ro.sapientia.ms.sapvertiser.Main.MainActivity;
+import ro.sapientia.ms.sapvertiser.R;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -37,13 +50,16 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private android.support.design.widget.TextInputEditText mPhoneNumber;
     private android.support.design.widget.TextInputEditText mVerificationCode;
-    private android.support.design.widget.TextInputLayout mFirstName;
+    /**private android.support.design.widget.TextInputLayout mFirstName;
     private android.support.design.widget.TextInputEditText mFirstNameValue;
     private android.support.design.widget.TextInputEditText mLastNameValue;
     private android.support.design.widget.TextInputLayout mLastName;
-    private TextView mRegister;
+    private TextView mRegister;**/
+    private Button mGetCodeButton;
     private Button mSignInButton;
-    private int registeredUser = 0;
+    /**private int registeredUser = 0;**/
+
+    private Animation slide_in_left, slide_out_left;
 
     private FirebaseAuth mAuth;
     private String codeSent;
@@ -56,12 +72,26 @@ public class AuthenticationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authentication);
 
+
+        setContentView(R.layout.activity_authentication);
+        this.setTitle("Authentication");
+        slide_in_left = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        slide_out_left = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+        final ViewFlipper authentication = findViewById( R.id.authenticationLayout );
+        authentication.showNext();
+
+
+        Log.d(TAG, "Authentication layout called");
         mAuth = FirebaseAuth.getInstance();
-        mVerificationCode = findViewById(R.id.verificationCode);
         mPhoneNumber = findViewById(R.id.phoneNumber);
-        mFirstName = findViewById(R.id.firstName);
+        mGetCodeButton = findViewById(R.id.getCode);
+        mGetCodeButton.setVisibility(View.INVISIBLE);
+        mVerificationCode = findViewById(R.id.verificationCode);
+        mSignInButton = findViewById(R.id.signIn);
+        mSignInButton.setVisibility(View.INVISIBLE);
+
+        /**mFirstName = findViewById(R.id.firstName);
         mFirstNameValue = findViewById(R.id.firstNameValue);
         mLastNameValue = findViewById(R.id.lastNameValue);
         mLastName = findViewById(R.id.lastName);
@@ -70,18 +100,80 @@ public class AuthenticationActivity extends AppCompatActivity {
         registeredUser = 0;
 
         mFirstName.setVisibility(View.INVISIBLE);
-        mLastName.setVisibility(View.INVISIBLE);
+        mLastName.setVisibility(View.INVISIBLE);**/
 
-        findViewById(R.id.verificationButton).setOnClickListener(new View.OnClickListener(){
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Log.d(TAG, "Phone number field changed.");
+                mGetCodeButton.setVisibility(View.VISIBLE);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
+
+        mVerificationCode.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Log.d(TAG, "Verification code field changed.");
+                mSignInButton.setVisibility(View.VISIBLE);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
+
+        mGetCodeButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
                     //mVerificationButton.setClickable(false);
-                    Log.d(TAG, "Verification button pressed");
-                    sendVerificationCode();
+                    Log.d(TAG, "Get code button pressed");
+                    ViewFlipper signIn = findViewById( R.id.signInLayout );
+                    authentication.setOutAnimation(slide_out_left);
+                    signIn.setInAnimation(slide_in_left);
+                    signIn.setVisibility(View.VISIBLE);
+                    authentication.setVisibility(View.INVISIBLE);
+                    signIn.showNext();
+                    Log.d(TAG, "Sign in layout called");
+
+                    //sendVerificationCode();
                 }
         });
 
-        findViewById(R.id.signinButton).setOnClickListener(new View.OnClickListener(){
+        mSignInButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //mVerificationButton.setClickable(false);
+                Log.d(TAG, "Sign in button pressed");
+                Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                /**ViewFlipper signIn = findViewById( R.id.signInLayout );
+                authentication.setOutAnimation(slide_out_left);
+                signIn.setInAnimation(slide_in_left);
+                signIn.setVisibility(View.VISIBLE);
+                authentication.setVisibility(View.INVISIBLE);
+                signIn.showNext();**/
+
+
+            }
+        });
+        /**findViewById(R.id.signinButton).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                // mSignInButton.setClickable(false);
@@ -157,8 +249,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                             }
 
                                 //here we can open a new activity
-                            /*Toast.makeText(getApplicationContext(),
-                            "Login succesfull", Toast.LENGTH_LONG).show();*/
+                            Toast.makeText(getApplicationContext(),
+                            "Login succesfull", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -215,7 +307,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 super.onCodeSent(s, forceResendingToken);
                 codeSent = s;
                 Log.d(TAG, "Code " + codeSent);
-            }
+            }**/
         };
 
 
