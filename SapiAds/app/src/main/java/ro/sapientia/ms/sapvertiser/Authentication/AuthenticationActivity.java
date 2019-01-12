@@ -57,15 +57,15 @@ public class AuthenticationActivity extends AppCompatActivity {
     //+40 774035590
     private android.support.design.widget.TextInputEditText mPhoneNumber;
     private android.support.design.widget.TextInputEditText mVerificationCode;
-    /**
-     * private android.support.design.widget.TextInputLayout mFirstName;
-     * private android.support.design.widget.TextInputEditText mFirstNameValue;
-     * private android.support.design.widget.TextInputEditText mLastNameValue;
-     * private android.support.design.widget.TextInputLayout mLastName;
-     * private TextView mRegister;
-     **/
+
+     private android.support.design.widget.TextInputLayout mFirstName;
+     private android.support.design.widget.TextInputEditText mFirstNameValue;
+     private android.support.design.widget.TextInputEditText mLastNameValue;
+     private android.support.design.widget.TextInputLayout mLastName;
+
     private Button mGetCodeButton;
     private Button mSignInButton;
+    private Button mRegisterButton;
 
     private Animation slide_in_left, slide_out_left;
 
@@ -74,6 +74,8 @@ public class AuthenticationActivity extends AppCompatActivity {
     private String sentCode;
     private String phoneNumber;
     private String userInputCode;
+
+    private ViewFlipper authenticationLayout, signInLayout, registerLayout;
 
     private static final String TAG = "AuthActivity";
 
@@ -89,8 +91,19 @@ public class AuthenticationActivity extends AppCompatActivity {
         this.setTitle("Authentication");
         slide_in_left = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
         slide_out_left = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-        final ViewFlipper authentication = findViewById(R.id.authenticationLayout);
-        authentication.showNext();
+        authenticationLayout = findViewById(R.id.authenticationLayout);
+        signInLayout = findViewById(R.id.signInLayout);
+        registerLayout = findViewById(R.id.registerLayout);
+
+        authenticationLayout.setInAnimation(slide_in_left);
+        signInLayout.setInAnimation(slide_in_left);
+        registerLayout.setInAnimation(slide_in_left);
+
+        authenticationLayout.setOutAnimation(slide_out_left);
+        signInLayout.setOutAnimation(slide_out_left);
+        registerLayout.setOutAnimation(slide_out_left);
+
+        authenticationLayout.showNext();
 
 
         Log.d(TAG, "Authentication layout called");
@@ -101,17 +114,13 @@ public class AuthenticationActivity extends AppCompatActivity {
         mVerificationCode = findViewById(R.id.verificationCode);
         mSignInButton = findViewById(R.id.signIn);
         mSignInButton.setVisibility(View.INVISIBLE);
+        mRegisterButton = findViewById(R.id.register);
+        mRegisterButton.setVisibility(View.INVISIBLE);
 
-        /**mFirstName = findViewById(R.id.firstName);
-         mFirstNameValue = findViewById(R.id.firstNameValue);
-         mLastNameValue = findViewById(R.id.lastNameValue);
-         mLastName = findViewById(R.id.lastName);
-         mRegister = findViewById(R.id.register);
-         mSignInButton = findViewById(R.id.signinButton);
-         registeredUser = 0;
-
-         mFirstName.setVisibility(View.INVISIBLE);
-         mLastName.setVisibility(View.INVISIBLE);**/
+        mFirstName = findViewById(R.id.firstNameInputLayout);
+        mFirstNameValue = findViewById(R.id.firstNameValue);
+        mLastNameValue = findViewById(R.id.lastNameValue);
+        mLastName = findViewById(R.id.lastNameInputLayout);
 
         mPhoneNumber.addTextChangedListener(new TextWatcher() {
 
@@ -149,17 +158,32 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
 
+        mFirstNameValue.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Log.d(TAG, "Verification code field changed.");
+                mRegisterButton.setVisibility(View.VISIBLE);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
+
         mGetCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Log.d(TAG, "Get code button pressed");
-                ViewFlipper signIn = findViewById(R.id.signInLayout);
-                authentication.setOutAnimation(slide_out_left);
-                signIn.setInAnimation(slide_in_left);
-                signIn.setVisibility(View.VISIBLE);
-                authentication.setVisibility(View.INVISIBLE);
-                signIn.showNext();
+                signInLayout.setVisibility(View.VISIBLE);
+                authenticationLayout.setVisibility(View.GONE);
+                signInLayout.showNext();
                 Log.d(TAG, "Sign in layout called");
                 sendVerificationCode();
                 Log.d(TAG, "Phone: " + phoneNumber + " Verification code: " + sentCode);
@@ -188,95 +212,23 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             }
         });
-        /**findViewById(R.id.signinButton).setOnClickListener(new View.OnClickListener(){
-        @Override public void onClick(View v){
-        // mSignInButton.setClickable(false);
-        Log.d(TAG, "Sign in button pressed");
-        if(mPhoneNumber.getText().toString() != null && codeSent != null)
-        {
-        verifySignInCode();
-        }
+
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mVerificationButton.setClickable(false);
+                Log.d(TAG, "Register button pressed");
+                if (mFirstNameValue.getText().toString() != null && mLastNameValue.getText().toString() != null) {
+                    registerNewUser();
+                }
+                else{
+                    Toast.makeText(AuthenticationActivity.this, "Firstname and lastname is required",
+                            Toast.LENGTH_LONG).show();
+                }
 
 
-        }
+            }
         });
-
-         findViewById(R.id.register).setOnClickListener(new View.OnClickListener(){
-        @Override public void onClick(View v){
-        Log.d(TAG, "Sign in button pressed");
-        mFirstName.setVisibility(View.VISIBLE);
-        mLastName.setVisibility(View.VISIBLE);
-        mRegister.setVisibility(View.INVISIBLE);
-        mSignInButton.setText("Register");
-        registeredUser = 1;
-
-        }
-        });
-         }
-
-         private void verifySignInCode(){
-         userCode = mVerificationCode.getText().toString();
-         Log.d(TAG, "Code:" + userCode);
-         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, userCode);
-         signInWithPhoneAuthCredential(credential);
-         }
-
-         private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-         mAuth.signInWithCredential(credential)
-         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-        @Override public void onComplete(@NonNull final Task<AuthResult> task) {
-        if (task.isSuccessful()) {
-        if(registeredUser == 1)
-        {
-        Log.d(TAG, "Task succesfull");
-        String firstName = mFirstNameValue.getText().toString();
-        String lastName = mLastNameValue.getText().toString();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String key = Long.toString(System.currentTimeMillis());
-        final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
-        Map<String,String > map = new HashMap<>();
-        map.put("firstName", firstName);
-        map.put("lastName", lastName);
-        map.put("photoUrl", "https://scontent.fotp3-2.fna.fbcdn.net/v/t1.0-9/45669376_2031047590289015_5687033769354067968_o.jpg?_nc_cat=106&_nc_ht=scontent.fotp3-2.fna&oh=0269a86d62af533fbc0e8dc1f3e627b5&oe=5C69F883");
-
-        users.setValue(map)
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-        @Override public void onSuccess(Void aVoid) {
-        Toast.makeText(getApplicationContext(),
-        "Your sign up was successful!", Toast.LENGTH_LONG).show();
-        }
-        });
-        }
-        else
-        {
-        Log.d(TAG, "Task succesfull");
-        Toast.makeText(getApplicationContext(),
-        "You logged in!", Toast.LENGTH_LONG).show();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String key = Long.toString(System.currentTimeMillis());
-        final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
-        Map<String,String > map = new HashMap<>();
-
-        }
-
-        //here we can open a new activity
-        Toast.makeText(getApplicationContext(),
-        "Login succesfull", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-        } else {
-        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-        Toast.makeText(getApplicationContext(),
-        "Incorrect verification code", Toast.LENGTH_LONG).show();
-        // The verification code entered was invalid
-        }
-        }
-        }
-        });
-         }
-
-         **/
     }
 
     private void sendVerificationCode() {
@@ -327,25 +279,57 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void userAlreadyExists() {
 
         Log.d(TAG, "Check user state");
-        databaseReference.child("users").orderByKey().equalTo(mPhoneNumber.getText().toString()).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("users/" + mPhoneNumber.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    //not registered
-                    Log.d(TAG, "This is a new user");
-                } else {
+                if(dataSnapshot.exists() && dataSnapshot.getChildren() != null){
                     Log.d(TAG, "This user already exists");
+                    Toast.makeText(getApplicationContext(),
+                            "You have successfully logged in", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+                }
+                else{
+                    Log.d(TAG, "This is a new user");
+                    registerLayout.setVisibility(View.VISIBLE);
+                    signInLayout.setVisibility(View.GONE);
+                    registerLayout.showNext();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, "This operation has been cancelled");
+
             }
         });
+
+    }
+
+        public void registerNewUser(){
+
+        Log.d(TAG, "User registration");
+        String firstName = mFirstNameValue.getText().toString();
+        String lastName = mLastNameValue.getText().toString();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //String key = Long.toString(System.currentTimeMillis());
+        final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
+        Log.d(TAG, "User details: " + firstName + " " + lastName);
+        Map<String,String > map = new HashMap<>();
+        map.put("firstName", firstName);
+        map.put("lastName", lastName);
+        map.put("photoUrl", "https://scontent.fotp3-2.fna.fbcdn.net/v/t1.0-9/45669376_2031047590289015_5687033769354067968_o.jpg?_nc_cat=106&_nc_ht=scontent.fotp3-2.fna&oh=0269a86d62af533fbc0e8dc1f3e627b5&oe=5C69F883");
+
+        users.setValue(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(),
+                                "Your registration was successful!", Toast.LENGTH_LONG).show();
+                        Intent homeActivity = new Intent(AuthenticationActivity.this, MainActivity.class);
+                        startActivity(homeActivity);
+                        finish();
+                    }
+                });
     }
 
 
