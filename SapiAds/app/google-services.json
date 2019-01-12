@@ -8,28 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:799855020452:android:0432a366c8205647",
+        "mobilesdk_app_id": "1:799855020452:android:9e64ed8502a475e9",
         "android_client_info": {
-          "package_name": "com.example.nagyjahel.sapiads"
+          "package_name": "ro.sapientia.ms.sapvertiser"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "799855020452-akoammsbas007m6lci5fr119b563cm01.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.nagyjahel.sapiads",
-            "certificate_hash": "8a9f063b05dfb195db8d5d46e58662accaf15c7e"
-          }
-        },
-        {
-          "client_id": "799855020452-hejqeibiroh15j3f9et9leo6egl4trer.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.nagyjahel.sapiads",
-            "certificate_hash": "54a024b8048a02f23e1fdd74c40068e20da0f1b8"
-          }
-        },
         {
           "client_id": "799855020452-bqf7fsjb0a3lt3tui6658fv2hqebof8v.apps.googleusercontent.com",
           "client_type": 3
@@ -45,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "799855020452-bqf7fsjb0a3lt3tui6658fv2hqebof8v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
