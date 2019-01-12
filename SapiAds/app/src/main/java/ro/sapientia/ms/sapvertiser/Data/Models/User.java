@@ -1,4 +1,4 @@
-package ro.sapientia.ms.sapvertiser.Database.Models;
+package ro.sapientia.ms.sapvertiser.Data.Models;
 
 import java.util.ArrayList;
 

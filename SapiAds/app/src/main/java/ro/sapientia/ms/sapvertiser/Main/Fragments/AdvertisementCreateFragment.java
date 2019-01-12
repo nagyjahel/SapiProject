@@ -34,10 +34,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
-import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import ro.sapientia.ms.sapvertiser.Data.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.SelectPhotoDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
+import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
 public class AdvertisementCreateFragment extends Fragment implements OnPhotoSelectedListener {
@@ -105,7 +108,7 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
         Bundle args = getArguments();
         initView(view);
 
-        if(!args.isEmpty()){
+        if(args != null && !args.isEmpty()){
             fillWithData(args.getLong("adId"));
         }
 
@@ -168,19 +171,6 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
        return true;
     }
 
-
-    /*****************************************************************************************************
-     The changeFragment method of the Advertisement create fragment
-     - Changes the actual fragment to another selected one.
-     *****************************************************************************************************/
-    private void changeFragment(){
-        Log.d(TAG, "changeFragment method called.");
-        AdvertisementListFragment listFragment = new AdvertisementListFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_placeholder, listFragment);
-        fragmentTransaction.commit();
-    }
 
     /*****************************************************************************************************
      The prepareData method of the Advertisement create fragment
@@ -258,7 +248,6 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
@@ -272,7 +261,7 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
                                                 Toast toast = Toast.makeText(getActivity(), "Your advertisement has been successfully uploaded!", Toast.LENGTH_LONG);
                                                 toast.show();
                                                 progressDialog.dismiss();
-                                                changeFragment();
+                                                Navigation.getNavigationInstance().changeFragment(getFragmentManager(),new AdvertisementListFragment(),false,null);
 
                                             }
                                         })
@@ -364,6 +353,18 @@ public class AdvertisementCreateFragment extends Fragment implements OnPhotoSele
 
 
     public void fillWithData(long selectedAdId){
+        DataHandler.getDataHandlerInstance().getAdvertisement(selectedAdId, new RetrieveDataListener<Advertisement>() {
+            @Override
+            public void onSucces(Advertisement advertisement) {
+                adTitle.setText(advertisement.getTitle());
+                adContent.setText(advertisement.getContent());
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+            }
+        });
         
     }
 }

@@ -20,9 +20,12 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
-import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import ro.sapientia.ms.sapvertiser.Data.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementDetailFragment;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
+import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
 import java.util.ArrayList;
@@ -34,9 +37,6 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
     private ArrayList<User> mUsers;
     private ArrayList<Advertisement> mAds;
     private FragmentActivity fragmentActivity;
-    private FragmentTransaction fragmentTransaction;
-    private FragmentManager fragmentManager;
-    private ActionBar mToolbar;
 
     /*****************************************************************************************************
      The constructor of the Advertisement Recycler View Adapter
@@ -45,9 +45,6 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         this.mAds = Ads;
         this.mUsers = Users;
         this.fragmentActivity = fragmentActivity;
-        this.fragmentManager = fragmentActivity.getSupportFragmentManager();
-        this.fragmentTransaction =fragmentManager.beginTransaction();
-
     }
 
 
@@ -59,9 +56,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Log.d(TAG, "onCreateViewHolder method called");
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_item, viewGroup, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_item, viewGroup, false));
     }
 
     /*****************************************************************************************************
@@ -72,28 +67,19 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         Log.d(TAG, "onBindViewHolder method called");
         final Advertisement currentAd = mAds.get(i);
-        final User currentUser = getUserById(currentAd.getPublishingUserId());
-        if(currentUser == null) {
-            Log.d(TAG, "User" +currentAd.getPublishingUserId()+ " does not exists in the database.");
-            return;
-        }
-        Log.d("ViewHolderInit: ", currentUser.getFirstName() + ":"  +currentAd.getTitle());
-        initViewHolder(viewHolder,currentUser,currentAd);
-    }
-
-    /*****************************************************************************************************
-     The getUserById method of the Advertisement Recycler View Adapter
-     - Finds the corresponding user in the collection based on telephone number
-     *****************************************************************************************************/
-    @Nullable
-    private User getUserById(String telephone) {
-        Log.d(TAG, "getUserById method called");
-        for(int i=0;i<mUsers.size(); ++i){
-            if(mUsers.get(i).getTelephone().equals(telephone)){
-                return mUsers.get(i);
+        DataHandler.getDataHandlerInstance().getUser(currentAd.getPublishingUserId(), new RetrieveDataListener<User>() {
+            @Override
+            public void onSucces(User user) {
+                Log.d("ViewHolderInit: ", user.getFirstName() + ":"  +currentAd.getTitle());
+                initViewHolder(viewHolder,user,currentAd);
             }
-        }
-        return null;
+
+            @Override
+            public void onFailure(String message) {
+                Log.d(TAG, "User" +currentAd.getPublishingUserId()+ " does not exists in the database.");
+            }
+        });
+
     }
 
 
@@ -107,30 +93,14 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
     }
 
 
-    /*****************************************************************************************************
-     The changeFragment method of the Advertisement Recycler View Adapter
-     - Prepares the values that have to be passed to the next fragment
-     - Changes the current fragment with another selected one
-     *****************************************************************************************************/
-    private void changeFragment(Advertisement currentAd, User currentUser, Fragment fragment)
-    {
-        Log.d(TAG, "changeFragment method called");
+
+    private Bundle createArguments(Advertisement currentAd, User currentUser){
         Gson gson = new Gson();
-        String adData = gson.toJson(currentAd);
-        String userData = gson.toJson(currentUser);
-
         Bundle fragmentArgs = new Bundle();
-        fragmentArgs.putString("currentAd", adData);
-        fragmentArgs.putString("currentUser", userData);
-
-        fragment.setArguments(fragmentArgs);
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentArgs.putString("currentAd", gson.toJson(currentAd));
+        fragmentArgs.putString("currentUser", gson.toJson(currentUser));
+        return fragmentArgs;
     }
-
-
     /*****************************************************************************************************
      The initViewHolder method of the Advertisement Recycler View Adapter
      - Fills the viewHolder with actual data
@@ -150,15 +120,13 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
                 .into(viewHolder.adImage);
 
         viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
-        Log.d(TAG, "Advertisement title: " + currentAd.getTitle());
-        Log.d(TAG, "Advertisement content: " + currentAd.getContent());
         viewHolder.adTitle.setText(currentAd.getTitle());
         viewHolder.adContent.setText(currentAd.getContent());
         viewHolder.nrViews.setText(String.valueOf( currentAd.getViewed()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeFragment(currentAd, currentUser, new AdvertisementDetailFragment());
+                Navigation.getNavigationInstance().changeFragment(fragmentActivity.getSupportFragmentManager(), new AdvertisementDetailFragment(),true, createArguments(currentAd,currentUser));
             }
         });
     }

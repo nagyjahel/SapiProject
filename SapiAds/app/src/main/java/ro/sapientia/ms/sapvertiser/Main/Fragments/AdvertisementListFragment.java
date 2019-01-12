@@ -13,12 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.ArrayList;
 
-import ro.sapientia.ms.sapvertiser.Database.Remote.DataHandler;
-import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
-import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementRecyclerViewAdapter;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
+import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
 
@@ -34,13 +35,13 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
 
         @Override
         public void deleteAdvertisementResult() {
-            changeFragment(new AdvertisementListFragment());
+            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(),new AdvertisementListFragment(),false, null);
             Toast.makeText(getContext(), "Your advertisement has been deleted!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void reportAdvertisementResult() {
-            changeFragment(new AdvertisementListFragment());
+            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(),new AdvertisementListFragment(),false, null);
             Toast.makeText(getContext(), "Thank you for reporting inappropiate advertisement!", Toast.LENGTH_SHORT).show();
         }
 
@@ -50,7 +51,6 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
      The constructor of the Advertisement list fragment
      *****************************************************************************************************/
     public AdvertisementListFragment() {
-
         Log.d(TAG, "constructor called");
     }
 
@@ -117,17 +117,6 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
                 Log.d(TAG, "Get users from database: failure.");
             }
         });
-    }
-
-    /*****************************************************************************************************
-     The changeFragment method of the Main Activity
-     - Changes the actual fragment with another selected one
-     *****************************************************************************************************/
-    private void changeFragment(Fragment fragment){
-        Log.d(TAG, "changeFragment method called.");
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
-        fragmentTransaction.commit();
     }
 
 }

@@ -5,7 +5,7 @@
     android:id="@+id/recycler_view"
     android:name="com.example.nagyjahel.sapiads.Main.AdListFragment"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     app:layoutManager="android.support.v7.widget.GridLayoutManager"
     tools:context=".Main.Fragments.AdvertisementListFragment"
     tools:listitem="@layout/fragment_item" />

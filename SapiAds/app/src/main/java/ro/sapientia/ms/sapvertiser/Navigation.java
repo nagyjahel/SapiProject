@@ -1,13 +1,38 @@
 package ro.sapientia.ms.sapvertiser;
 
-import ro.sapientia.ms.sapvertiser.Database.Remote.DataHandler;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 public class Navigation {
 
     private static volatile Navigation navigation = new Navigation();
-    private Navigation(){};
+    private Navigation(){}
 
-    public Navigation getNavigationInstance(){
+    public static Navigation getNavigationInstance(){
         return navigation;
     }
+
+    public void changeFragment(FragmentManager fragmentManager, Fragment fragment, boolean addToBackStack, Bundle bundle){
+            if(bundle != null){
+                fragment.setArguments(bundle);
+            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
+            if(addToBackStack){
+                fragmentTransaction.addToBackStack(null);
+            }
+            fragmentTransaction.commit();
+    }
+
+    public void showFragment(FragmentManager fragmentManager, Fragment fragment, boolean addToBackStack){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_placeholder, fragment);
+        if(addToBackStack){
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
+    }
+
 }
