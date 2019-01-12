@@ -1,13 +1,11 @@
 package ro.sapientia.ms.sapvertiser.Main.Presenters;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
-import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementRecyclerViewAdapter;
 
 public class AdvertisementListPresenter {

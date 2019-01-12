@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementCreateFragment;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementListFragment;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.ProfileFragment;
+import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,17 +46,17 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     Log.d(TAG, "Home item from the navigation bar selected.");
                     mToolbar.setTitle("News feed");
-                    changeFragment(new AdvertisementListFragment());
+                    Navigation.getNavigationInstance().changeFragment(fragmentManager,new AdvertisementListFragment(),true, null);
                     return true;
                 case R.id.navigation_new_ad:
                     Log.d(TAG, "Plus item from the navigation bar selected.");
                     verifyPermissions();
                     mToolbar.setTitle("Create a new ad");
-                    changeFragment(new AdvertisementCreateFragment());
+                    Navigation.getNavigationInstance().changeFragment(fragmentManager,new AdvertisementCreateFragment(),true, null);
                     return true;
                 case R.id.navigation_profile:
                     mToolbar.setTitle("My profile page");
-                    changeFragment(new ProfileFragment());
+                    Navigation.getNavigationInstance().changeFragment(fragmentManager,new ProfileFragment(),true, null);
                     Log.d(TAG, "Profile item from the navigation bar selected.");
                     mToolbar.setTitle("Profile");
                     return true;
@@ -77,27 +78,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate method called.");
         initMemberVariables();
         setContentView(R.layout.activity_main);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_placeholder, new AdvertisementListFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        Navigation.getNavigationInstance().showFragment(fragmentManager, new AdvertisementListFragment(), false);
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
-
-    /*****************************************************************************************************
-     The changeFragment method of the Main Activity
-     - Changes the actual fragment with another selected one
-     *****************************************************************************************************/
-    private void changeFragment(Fragment fragment){
-        Log.d(TAG, "changeFragment method called.");
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
 

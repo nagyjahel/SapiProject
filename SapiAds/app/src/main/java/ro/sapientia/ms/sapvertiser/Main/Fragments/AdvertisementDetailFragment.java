@@ -18,18 +18,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ro.sapientia.ms.sapvertiser.Database.Models.Advertisement;
-import ro.sapientia.ms.sapvertiser.Database.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import ro.sapientia.ms.sapvertiser.Data.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementReportDeleteDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.R;
 
 
 public class AdvertisementDetailFragment extends Fragment {
 
     private static final String TAG = "AdDetailFragment";
-    private FirebaseDatabase database;
-    private DatabaseReference advertisementReference;
     private CircleImageView userImage;
     private TextView userName;
     private User publisher;
@@ -48,7 +48,6 @@ public class AdvertisementDetailFragment extends Fragment {
      *****************************************************************************************************/
     public AdvertisementDetailFragment() {
         Log.d(TAG, "Constructor called");
-        database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         loggedUser = auth.getCurrentUser();
     }
@@ -63,19 +62,34 @@ public class AdvertisementDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView method called.");
-        Bundle args = getArguments();
-        Gson gson = new Gson();
-        selectedAd= gson.fromJson(args.getString("currentAd"), Advertisement.class);
-        publisher = gson.fromJson(args.getString("currentUser"), User.class);
-        advertisementReference = database.getReference("ads/"+selectedAd.getId()+"/viewed");
+        getDataFromArguments(getArguments());
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         initView(view);
         fillViewWithCorrespondingData(view);
-        incrementNumberOfViewsOnAd();
+        incrementNumberOfViews();
         return view;
 
     }
 
+    public void incrementNumberOfViews(){
+        DataHandler.getDataHandlerInstance().incrementViewedNumberOnAd(selectedAd.getId(), selectedAd.getViewed(), new RetrieveDataListener<String>() {
+            @Override
+            public void onSucces(String data) {
+                Log.d(TAG,"Number of views successfully incremented");
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.d(TAG,"Incrementing number of views: failure");
+            }
+        });
+    }
+
+    public void getDataFromArguments(Bundle args){
+        Gson gson = new Gson();
+        selectedAd= gson.fromJson(args.getString("currentAd"), Advertisement.class);
+        publisher = gson.fromJson(args.getString("currentUser"), User.class);
+    }
 
     /*****************************************************************************************************
      The initView method of the Advertisement detail fragment
@@ -126,21 +140,5 @@ public class AdvertisementDetailFragment extends Fragment {
                 .into(userImage);
 
     }
-
-
-    /*****************************************************************************************************
-     The incrementNumberOfViewsOnAd method of the Advertisement detail fragment
-     - The number of views on an advertisement increments with every click on it.
-     This function saves the incremented value to the database/.
-     *****************************************************************************************************/
-    private void incrementNumberOfViewsOnAd(){
-        Log.d(TAG, "incrementNumberOfViewsOnAd method called.");
-        advertisementReference.setValue(String.valueOf(selectedAd.getViewed())).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("AdDetailFragment:", "Nr of viewed incremented" +  selectedAd.getViewed());
-            }});
-    }
-
 
 }
