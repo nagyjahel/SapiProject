@@ -3,7 +3,7 @@ package ro.sapientia.ms.sapvertiser.Authentication;
 import android.content.Intent;
 import android.os.Bundle;
 
-import ro.sapientia.ms.sapvertiser.Main.Fragments.AdListFragment;
+
 import ro.sapientia.ms.sapvertiser.Main.MainActivity;
 import ro.sapientia.ms.sapvertiser.R;
 import android.support.annotation.NonNull;
