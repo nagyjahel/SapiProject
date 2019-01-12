@@ -1,148 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools = "http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height = "match_parent"
-    android:background="@mipmap/login_screen"
-    tools:context=".Authentication.AuthenticationActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="361dp"
+        android:layout_height="242dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon" />
+
+    <ViewFlipper
+        android:id="@+id/authenticationLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp"
-        android:background="@android:drawable/screen_background_dark_transparent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo">
 
+        <android.support.constraint.ConstraintLayout
 
-        <ImageView
-            android:id="@+id/loginIcon"
-            android:layout_width="111dp"
-            android:layout_height="134dp"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp"
-            app:srcCompat="@drawable/common_full_open_on_phone" />
-
-        <android.support.design.widget.TextInputLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            >
+            android:layout_height="match_parent"
+            tools:context=".Authentication.AuthenticationActivity">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/phoneNumber"
+            <TextView
+                android:id="@+id/welcome1"
+                android:layout_width="363dp"
+                android:layout_height="87dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Welcome"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="40dp"
+                android:textStyle=""
+                app:fontFamily="@font/quicksand"
+                app:layout_constraintBottom_toTopOf="@+id/telephone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <android.support.design.widget.TextInputLayout
+
+                android:id="@+id/telephone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:hint="Phone"
-                android:textColor="@android:color/white"
-               />
+                android:layout_height="77dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="28dp"
+                app:layout_constraintBottom_toTopOf="@+id/getCode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/phoneNumber"
+                    android:layout_width="322dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+                    android:fontFamily="@font/quicksand_light"
+                    android:hint="Telephone"
+                    android:textSize="20dp" />
+            </android.support.design.widget.TextInputLayout>
 
-
-        <Button
-            android:id="@+id/verificationButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/verificationCode"
-            android:layout_margin="5dp"
-            android:background="@android:color/darker_gray"
-            android:text="Get Verification Code"
-            android:textAllCaps="false"
-            android:textSize="15dp"
-            android:textStyle="bold" />
-
-        <android.support.design.widget.TextInputLayout
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:layout_alignBottom="@+id/verificationButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/verificationCode"
+            <Button
+                android:id="@+id/getCode"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:hint="Enter received code"
+                android:layout_height="69dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="28dp"
+                android:background="@color/colorPrimaryDark"
+                android:duplicateParentState="false"
+                android:fontFamily="@font/quicksand"
+                android:padding="18dp"
+                android:text="get code  "
                 android:textColor="@android:color/white"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.533"
+                app:layout_constraintStart_toStartOf="parent" />
+            />
 
-                android:textColorHint="@android:color/white"
-                android:textSize="15dp" />
+        </android.support.constraint.ConstraintLayout>
+    </ViewFlipper>
 
-        </android.support.design.widget.TextInputLayout>
+    <ViewFlipper
+        android:id="@+id/signInLayout"
+        android:layout_width="match_parent"
+        android:layout_height="227dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo">
 
-        <android.support.design.widget.TextInputLayout
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
+        <android.support.constraint.ConstraintLayout
+
+
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/firstName">
+            android:layout_height="match_parent"
+            tools:context=".Authentication.AuthenticationActivity">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/firstNameValue"
+            <android.support.design.widget.TextInputLayout
+
+                android:id="@+id/textInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:hint="First name"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
-                android:textSize="15dp"
-               />
+                android:layout_height="77dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="60dp"
+                app:layout_constraintBottom_toTopOf="@+id/signIn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent">
 
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lastName">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/verificationCode"
+                    android:layout_width="322dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+                    android:fontFamily="@font/quicksand_light"
+                    android:hint="Verification code"
+                    android:textSize="20dp" />
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/lastNameValue"
+
+            <Button
+                android:id="@+id/signIn"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:hint="Last name"
+                android:layout_height="66dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="28dp"
+                android:background="@color/colorPrimaryDark"
+                android:duplicateParentState="false"
+                android:fontFamily="@font/quicksand"
+                android:padding="18dp"
+                android:text="Next"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
-                android:textSize="15dp"
-                />
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.533"
+                app:layout_constraintStart_toStartOf="parent" />
+            />
 
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/signinButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@android:color/darker_gray"
-            android:text="Sign In"
-            android:textSize="15dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/register"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="Register here!"
-            android:layout_margin="@dimen/activity_vertical_margin"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:padding="0dp"
-            android:textSize="15dp" />
-
-    </LinearLayout>
-
-
-</RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
+    </ViewFlipper>
+</android.support.constraint.ConstraintLayout>
