@@ -31,6 +31,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
@@ -72,10 +73,12 @@ public class AuthenticationActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private String sentCode;
+    private String mVerificationId;
     private String phoneNumber;
     private String userInputCode;
 
     private ViewFlipper authenticationLayout, signInLayout, registerLayout;
+    private PhoneAuthCredential phoneCredential;
 
     private static final String TAG = "AuthActivity";
 
@@ -261,6 +264,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             sentCode = phoneAuthCredential.getSmsCode();
             Log.d(TAG, "Verification completed " + sentCode);
+            signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
         @Override
@@ -272,6 +276,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             String code = s;
+            mVerificationId = s;
             Log.d(TAG, "Code " + code);
         }
     };
@@ -328,6 +333,28 @@ public class AuthenticationActivity extends AppCompatActivity {
                         Intent homeActivity = new Intent(AuthenticationActivity.this, MainActivity.class);
                         startActivity(homeActivity);
                         finish();
+                    }
+                });
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        Log.d(TAG, "signInWithCredential called");
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = task.getResult().getUser();
+
+                        } else {
+                            // Sign in failed, display a message and update the UI
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                // The verification code entered was invalid
+                            }
+                        }
                     }
                 });
     }
