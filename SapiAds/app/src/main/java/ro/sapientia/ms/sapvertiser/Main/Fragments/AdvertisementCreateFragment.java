@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +43,7 @@ import java.util.Map;
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
+import ro.sapientia.ms.sapvertiser.Main.Helpers.ImageAdapter;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.SelectPhotoDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnPhotoSelectedListener;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
@@ -56,6 +59,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private TextInputEditText adTitle;
     private TextInputEditText adContent;
     private ImageView adImage;
+    private TextView adImageText;
+    private ImageView deleteImage;
+    private TextView deleteImageText;
     private Button addButton;
     private Button cancelButton;
     private DatabaseReference advertisement;
@@ -70,6 +76,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private User publisher;
     private ActionBar toolbar;
     private Long advertisementId;
+    private ViewPager images;
 
     public AdvertisementCreateFragment() {
 
@@ -132,8 +139,13 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         adContent = view.findViewById(R.id.new_ad_content);
         addButton = view.findViewById(R.id.new_ad_button);
         adImage = view.findViewById(R.id.new_ad_image);
+        adImageText = view.findViewById(R.id.new_ad_image_text);
+        deleteImage = view.findViewById(R.id.delete_image);
+        deleteImageText = view.findViewById(R.id.delete_image_text);
         cancelButton = view.findViewById(R.id.cancel);
         addButton.setVisibility(View.INVISIBLE);
+        images = view.findViewById(R.id.ad_images);
+
 
         if (args != null && !args.isEmpty()) {
             advertisementId = args.getLong("adId");
@@ -162,6 +174,16 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             }
         });
 
+        adImageText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "opening dialog to choose new photo");
+                SelectPhotoDialog selectPhotoDialog = new SelectPhotoDialog();
+                selectPhotoDialog.show(getFragmentManager(), getString(R.string.dialog_select_photo));
+                selectPhotoDialog.setTargetFragment(AdvertisementCreateFragment.this, 1);
+            }
+        });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -392,10 +414,8 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                 adTitle.setText(advertisement.getTitle());
                 adContent.setText(advertisement.getContent());
                 addButton.setText("Update");
-                if(!advertisement.getImageUrl().equals("")){
-                    Glide.with(view.getContext())
-                            .load(advertisement.getImageUrl())
-                            .into(adImage);
+                if(advertisement.getImageUrl().size()!= 0){
+                    images.setAdapter(new ImageAdapter(getContext(), advertisement.getImageUrl()));
                 }
 
             }

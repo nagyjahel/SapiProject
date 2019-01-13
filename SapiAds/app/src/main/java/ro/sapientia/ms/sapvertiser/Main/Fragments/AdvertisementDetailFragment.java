@@ -29,6 +29,8 @@ import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.R;
 
+import static android.view.View.GONE;
+
 
 public class AdvertisementDetailFragment extends Fragment {
 
@@ -130,7 +132,15 @@ public class AdvertisementDetailFragment extends Fragment {
         content.setText(selectedAd.getContent());
         selectedAd.incrementViewed();
         viewed.setText(String.valueOf(selectedAd.getViewed()));
-        imageSlider.setAdapter(new ImageAdapter(getActivity(),selectedAd.getImageUrl()));
+
+        if(selectedAd.getImageUrl().size()==0){
+            imageSlider.setVisibility(GONE);
+        }
+        else{
+            imageSlider.setAdapter(new ImageAdapter(getActivity(),selectedAd.getImageUrl()));
+        }
+
+
         userName.setText(publisher.getLastName()+ " " + publisher.getFirstName());
         Glide.with(view.getContext())
                 .asBitmap()
