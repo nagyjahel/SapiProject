@@ -80,23 +80,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
-    <ImageView
-        android:adjustViewBounds="true"
-        android:id="@+id/ad_image"
-        android:layout_width="fill_parent"
-        android:scaleType="fitXY"
-        android:layout_height="wrap_content"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/ad_images"
+        android:layout_width="match_parent"
+        android:layout_height="241dp"
         android:layout_below="@+id/ad_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toTopOf="@+id/viewed_nr"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ad_content" />
-
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"
@@ -116,27 +115,25 @@
         android:id="@+id/viewed_nr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ad_image"
+        android:layout_below="@+id/ad_images"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/ad_image" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_below="@+id/ad_image"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_below="@+id/ad_images"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_toStartOf="@+id/viewed_nr"
         android:layout_toLeftOf="@+id/viewed_nr"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ad_image"
         app:srcCompat="@mipmap/eyes" />
 </android.support.constraint.ConstraintLayout>

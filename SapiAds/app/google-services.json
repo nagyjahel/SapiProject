@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "799855020452-vidn774fgslafpmo565gd2rogvgpddr3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ro.sapientia.ms.sapvertiser",
+            "certificate_hash": "8a9f063b05dfb195db8d5d46e58662accaf15c7e"
+          }
+        },
+        {
           "client_id": "799855020452-bqf7fsjb0a3lt3tui6658fv2hqebof8v.apps.googleusercontent.com",
           "client_type": 3
         }

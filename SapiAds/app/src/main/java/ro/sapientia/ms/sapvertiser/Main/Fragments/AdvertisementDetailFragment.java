@@ -3,6 +3,7 @@ package ro.sapientia.ms.sapvertiser.Main.Fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementReportDeleteDialog;
+import ro.sapientia.ms.sapvertiser.Main.Helpers.ImageAdapter;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.R;
@@ -45,7 +47,7 @@ public class AdvertisementDetailFragment extends Fragment {
     private OnDialogButtonClicked listener;
     private RetrieveDataListener<String> onDeleteListener;
     private RetrieveDataListener<String> onReportListener;
-
+    private ViewPager imageSlider;
     public AdvertisementDetailFragment(){
 
     }
@@ -72,6 +74,8 @@ public class AdvertisementDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView method called.");
+
+
         getDataFromArguments(getArguments());
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         initView(view);
@@ -93,12 +97,16 @@ public class AdvertisementDetailFragment extends Fragment {
      *****************************************************************************************************/
     private void initView(View view) {
         Log.d(TAG, "initView method called.");
+        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), selectedAd.getImageUrl());
+
         title = view.findViewById(R.id.ad_title);
         content = view.findViewById(R.id.ad_content);
-        image = view.findViewById(R.id.ad_image);
+        //image = view.findViewById(R.id.ad_image);
         userImage = view.findViewById(R.id.ad_user_image);
         userName = view.findViewById(R.id.ad_user_name);
         viewed = view.findViewById(R.id.viewed_nr);
+        imageSlider = view.findViewById(R.id.ad_images);
+        imageSlider.setAdapter(imageAdapter);
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -122,13 +130,8 @@ public class AdvertisementDetailFragment extends Fragment {
         content.setText(selectedAd.getContent());
         selectedAd.incrementViewed();
         viewed.setText(String.valueOf(selectedAd.getViewed()));
-
-        Glide.with(view.getContext())
-                .load(selectedAd.getImageUrl())
-                .into(image);
-
+        imageSlider.setAdapter(new ImageAdapter(getActivity(),selectedAd.getImageUrl()));
         userName.setText(publisher.getLastName()+ " " + publisher.getFirstName());
-
         Glide.with(view.getContext())
                 .asBitmap()
                 .load(publisher.getPhotoUrl())

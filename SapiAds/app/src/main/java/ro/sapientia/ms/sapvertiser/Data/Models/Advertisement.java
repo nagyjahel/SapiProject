@@ -1,20 +1,23 @@
 package ro.sapientia.ms.sapvertiser.Data.Models;
 
+import java.util.ArrayList;
+
 public class Advertisement {
 
     private long id;
     private String title;
-    private String imageUrl;
+    private ArrayList<String> imageUrls;
     private String content;
     private String publishingUserId;
     private int isReported;
     private int isVisible;
     private int viewed;
 
-    public Advertisement(long id, String title, String imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {
+
+    public Advertisement(long id, String title, ArrayList<String> imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {
         this.id = id;
         this.title = title;
-        this.imageUrl = imageUrl;
+        this.imageUrls = imageUrl;
         this.content = content;
         this.publishingUserId = publishingUserId;
         this.isReported = isReported;
@@ -30,12 +33,12 @@ public class Advertisement {
         this.title = title;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public ArrayList<String> getImageUrl() {
+        return imageUrls;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrl(ArrayList<String> imageUrl) {
+        this.imageUrls = imageUrl;
     }
 
     public String getContent() {

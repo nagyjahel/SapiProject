@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,15 +61,15 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private DatabaseReference advertisement;
     private String newKey;
     private Bitmap selectedImageBitmap;
-    private Uri selectedUri;
-    private byte[] uploadedBytes;
+    private Uri selectedUri = null;
+    private byte[] uploadedBytes = null;
     private ProgressDialog progressDialog;
     private Uri downloadUrl;
     private String photoToUpload;
     private Advertisement selectedAd;
     private User publisher;
     private ActionBar toolbar;
-
+    private Long advertisementId;
 
     public AdvertisementCreateFragment() {
 
@@ -131,33 +133,23 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         addButton = view.findViewById(R.id.new_ad_button);
         adImage = view.findViewById(R.id.new_ad_image);
         cancelButton = view.findViewById(R.id.cancel);
+        addButton.setVisibility(View.INVISIBLE);
 
         if (args != null && !args.isEmpty()) {
-            fillWithData(args.getLong("adId"), view);
-        }
-        else {
-            addButton.setVisibility(View.INVISIBLE);
+            advertisementId = args.getLong("adId");
+            fillWithData(advertisementId, view);
+            addButton.setText("Update");
+        } else {
+            advertisementId= Long.valueOf(newKey);
             addButton.setText("Save");
-            addButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (allRequiredDataExist()) {
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        progressDialog.setTitle("Uploading your advertisement ... ");
-                        progressDialog.show();
-                        if (selectedImageBitmap != null && selectedUri == null) {
-                            uploadPhoto(selectedImageBitmap);
-                        } else if (selectedImageBitmap == null && selectedUri != null) {
-                            uploadPhoto(selectedUri);
-                        }
-
-                    } else {
-                        Toast toast = Toast.makeText(view.getContext(), "Please, fill all the fields!", Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-                }
-            });
         }
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadAdvertisement(String.valueOf(advertisementId), view);
+            }
+        });
 
         adImage.setOnClickListener(new View.OnClickListener() {
 
@@ -177,6 +169,80 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             }
         });
 
+        adTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!adContent.getText().toString().matches("")) {
+                    addButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        adContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!adTitle.getText().toString().matches("")) {
+                    addButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+
+    private void uploadAdvertisement(String key, View view) {
+        if (allRequiredDataExist()) {
+            if (selectedImageBitmap != null && selectedUri == null) {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setTitle("Uploading your advertisement ... ");
+                progressDialog.show();
+                uploadPhoto(selectedImageBitmap);
+            } else if (selectedImageBitmap == null && selectedUri != null) {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setTitle("Uploading your advertisement ... ");
+                progressDialog.show();
+                uploadPhoto(selectedUri);
+            } else if (selectedImageBitmap == null && selectedUri == null) {
+                DataHandler.getDataHandlerInstance().uploadAdvertisement(key, prepareData(), new RetrieveDataListener<String>() {
+                    @Override
+                    public void onSucces(String data) {
+                        Toast.makeText(getContext(), "Your advertisement had been uploaded", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(getContext(), "Something went wrong. Please, try again a bit later!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+            }
+
+        } else {
+            Toast toast = Toast.makeText(view.getContext(), "Please, fill all the fields!", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     /*****************************************************************************************************
@@ -200,10 +266,15 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         Map<String, String> map = new HashMap<>();
         map.put("title", adTitle.getText().toString());
         map.put("content", adContent.getText().toString());
-        map.put("imageUrl", downloadUrl.toString());
+        if (downloadUrl != null) {
+            map.put("imageUrl", downloadUrl.toString());
+        } else {
+            map.put("imageUrl", "");
+        }
         map.put("isReported", "0");
         map.put("isVisible", "1");
-        map.put("publishingUserId", loggedUser.getPhoneNumber());
+        map.put("publishingUserId", "+16505553434");
+        //map.put("publishingUserId", loggedUser.getPhoneNumber());
         map.put("viewed", "1");
         return map;
     }
@@ -321,9 +392,12 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                 adTitle.setText(advertisement.getTitle());
                 adContent.setText(advertisement.getContent());
                 addButton.setText("Update");
-                Glide.with(view.getContext())
-                        .load(advertisement.getImageUrl())
-                        .into(adImage);
+                if(!advertisement.getImageUrl().equals("")){
+                    Glide.with(view.getContext())
+                            .load(advertisement.getImageUrl())
+                            .into(adImage);
+                }
+
             }
 
             @Override

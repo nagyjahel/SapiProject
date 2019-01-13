@@ -16,7 +16,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.CharArrayReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
@@ -65,10 +67,15 @@ public class DataHandler implements IDataHandler {
             int isReported = Integer.parseInt((String) dataSnapshot.child("isReported").getValue());
             int isVisible = Integer.parseInt((String) dataSnapshot.child("isVisible").getValue());
             String title = (String) dataSnapshot.child("title").getValue();
-            String photoUrl = (String) dataSnapshot.child("imageUrl").getValue();
+            ArrayList<String> photos = new ArrayList<>();
+
+            for(DataSnapshot dataSnapshot1: dataSnapshot.child("imageUrl").getChildren()){
+                photos.add((String)dataSnapshot1.getValue());
+            }
+
             String content = (String) dataSnapshot.child("content").getValue();
             String publishingUserId = (String) dataSnapshot.child("publishingUserId").getValue();
-            return new Advertisement(id, title, photoUrl, content, publishingUserId, isReported, isVisible, viewed);
+            return new Advertisement(id, title, photos, content, publishingUserId, isReported, isVisible, viewed);
 
     }
 
@@ -118,7 +125,7 @@ public class DataHandler implements IDataHandler {
 
     @Override
     public void getAdvertisements(final RetrieveDataListener<ArrayList<Advertisement>> callback) {
-        firebaseDatabase.getReference("ads").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.getReference("ads").orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             ArrayList<Advertisement> advertisements = new ArrayList<>();
 
             @Override
@@ -130,6 +137,7 @@ public class DataHandler implements IDataHandler {
                         }
                     }
                 }
+                Collections.reverse(advertisements);
                 callback.onSucces(advertisements);
             }
 
@@ -158,13 +166,24 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
-    public void uploadAdvertisement(Map<String, String> values, RetrieveDataListener<Advertisement> callback) {
+    public void uploadAdvertisement(final String key, Map<String, String> values, final RetrieveDataListener<String> callback) {
+        databaseReference.child("ads/"+key).setValue(values).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                callback.onSucces(key);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFailure(key);
+            }
+        });
 
     }
 
     @Override
     public void uploadAdvertisementWithPhotos(final Map<String, String> values, final RetrieveDataListener<Advertisement> callback, byte[] bytes, String path) {
-        storageReference.putBytes(bytes)
+        /*storageReference.putBytes(bytes)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -197,8 +216,8 @@ public class DataHandler implements IDataHandler {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         //callback.onProgress();
-                    }
-                });
+                    }*
+                });*/
     }
 
     @Override

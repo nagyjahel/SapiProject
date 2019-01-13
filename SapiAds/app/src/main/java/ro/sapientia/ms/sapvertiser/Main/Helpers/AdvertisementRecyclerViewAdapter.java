@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -118,9 +119,13 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
                 .load(currentUser.getPhotoUrl())
                 .into(viewHolder.userImage);
 
-        Glide.with(viewHolder.itemView.getContext())
-                .load(currentAd.getImageUrl())
-                .into(viewHolder.adImage);
+        if(currentAd.getImageUrl().size() == 0 ){
+            viewHolder.adImage.setVisibility(View.GONE);
+        }
+        else{
+            ImageAdapter imageAdapter = new ImageAdapter(fragmentActivity, currentAd.getImageUrl());
+            viewHolder.adImage.setAdapter(imageAdapter);
+        }
 
         viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
         viewHolder.adTitle.setText(currentAd.getTitle());
@@ -158,7 +163,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         TextView userName;
         TextView adTitle;
         TextView adContent;
-        ImageView adImage;
+        ViewPager adImage;
         TextView nrViews;
 
         public ViewHolder(@NonNull View itemView) {
@@ -168,7 +173,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
             userName = itemView.findViewById(R.id.ad_user_name);
             adTitle = itemView.findViewById(R.id.ad_title);
             adContent = itemView.findViewById(R.id.ad_content);
-            adImage = itemView.findViewById(R.id.ad_image);
+            adImage = itemView.findViewById(R.id.ad_images);
             nrViews = itemView.findViewById(R.id.viewed_nr);
         }
     }
