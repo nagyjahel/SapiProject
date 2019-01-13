@@ -14,12 +14,12 @@ public class Navigation {
         return navigation;
     }
 
-    public void changeFragment(FragmentManager fragmentManager, Fragment fragment, boolean addToBackStack, Bundle bundle){
+    public void changeFragment(FragmentManager fragmentManager, Fragment fragment, boolean addToBackStack, Bundle bundle, String tag){
             if(bundle != null){
                 fragment.setArguments(bundle);
             }
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_placeholder, fragment);
+            fragmentTransaction.replace(R.id.fragment_placeholder, fragment, tag);
             if(addToBackStack){
                 fragmentTransaction.addToBackStack(null);
             }

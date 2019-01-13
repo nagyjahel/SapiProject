@@ -44,16 +44,22 @@ public class AdvertisementDetailFragment extends Fragment {
     private FirebaseUser loggedUser;
     private OnDialogButtonClicked listener;
     private RetrieveDataListener<String> onDeleteListener;
+    private RetrieveDataListener<String> onReportListener;
+
+    public AdvertisementDetailFragment(){
+
+    }
 
     /*****************************************************************************************************
      The constructor of the Advertisement detail fragment
      *****************************************************************************************************/
     @SuppressLint("ValidFragment")
-    public AdvertisementDetailFragment(RetrieveDataListener<String> onDeleteListener) {
+    public AdvertisementDetailFragment(RetrieveDataListener<String> onDeleteListener, RetrieveDataListener<String> onReportListener) {
         Log.d(TAG, "Constructor called");
         this.auth = FirebaseAuth.getInstance();
         this.loggedUser = auth.getCurrentUser();
         this.onDeleteListener = onDeleteListener;
+        this.onReportListener = onReportListener;
     }
 
 
@@ -70,23 +76,8 @@ public class AdvertisementDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         initView(view);
         fillViewWithCorrespondingData(view);
-        incrementNumberOfViews();
         return view;
 
-    }
-
-    public void incrementNumberOfViews(){
-        DataHandler.getDataHandlerInstance().incrementViewedNumberOnAd(selectedAd.getId(), selectedAd.getViewed(), new RetrieveDataListener<String>() {
-            @Override
-            public void onSucces(String data) {
-                Log.d(TAG,"Number of views successfully incremented");
-            }
-
-            @Override
-            public void onFailure(String message) {
-                Log.d(TAG,"Incrementing number of views: failure");
-            }
-        });
     }
 
     public void getDataFromArguments(Bundle args){
@@ -112,7 +103,7 @@ public class AdvertisementDetailFragment extends Fragment {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener, onDeleteListener);
+                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener, onDeleteListener, onReportListener);
                 dialog.show(getFragmentManager(),getString(R.string.dialog_manage_advertisement ));
                 dialog.setTargetFragment(AdvertisementDetailFragment.this,1);
                 return true;
@@ -131,6 +122,7 @@ public class AdvertisementDetailFragment extends Fragment {
         content.setText(selectedAd.getContent());
         selectedAd.incrementViewed();
         viewed.setText(String.valueOf(selectedAd.getViewed()));
+
         Glide.with(view.getContext())
                 .load(selectedAd.getImageUrl())
                 .into(image);

@@ -47,6 +47,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
     private long currentAdId;
     private OnDialogButtonClicked mListener;
     private RetrieveDataListener<String > onDeleteListener;
+    private RetrieveDataListener<String > onReportListener;
     /*****************************************************************************************************
      The default constructor of the AdvertisementReportDeleteDialog class
      *****************************************************************************************************/
@@ -61,14 +62,16 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
      - initiates the member variables
      *****************************************************************************************************/
     @SuppressLint("ValidFragment")
-    public AdvertisementReportDeleteDialog(long adId, OnDialogButtonClicked listener, RetrieveDataListener<String> onDeleteListener){
+    public AdvertisementReportDeleteDialog(long adId, OnDialogButtonClicked listener, RetrieveDataListener<String> onDeleteListener, RetrieveDataListener<String> onReportListener){
         mListener = listener;
         currentAdId = adId;
         auth = FirebaseAuth.getInstance();
+
         loggedUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("ads/" + adId);
         this.onDeleteListener = onDeleteListener;
+        this.onReportListener = onReportListener;
     }
 
 
@@ -90,7 +93,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String publishingUserId = (String)dataSnapshot.getValue();
-
+                String loggedUserNumber = "+16505553434";
                 if(loggedUser.getPhoneNumber().equals(publishingUserId)){
                     editAdvertisement.setVisibility(View.VISIBLE);
                     editAdvertisement.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +104,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
                             Bundle bundle = new Bundle();
                             Log.d("AdRepDeleteDialog", "Advertisement id: " + currentAdId);
                             bundle.putLong("adId", currentAdId);
-                            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementCreateFragment(),false, bundle);
+                            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementCreateFragment(),true, bundle, "AdCreateFragment");
                         }
                     });
 
@@ -116,7 +119,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
                                     switch (which){
                                         case DialogInterface.BUTTON_POSITIVE:
                                             DataHandler.getDataHandlerInstance().deleteAdvertisement(currentAdId, onDeleteListener);
-                                            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementListFragment(), false, null);
+                                            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
                                             break;
 
                                         case DialogInterface.BUTTON_NEGATIVE:
@@ -145,13 +148,8 @@ public class AdvertisementReportDeleteDialog extends DialogFragment  {
 
                                     switch (which){
                                         case DialogInterface.BUTTON_POSITIVE:
-                                            databaseReference.child("isReported").setValue("1").addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    mListener.reportAdvertisementResult();
-
-                                                }
-                                            });
+                                            DataHandler.getDataHandlerInstance().reportAdvertisement(currentAdId, onReportListener);
+                                            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
                                             break;
 
                                         case DialogInterface.BUTTON_NEGATIVE:

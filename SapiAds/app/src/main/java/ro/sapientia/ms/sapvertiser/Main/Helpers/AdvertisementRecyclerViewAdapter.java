@@ -38,14 +38,16 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
     private ArrayList<Advertisement> mAds;
     private FragmentActivity fragmentActivity;
     private RetrieveDataListener<String> onDeleteListener;
+    private RetrieveDataListener<String> onReportListener;
     /*****************************************************************************************************
      The constructor of the Advertisement Recycler View Adapter
      *****************************************************************************************************/
-    public AdvertisementRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Advertisement> Ads, RetrieveDataListener<String> onDeleteListener) {
+    public AdvertisementRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<User> Users, ArrayList<Advertisement> Ads, RetrieveDataListener<String> onDeleteListener, RetrieveDataListener<String> onReportListener) {
         this.mAds = Ads;
         this.mUsers = Users;
         this.fragmentActivity = fragmentActivity;
         this.onDeleteListener = onDeleteListener;
+        this.onReportListener = onReportListener;
     }
 
 
@@ -127,7 +129,22 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.getNavigationInstance().changeFragment(fragmentActivity.getSupportFragmentManager(), new AdvertisementDetailFragment(onDeleteListener),true, createArguments(currentAd,currentUser));
+                incrementNumberOfViewsOnAdvertisement(currentAd);
+                Navigation.getNavigationInstance().changeFragment(fragmentActivity.getSupportFragmentManager(), new AdvertisementDetailFragment(onDeleteListener, onReportListener),true, createArguments(currentAd,currentUser), "AdDetailFragment");
+            }
+        });
+    }
+
+    public void incrementNumberOfViewsOnAdvertisement(Advertisement advertisement){
+        DataHandler.getDataHandlerInstance().incrementViewedNumberOnAd(advertisement.getId(), advertisement.getViewed(), new RetrieveDataListener<String>() {
+            @Override
+            public void onSucces(String data) {
+                Log.d(TAG,"Number of views successfully incremented");
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.d(TAG,"Incrementing number of views: failure");
             }
         });
     }

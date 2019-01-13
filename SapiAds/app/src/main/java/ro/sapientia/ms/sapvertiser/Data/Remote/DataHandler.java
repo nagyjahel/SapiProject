@@ -202,6 +202,23 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
+    public void reportAdvertisement(final long advertisementId, final RetrieveDataListener<String> callback) {
+        firebaseDatabase.getReference("ads/" + advertisementId + "/isReported").setValue("1")
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.onSucces(Long.toString(advertisementId));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
+    }
+
+    @Override
     public void deleteAdvertisement(final long advertisementId, final RetrieveDataListener<String> callback) {
         firebaseDatabase.getReference("ads/" + advertisementId + "/isVisible").setValue("0")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

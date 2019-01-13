@@ -7,11 +7,12 @@
     android:layout_height="fill_parent"
     tools:context=".Main.MainActivity">
 
+
     <LinearLayout
         android:id="@+id/fragment_placeholder"
         android:name="com.example.nagyjahel.sapiads.Main.AdListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="horizontal"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/navigation"

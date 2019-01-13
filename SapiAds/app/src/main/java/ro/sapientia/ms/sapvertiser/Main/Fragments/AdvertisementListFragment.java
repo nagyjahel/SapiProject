@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
@@ -35,13 +36,13 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
 
         @Override
         public void deleteAdvertisementResult() {
-            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(),new AdvertisementListFragment(),false, null);
+            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(),new AdvertisementListFragment(),false, null, TAG);
             Toast.makeText(getContext(), "Your advertisement has been deleted!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void reportAdvertisementResult() {
-            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(),new AdvertisementListFragment(),false, null);
+            Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(),new AdvertisementListFragment(),false, null,TAG);
             Toast.makeText(getContext(), "Thank you for reporting inappropiate advertisement!", Toast.LENGTH_SHORT).show();
         }
 
@@ -89,6 +90,17 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
             public void onFailure(String message) {
                 Toast.makeText(getContext(),"Unsuccessfull delete", Toast.LENGTH_SHORT).show();
             }
+        }, new RetrieveDataListener<String>(){
+
+            @Override
+            public void onSucces(String data) {
+                Toast.makeText(getContext(),"Successfull report", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(getContext(),"Unsuccessfull delete", Toast.LENGTH_SHORT).show();
+            }
         });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -106,11 +118,17 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
             @Override
             public void onSucces(ArrayList<User> data) {
                 Log.d(TAG, "Get users from database: success.");
+                if(users.size() != 0 ){
+                    users.clear();
+                }
                 users.addAll(data);
                 DataHandler.getDataHandlerInstance().getAdvertisements(new RetrieveDataListener<ArrayList<Advertisement>>() {
                     @Override
                     public void onSucces(ArrayList<Advertisement> data) {
                         Log.d(TAG, "Get advertisements from database: success.");
+                        if(advertisements.size() != 0 ){
+                            advertisements.clear();
+                        }
                         advertisements.addAll(data);
                         adapter.notifyDataSetChanged();
                     }
