@@ -3,9 +3,13 @@ package ro.sapientia.ms.sapvertiser.Main.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +43,7 @@ import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.Main.MainActivity;
+import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
 public class ProfileFragment extends Fragment {
@@ -86,9 +91,6 @@ public class ProfileFragment extends Fragment {
 
 
         mAuth = FirebaseAuth.getInstance();
-        /**String key = Long.toString(System.currentTimeMillis());
-         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-         final DatabaseReference ref = database.getReference("ads/" + key);**/
         currentUser = mAuth.getCurrentUser();
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -147,14 +149,23 @@ public class ProfileFragment extends Fragment {
                 if(firstnameUpdated == true && lastnameUpdated == true){
                     Toast.makeText(getActivity(), "Your profile has been updated.",
                             Toast.LENGTH_LONG).show();
-                    getUserDetails();
+                    Fragment fragment = new ProfileFragment();
+                    replaceFragment(fragment);
+
+                    //getUserDetails();
                 }
 
             }
         });
 
-
         return view;
+    }
+
+    public void replaceFragment(Fragment someFragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_placeholder, someFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void getUserDetails() {
