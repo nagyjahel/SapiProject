@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,10 +65,12 @@ public class AuthenticationActivity extends AppCompatActivity {
      private android.support.design.widget.TextInputEditText mFirstNameValue;
      private android.support.design.widget.TextInputEditText mLastNameValue;
      private android.support.design.widget.TextInputLayout mLastName;
+     private TextView mOtherSignInOptions;
 
     private Button mGetCodeButton;
     private Button mSignInButton;
     private Button mRegisterButton;
+
     private android.widget.ProgressBar mProgressBar;
 
     private Animation slide_in_left, slide_out_left, slide_in_right, slide_out_right;
@@ -102,7 +105,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         authenticationLayout = findViewById(R.id.authenticationLayout);
         signInLayout = findViewById(R.id.signInLayout);
         registerLayout = findViewById(R.id.registerLayout);
-
+        mOtherSignInOptions = findViewById(R.id.other_signin_option);
+        mOtherSignInOptions.setVisibility(View.VISIBLE);
         authenticationLayout.setInAnimation(slide_in_right);
         signInLayout.setInAnimation(slide_in_right);
         registerLayout.setInAnimation(slide_in_right);
@@ -125,6 +129,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         mRegisterButton = findViewById(R.id.register);
         mRegisterButton.setVisibility(View.INVISIBLE);
 
+
         mFirstName = findViewById(R.id.firstNameInputLayout);
         mFirstNameValue = findViewById(R.id.firstNameValue);
         mLastNameValue = findViewById(R.id.lastNameValue);
@@ -144,7 +149,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-
+                mOtherSignInOptions.setVisibility(View.GONE);
             }
         });
 
@@ -183,6 +188,16 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             }
         });
+
+        mOtherSignInOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d(TAG, "Other sign in options pressed");
+
+            }
+        });
+
 
         mGetCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override

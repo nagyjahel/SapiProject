@@ -21,11 +21,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
@@ -36,7 +38,7 @@ public class ProfileFragment extends Fragment {
     private TextInputEditText mFirstNameValue;
     private TextInputEditText mLastNameValue;
     private EditText mPhoneNumber;
-    private ImageButton mProfilePicture;
+    private CircleImageView mProfilePicture;
 
     private TextInputLayout mFirstNameInputLayout;
     private TextInputLayout mLastNameInputLayout;
@@ -44,7 +46,6 @@ public class ProfileFragment extends Fragment {
 
     private Button mSaveButton;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
 
     private DataHandler dataHandler;
     private DatabaseReference databaseReference;
@@ -185,6 +186,10 @@ public class ProfileFragment extends Fragment {
                 mPhoneNumber.setText(data.getTelephone());
                 mFirstNameValue.setText(data.getFirstName());
                 mLastNameValue.setText(data.getLastName());
+                Glide.with(getContext())
+                        .asBitmap()
+                        .load(data.getPhotoUrl())
+                        .into(mProfilePicture);
                 mSaveButton.setVisibility(View.GONE);
             }
 
