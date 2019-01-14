@@ -6,4 +6,6 @@
     <color name="black">#000000</color>
     <color name="colorGrey">#464749</color>
     <color name="lightGrey">#d1d1d1</color>
+    <color name="ashGrey">#B2BEB5</color>
+    <color name="metalSaurus">#6E7F80</color>
 </resources>

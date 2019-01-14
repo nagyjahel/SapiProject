@@ -1,44 +1,36 @@
 package ro.sapientia.ms.sapvertiser.Main.Fragments;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import ro.sapientia.ms.sapvertiser.Authentication.AuthenticationActivity;
-import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import de.hdodenhof.circleimageview.CircleImageView;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
-import ro.sapientia.ms.sapvertiser.Main.MainActivity;
 import ro.sapientia.ms.sapvertiser.R;
 
 public class ProfileFragment extends Fragment {
@@ -46,7 +38,7 @@ public class ProfileFragment extends Fragment {
     private TextInputEditText mFirstNameValue;
     private TextInputEditText mLastNameValue;
     private EditText mPhoneNumber;
-    private ImageButton mProfilePicture;
+    private CircleImageView mProfilePicture;
 
     private TextInputLayout mFirstNameInputLayout;
     private TextInputLayout mLastNameInputLayout;
@@ -54,7 +46,6 @@ public class ProfileFragment extends Fragment {
 
     private Button mSaveButton;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
 
     private DataHandler dataHandler;
     private DatabaseReference databaseReference;
@@ -86,9 +77,6 @@ public class ProfileFragment extends Fragment {
 
 
         mAuth = FirebaseAuth.getInstance();
-        /**String key = Long.toString(System.currentTimeMillis());
-         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-         final DatabaseReference ref = database.getReference("ads/" + key);**/
         currentUser = mAuth.getCurrentUser();
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -107,6 +95,42 @@ public class ProfileFragment extends Fragment {
 
 
         getUserDetails();
+
+        mFirstNameValue.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Log.d(TAG, "Verification code field changed.");
+                mSaveButton.setVisibility(View.VISIBLE);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
+
+        mLastNameValue.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Log.d(TAG, "Verification code field changed.");
+                mSaveButton.setVisibility(View.VISIBLE);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,18 +168,15 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-                if(firstnameUpdated == true && lastnameUpdated == true){
-                    Toast.makeText(getActivity(), "Your profile has been updated.",
-                            Toast.LENGTH_LONG).show();
-                    getUserDetails();
-                }
+                Log.d(TAG, "Update is ready");
+                successfulUpdateDialog();
 
             }
         });
 
-
         return view;
     }
+
 
     private void getUserDetails() {
         DataHandler.getDataHandlerInstance().getUser(currentUser.getPhoneNumber(), new RetrieveDataListener<User>(){
@@ -165,6 +186,11 @@ public class ProfileFragment extends Fragment {
                 mPhoneNumber.setText(data.getTelephone());
                 mFirstNameValue.setText(data.getFirstName());
                 mLastNameValue.setText(data.getLastName());
+                Glide.with(getContext())
+                        .asBitmap()
+                        .load(data.getPhotoUrl())
+                        .into(mProfilePicture);
+                mSaveButton.setVisibility(View.GONE);
             }
 
             @Override
@@ -175,5 +201,29 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private void successfulUpdateDialog() {
+        AlertDialog dialog;
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+        alertDialog.setTitle("Successful update");
+        alertDialog.setCancelable(false);
+
+        alertDialog.setIcon(R.drawable.success_icon);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //refresh profile fragment
+                Fragment fragment = new ProfileFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.detach(fragment);
+                fragmentTransaction.attach(fragment);
+                final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                mSaveButton.setVisibility(View.GONE);
+
+            }
+        });
+
+        dialog = alertDialog.create();
+        dialog.show();
+    }
 
 }
