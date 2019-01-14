@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -67,6 +68,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private Button mGetCodeButton;
     private Button mSignInButton;
     private Button mRegisterButton;
+    private android.widget.ProgressBar mProgressBar;
 
     private Animation slide_in_left, slide_out_left, slide_in_right, slide_out_right;
 
@@ -79,6 +81,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private ViewFlipper authenticationLayout, signInLayout, registerLayout;
     private PhoneAuthCredential phoneCredential;
+
 
     private static final String TAG = "AuthActivity";
 

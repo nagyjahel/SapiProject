@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void logOutPopUp() {
         AlertDialog dialog;
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.ThemeOverlay_MaterialComponents_Dialog_Alert);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
         alertDialog.setTitle("Log out");
         alertDialog.setMessage("Are you sure you want to log out?");
         alertDialog.setCancelable(false);
