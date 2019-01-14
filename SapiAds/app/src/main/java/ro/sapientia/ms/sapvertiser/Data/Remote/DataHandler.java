@@ -221,7 +221,7 @@ public class DataHandler implements IDataHandler {
             public void onSucces(Advertisement data) {
                 data.getImageUrl().add(newPhotoUri.toString());
                 for(int i=0; i<  data.getImageUrl().size(); ++i){
-                    databaseReference.child("ads/"+key).child(String.valueOf(i)).setValue( data.getImageUrl().get(i));
+                    databaseReference.child("ads/"+key + "/imageUrl/").child(String.valueOf(i)).setValue( data.getImageUrl().get(i));
                 }
                 callback.onSucces(data);
             }

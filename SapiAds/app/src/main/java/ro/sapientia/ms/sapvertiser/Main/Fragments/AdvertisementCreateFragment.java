@@ -149,7 +149,8 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         cancelButton = view.findViewById(R.id.cancel);
         addButton.setVisibility(View.INVISIBLE);
         images = view.findViewById(R.id.ad_images);
-
+        imageAdapter = new ImageAdapter(getActivity(), new ArrayList<String>());
+        images.setAdapter(imageAdapter);
 
         if (args != null && !args.isEmpty()) {
             advertisementId = args.getLong("adId");
@@ -164,6 +165,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             @Override
             public void onClick(View v) {
                 uploadAdvertisement(String.valueOf(advertisementId), view);
+
             }
         });
 
@@ -239,17 +241,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
 
     private void uploadAdvertisement(String key, View view) {
         if (allRequiredDataExist()) {
-            if (selectedImageBitmap != null && selectedUri == null) {
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setTitle("Uploading your advertisement ... ");
-                progressDialog.show();
-                uploadPhoto(selectedImageBitmap);
-            } else if (selectedImageBitmap == null && selectedUri != null) {
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setTitle("Uploading your advertisement ... ");
-                progressDialog.show();
-                uploadPhoto(selectedUri);
-            } else if (selectedImageBitmap == null && selectedUri == null) {
+
                 DataHandler.getDataHandlerInstance().uploadAdvertisement(key, prepareData(), new RetrieveDataListener<String>() {
                     @Override
                     public void onSucces(String data) {
@@ -262,8 +254,16 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                         Toast.makeText(getContext(), "Something went wrong. Please, try again a bit later!", Toast.LENGTH_SHORT).show();
                     }
                 });
-                Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+
+            if (selectedUris.size() != 0 || selectedImageBitmaps.size()!=0) {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setTitle("Uploading your advertisement ... ");
+                progressDialog.show();
+                uploadPhoto();
             }
+
+                Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+
 
         } else {
             Toast toast = Toast.makeText(view.getContext(), "Please, fill all the fields!", Toast.LENGTH_LONG);
@@ -295,7 +295,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         map.put("imageUrl", "");
         map.put("isReported", "0");
         map.put("isVisible", "1");
-        map.put("publishingUserId", loggedUser.getPhoneNumber());
+        map.put("publishingUserId", "+16505553434");
         map.put("viewed", "1");
         return map;
     }
@@ -330,11 +330,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
      The uploadPhoto method of the Advertisement create fragment
      - Will start the upload of the photo - even if it was selected, or taken with camera
      *****************************************************************************************************/
-    private void uploadPhoto(Bitmap bitmap) {
+    private void uploadPhoto() {
         progressDialog.incrementProgressBy(10);
         Log.d(TAG, "Upload new image bitmap to storage");
-
-
         for(Bitmap bitmap1:selectedImageBitmaps){
             BackgroundImageResize resize = new BackgroundImageResize(bitmap1);
             Uri uri = null;
@@ -348,20 +346,13 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         }
     }
 
-    private void uploadPhoto(Uri imagePath) {
-        progressDialog.incrementProgressBy(10);
-        Log.d(TAG, "Upload new photo uri to storage");
-
-    }
-
-
     /*****************************************************************************************************
      The executeUploadTask method of the Advertisement create fragment
      - Will upload the advertisement to the database
      *****************************************************************************************************/
     private void executeUploadTask(byte[] bytes) {
         progressDialog.incrementProgressBy(15);
-        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("ads/" + newKey + "/imageUrl");
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("ads/" + advertisementId + "/imageUrl"+Long.toString(System.currentTimeMillis()));
         UploadTask uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -373,6 +364,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                         DataHandler.getDataHandlerInstance().uploadAdvertisementWithPhoto(advertisementId, prepareData(), uri, new RetrieveDataListener<Advertisement>() {
                             @Override
                             public void onSucces(Advertisement data) {
+                                Log.d(TAG, "Successful update: images: " +data.getImageUrl().size());
                                 //imageAdapter.notifyDataSetChanged();
                             }
 
@@ -433,12 +425,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                 adTitle.setText(advertisement.getTitle());
                 adContent.setText(advertisement.getContent());
                 addButton.setText("Update");
-                if(advertisement.getImageUrl().size()!= 0){
-                    imageUrls.addAll(advertisement.getImageUrl());
-                    imageAdapter = new ImageAdapter(getActivity(), imageUrls);
-                    images.setAdapter(imageAdapter);
-                }
-
+                imageUrls.addAll(advertisement.getImageUrl());
+                imageAdapter = new ImageAdapter(getActivity(), imageUrls);
+                images.setAdapter(imageAdapter);
             }
 
             @Override
