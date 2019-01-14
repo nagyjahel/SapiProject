@@ -38,21 +38,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         slideUp(logo);
 
 
-        startApp = findViewById(R.id.startApplicationButton);
-        startApp.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Click detected");
-                Intent authentication = new Intent(SplashScreenActivity.this, AuthenticationActivity.class);
-                startActivity(authentication);
-                finish();
-                Log.d(TAG, "End app");
-            }
-
-
-
-        });
     }
 
 

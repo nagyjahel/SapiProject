@@ -68,7 +68,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private Button mSignInButton;
     private Button mRegisterButton;
 
-    private Animation slide_in_left, slide_out_left;
+    private Animation slide_in_left, slide_out_left, slide_in_right, slide_out_right;
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
@@ -94,17 +94,19 @@ public class AuthenticationActivity extends AppCompatActivity {
         this.setTitle("Authentication");
         slide_in_left = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
         slide_out_left = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+        slide_in_right = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+        slide_out_right = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
         authenticationLayout = findViewById(R.id.authenticationLayout);
         signInLayout = findViewById(R.id.signInLayout);
         registerLayout = findViewById(R.id.registerLayout);
 
-        authenticationLayout.setInAnimation(slide_in_left);
-        signInLayout.setInAnimation(slide_in_left);
-        registerLayout.setInAnimation(slide_in_left);
+        authenticationLayout.setInAnimation(slide_in_right);
+        signInLayout.setInAnimation(slide_in_right);
+        registerLayout.setInAnimation(slide_in_right);
 
-        authenticationLayout.setOutAnimation(slide_out_left);
-        signInLayout.setOutAnimation(slide_out_left);
-        registerLayout.setOutAnimation(slide_out_left);
+        authenticationLayout.setOutAnimation(slide_out_right);
+        signInLayout.setOutAnimation(slide_out_right);
+        registerLayout.setOutAnimation(slide_out_right);
 
         authenticationLayout.showNext();
 
