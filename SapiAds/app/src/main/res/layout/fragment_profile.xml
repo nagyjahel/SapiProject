@@ -1,141 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Main.Fragments.ProfileFragment">
-
     <!-- TODO: Update blank fragment layout -->
 
-    <android.support.constraint.ConstraintLayout
+    <ImageButton
+        android:id="@+id/profileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.TextInputLayout
+
+        android:id="@+id/firstNameInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage">
 
-        <LinearLayout
-            android:layout_width="368dp"
-            android:layout_height="495dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/firstNameValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand"
+            android:hint="First name"
+            android:textSize="20dp" />
+    </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="94dp"
-                android:orientation="horizontal">
+    <android.support.design.widget.TextInputLayout
 
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@mipmap/profile" />
-            </LinearLayout>
+        android:id="@+id/lastNameInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstNameInputLayout">
 
-            <LinearLayout
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/lastNameValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand"
+            android:hint="Last name"
+            android:textSize="20dp" />
+    </android.support.design.widget.TextInputLayout>
 
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:orientation="horizontal">
+    <android.support.design.widget.TextInputLayout
 
-                <TextView
-                    android:id="@+id/firstNameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textSize="15dp"
-                    android:text="First Name" />
+        android:id="@+id/phoneNumberLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameInputLayout">
 
-                <EditText
-                    android:id="@+id/firstNameValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:textSize="20dp"
-                    android:gravity="center_vertical"
-                    android:inputType="textPersonName"
-                    android:text="First Name" />
-            </LinearLayout>
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand"
+            android:hint="Phone number"
+            android:enabled="false"
+            android:textSize="20dp" />
+    </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:orientation="horizontal">
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="326dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:text="Save"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberLayout" />
 
-                <TextView
-                    android:id="@+id/lastNameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textSize="15dp"
-                    android:text="Last Name" />
-
-                <EditText
-                    android:id="@+id/lastNameValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:textSize="20dp"
-                    android:gravity="center_vertical"
-                    android:hint="Last Name"
-                    android:inputType="textPersonName"
-                    android:text="Last Name" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/phoneNumberTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textSize="15dp"
-                    android:text="Telephone" />
-
-                <EditText
-                    android:id="@+id/phoneNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:textSize="20dp"
-                    android:gravity="center_vertical"
-                    android:hint="Phone Number"
-                    android:inputType="textPersonName"
-                    android:text="Phone Number" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/saveButton"
-                style="@style/Widget.AppCompat.Button"
-                android:layout_width="match_parent"
-                android:layout_marginTop="40dp"
-                android:layout_height="50dp"
-                android:theme="@style/Widget.AppCompat.ActionButton"
-                android:background="@color/colorPrimary"
-                android:text="SAVE" />
-
-        </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

@@ -189,7 +189,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 signInLayout.showNext();
                 Log.d(TAG, "Sign in layout called");
                 sendVerificationCode();
-                Log.d(TAG, "Phone: " + phoneNumber + " Verification code: " + sentCode);
+                Log.d(TAG, "Phone: " + phoneNumber);
             }
         });
 
@@ -264,7 +264,9 @@ public class AuthenticationActivity extends AppCompatActivity {
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             sentCode = phoneAuthCredential.getSmsCode();
             Log.d(TAG, "Verification completed " + sentCode);
-            signInWithPhoneAuthCredential(phoneAuthCredential);
+            //signInWithPhoneAuthCredential(phoneAuthCredential);
+
+
         }
 
         @Override
@@ -291,6 +293,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                     Log.d(TAG, "This user already exists");
                     Toast.makeText(getApplicationContext(),
                             "You have successfully logged in", Toast.LENGTH_LONG).show();
+                    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(mVerificationId, userInputCode);
+                    signInWithPhoneAuthCredential(phoneAuthCredential);
                     Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -330,6 +334,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                     @Override public void onSuccess(Void aVoid) {
                         Toast.makeText(getApplicationContext(),
                                 "Your registration was successful!", Toast.LENGTH_LONG).show();
+                        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(mVerificationId, userInputCode);
+                        signInWithPhoneAuthCredential(phoneAuthCredential);
                         Intent homeActivity = new Intent(AuthenticationActivity.this, MainActivity.class);
                         startActivity(homeActivity);
                         finish();
@@ -339,6 +345,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         Log.d(TAG, "signInWithCredential called");
+        Log.d(TAG, "Credential: " + credential.toString());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -347,7 +354,11 @@ public class AuthenticationActivity extends AppCompatActivity {
                             // Sign in success
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
-
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            if(currentUser != null){
+                                Log.d(TAG, "Current User: " + currentUser.getPhoneNumber());
+                            }
+                            Log.d(TAG, "User: " + user.getPhoneNumber());
                         } else {
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

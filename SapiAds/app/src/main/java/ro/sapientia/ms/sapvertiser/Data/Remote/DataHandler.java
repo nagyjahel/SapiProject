@@ -166,6 +166,38 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
+    public void editUserFirstName(final String key, String firstname, final RetrieveDataListener<String> callback) {
+        databaseReference.child("users/"+key).child("firstName").setValue(firstname).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                callback.onSucces(key);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFailure(key);
+            }
+        });
+
+    }
+
+    @Override
+    public void editUserLastName(final String key, String lastname, final RetrieveDataListener<String> callback) {
+        databaseReference.child("users/"+key).child("lastName").setValue(lastname).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                callback.onSucces(key);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFailure(key);
+            }
+        });
+
+    }
+
+    @Override
     public void uploadAdvertisement(final String key, Map<String, String> values, final RetrieveDataListener<String> callback) {
         databaseReference.child("ads/"+key).setValue(values).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

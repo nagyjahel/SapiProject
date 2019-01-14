@@ -1,28 +1,74 @@
 package ro.sapientia.ms.sapvertiser.Main.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import ro.sapientia.ms.sapvertiser.Authentication.AuthenticationActivity;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
+import ro.sapientia.ms.sapvertiser.Data.Models.User;
+import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
+import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
+import ro.sapientia.ms.sapvertiser.Main.MainActivity;
 import ro.sapientia.ms.sapvertiser.R;
 
 public class ProfileFragment extends Fragment {
 
-    private EditText mFirstNameValue;
-    private EditText mLastNameValue;
+    private TextInputEditText mFirstNameValue;
+    private TextInputEditText mLastNameValue;
     private EditText mPhoneNumber;
-    private ImageView mProfilePicture;
+    private ImageButton mProfilePicture;
+
+    private TextInputLayout mFirstNameInputLayout;
+    private TextInputLayout mLastNameInputLayout;
+    private TextInputLayout mPhoneNumberInputLayout;
 
     private Button mSaveButton;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
+    private DataHandler dataHandler;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseUser currentUser;
+
+    private Boolean firstnameUpdated;
+    private Boolean lastnameUpdated;
+
+
+
+    private User mUser;
+
+    private static final String TAG = "ProfileFragment";
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -34,39 +80,100 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String key = Long.toString(System.currentTimeMillis());
-        final DatabaseReference ref = database.getReference("ads/" + key);
-        final FirebaseAuth user = FirebaseAuth.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+        /**String key = Long.toString(System.currentTimeMillis());
+         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+         final DatabaseReference ref = database.getReference("ads/" + key);**/
+        currentUser = mAuth.getCurrentUser();
+
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        mProfilePicture = view.findViewById(R.id.profileImage);
+        mFirstNameInputLayout = view.findViewById(R.id.firstNameInputLayout);
+        mLastNameInputLayout = view.findViewById(R.id.lastNameInputLayout);
+        mPhoneNumberInputLayout = view.findViewById(R.id.phoneNumberLayout);
+
+        Log.d("TAG", "User: " + currentUser.getPhoneNumber());
+
+        mSaveButton = view.findViewById(R.id.saveButton);
+        mFirstNameValue = view.findViewById(R.id.firstNameValue);
+        mLastNameValue = view.findViewById(R.id.lastNameValue);
+        mPhoneNumber = view.findViewById(R.id.phoneNumber);
 
 
-       /* mSaveButton.setOnClickListener(new View.OnClickListener() {
+        getUserDetails();
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mFirstNameValue.getText().toString().equals("") && !mLastNameValue.getText().toString().equals("") && !mPhoneNumber.getText().toString().equals("")) {
-                    Map<String, String> map = new HashMap<>();
-                    String phone, firstName, lastName, photoUrl;
-                    phone = mPhoneNumber.getText().toString();
-                    firstName = mFirstNameValue.getText().toString();
-                    lastName = mLastNameValue.getText().toString();
+
+                firstnameUpdated = false;
+                lastnameUpdated = false;
+                Log.d(TAG, "Update user information");
+                String firstName = mFirstNameValue.getText().toString();
+                String lastName = mLastNameValue.getText().toString();
+
+                DataHandler.getDataHandlerInstance().editUserFirstName(currentUser.getPhoneNumber(), firstName, new RetrieveDataListener<String>(){
+                    @Override
+                    public void onSucces(String message) {
+                        Log.d(TAG, "Edit user information: success.");
+                        firstnameUpdated = true;
+
+                    }
+                    @Override
+                    public void onFailure(String message) {
+                        Log.d(TAG, "Edit user information: failure.");
+                    }
+                });
+
+                DataHandler.getDataHandlerInstance().editUserLastName(currentUser.getPhoneNumber(), lastName, new RetrieveDataListener<String>(){
+                    @Override
+                    public void onSucces(String message) {
+                        Log.d(TAG, "Edit user information: success.");
+                        lastnameUpdated = true;
+
+                    }
+                    @Override
+                    public void onFailure(String message) {
+                        Log.d(TAG, "Edit user information: failure.");
+                    }
+                });
+
+                if(firstnameUpdated == true && lastnameUpdated == true){
+                    Toast.makeText(getActivity(), "Your profile has been updated.",
+                            Toast.LENGTH_LONG).show();
+                    getUserDetails();
                 }
 
             }
-        });*/
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        /*mSaveButton.findViewById(R.id.saveButton);
-        mFirstNameValue.findViewById(R.id.firstNameValue);
-        mLastNameValue.findViewById(R.id.lastNameValue);
-        mPhoneNumber.findViewById(R.id.phoneNumber);
+        });
 
-        mPhoneNumber.setText(user.getCurrentUser().getProviderId());
-        mFirstNameValue.setText(user.getCurrentUser().getDisplayName());
-        mLastNameValue.setText(user.getCurrentUser().getDisplayName());*/
+
         return view;
     }
+
+    private void getUserDetails() {
+        DataHandler.getDataHandlerInstance().getUser(currentUser.getPhoneNumber(), new RetrieveDataListener<User>(){
+            @Override
+            public void onSucces(User data) {
+                Log.d(TAG, "Get user from database: success.");
+                mPhoneNumber.setText(data.getTelephone());
+                mFirstNameValue.setText(data.getFirstName());
+                mLastNameValue.setText(data.getLastName());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.d(TAG, "Get user from database: failure.");
+            }
+        });
+
+    }
+
+
 }

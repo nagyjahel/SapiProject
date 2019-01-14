@@ -15,6 +15,8 @@ public interface IDataHandler {
 
     void getAdvertisements(RetrieveDataListener<ArrayList<Advertisement>> callback);
     void getAdvertisement(long advertisementId, RetrieveDataListener<Advertisement> callback);
+    void editUserLastName(String key, String lastname, RetrieveDataListener<String> callback);
+    void editUserFirstName(String key, String firstname, RetrieveDataListener<String> callback);
     void uploadAdvertisement(String key, Map<String,String> values, RetrieveDataListener<String> callback);
     void uploadAdvertisementWithPhotos(Map<String,String> values, RetrieveDataListener<Advertisement> callback, byte[] bytes, String path);
     void reportAdvertisement(long advertisementId, RetrieveDataListener<String> callback);
