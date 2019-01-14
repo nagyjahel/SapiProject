@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +70,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private String newKey;
     private Bitmap selectedImageBitmap;
     private Uri selectedUri = null;
-    private byte[] uploadedBytes = null;
+    private ArrayList<Uri> selectedUris = new ArrayList<>();
+    private ArrayList<Bitmap> selectedImageBitmaps = new ArrayList<>();
+    private ArrayList<String> imageUrls = new ArrayList<>();
     private ProgressDialog progressDialog;
     private Uri downloadUrl;
     private String photoToUpload;
@@ -77,7 +81,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private ActionBar toolbar;
     private Long advertisementId;
     private ViewPager images;
-
+    private ImageAdapter imageAdapter;
     public AdvertisementCreateFragment() {
 
     }
@@ -288,14 +292,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         Map<String, String> map = new HashMap<>();
         map.put("title", adTitle.getText().toString());
         map.put("content", adContent.getText().toString());
-        if (downloadUrl != null) {
-            map.put("imageUrl", downloadUrl.toString());
-        } else {
-            map.put("imageUrl", "");
-        }
+        map.put("imageUrl", "");
         map.put("isReported", "0");
         map.put("isVisible", "1");
-        //map.put("publishingUserId", "+16505553434");
         map.put("publishingUserId", loggedUser.getPhoneNumber());
         map.put("viewed", "1");
         return map;
@@ -308,10 +307,11 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
      *****************************************************************************************************/
     @Override
     public void getImagePath(Uri imagePath) {
-        adImage.setImageURI(null);
-        adImage.setImageURI(imagePath);
-        selectedUri = imagePath;
-        selectedImageBitmap = null;
+        imageUrls.add(imagePath.toString());
+        imageAdapter.notifyDataSetChanged();
+       // adImage.setImageURI(null);
+        //adImage.setImageURI(imagePath);
+        selectedUris.add(imagePath);
     }
 
 
@@ -322,8 +322,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     @Override
     public void getImageBitMap(Bitmap bitmap) {
         adImage.setImageBitmap(bitmap);
-        selectedUri = null;
-        selectedImageBitmap = bitmap;
+        selectedImageBitmaps.add(bitmap);
     }
 
 
@@ -334,16 +333,25 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private void uploadPhoto(Bitmap bitmap) {
         progressDialog.incrementProgressBy(10);
         Log.d(TAG, "Upload new image bitmap to storage");
-        BackgroundImageResize resize = new BackgroundImageResize(bitmap);
-        Uri uri = null;
-        resize.execute(uri);
+
+
+        for(Bitmap bitmap1:selectedImageBitmaps){
+            BackgroundImageResize resize = new BackgroundImageResize(bitmap1);
+            Uri uri = null;
+            resize.execute(uri);
+        }
+
+
+        for(Uri uri: selectedUris){
+            BackgroundImageResize resize = new BackgroundImageResize(null);
+            resize.execute(uri);
+        }
     }
 
     private void uploadPhoto(Uri imagePath) {
         progressDialog.incrementProgressBy(10);
         Log.d(TAG, "Upload new photo uri to storage");
-        BackgroundImageResize resize = new BackgroundImageResize(null);
-        resize.execute(imagePath);
+
     }
 
 
@@ -351,10 +359,10 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
      The executeUploadTask method of the Advertisement create fragment
      - Will upload the advertisement to the database
      *****************************************************************************************************/
-    private void executeUploadTask() {
+    private void executeUploadTask(byte[] bytes) {
         progressDialog.incrementProgressBy(15);
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("ads/" + newKey + "/imageUrl");
-        UploadTask uploadTask = storageReference.putBytes(uploadedBytes);
+        UploadTask uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -362,7 +370,18 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                     @Override
                     public void onSuccess(Uri uri) {
                         downloadUrl = uri;
-                        Log.d(TAG, "OnSucces: firebase download url: " + photoToUpload);
+                        DataHandler.getDataHandlerInstance().uploadAdvertisementWithPhoto(advertisementId, prepareData(), uri, new RetrieveDataListener<Advertisement>() {
+                            @Override
+                            public void onSucces(Advertisement data) {
+                                //imageAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+
+                            }
+                        });
+                        /*
                         advertisement.setValue(prepareData())
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -383,7 +402,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                                         toast.show();
                                         progressDialog.dismiss();
                                     }
-                                });
+                                });*/
 
                     }
                 });
@@ -415,7 +434,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                 adContent.setText(advertisement.getContent());
                 addButton.setText("Update");
                 if(advertisement.getImageUrl().size()!= 0){
-                    images.setAdapter(new ImageAdapter(getContext(), advertisement.getImageUrl()));
+                    imageUrls.addAll(advertisement.getImageUrl());
+                    imageAdapter = new ImageAdapter(getActivity(), imageUrls);
+                    images.setAdapter(imageAdapter);
                 }
 
             }
@@ -474,8 +495,8 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         protected void onPostExecute(byte[] bytes) {
             super.onPostExecute(bytes);
             progressDialog.incrementProgressBy(10);
-            uploadedBytes = bytes;
-            executeUploadTask();
+            //uploadedBytes = bytes;
+            executeUploadTask(bytes);
 
         }
     }
