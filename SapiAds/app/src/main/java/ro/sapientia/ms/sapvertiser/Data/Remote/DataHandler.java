@@ -71,6 +71,7 @@ public class DataHandler implements IDataHandler {
             int isReported = Integer.parseInt((String) dataSnapshot.child("isReported").getValue());
             int isVisible = Integer.parseInt((String) dataSnapshot.child("isVisible").getValue());
             String title = (String) dataSnapshot.child("title").getValue();
+            String price = (String) dataSnapshot.child("price").getValue();
             ArrayList<String> photos = new ArrayList<>();
 
             for(DataSnapshot dataSnapshot1: dataSnapshot.child("imageUrl").getChildren()){
@@ -79,7 +80,7 @@ public class DataHandler implements IDataHandler {
 
             String content = (String) dataSnapshot.child("content").getValue();
             String publishingUserId = (String) dataSnapshot.child("publishingUserId").getValue();
-            return new Advertisement(id, title, photos, content, publishingUserId, isReported, isVisible, viewed);
+        return new Advertisement(id, title, photos, content, price, publishingUserId, isReported, isVisible, viewed);
 
     }
 
@@ -168,6 +169,9 @@ public class DataHandler implements IDataHandler {
         });
     }
 
+    /*********************************************************
+     * Update the database with the current user edited first name.
+     *********************************************************/
     @Override
     public void editUserFirstName(final String key, String firstname, final RetrieveDataListener<String> callback) {
         databaseReference.child("users/"+key).child("firstName").setValue(firstname).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -184,6 +188,9 @@ public class DataHandler implements IDataHandler {
 
     }
 
+    /*********************************************************
+     * Update the database with the current user edited last name.
+     *********************************************************/
     @Override
     public void editUserLastName(final String key, String lastname, final RetrieveDataListener<String> callback) {
         databaseReference.child("users/"+key).child("lastName").setValue(lastname).addOnSuccessListener(new OnSuccessListener<Void>() {

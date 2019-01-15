@@ -1,7 +1,9 @@
 package ro.sapientia.ms.sapvertiser.Data.Models;
 
 import java.util.ArrayList;
-
+/*********************************************************
+ * User class with attributes and methods of a user.
+ *********************************************************/
 public class User {
 
     private String telephone;

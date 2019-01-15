@@ -11,15 +11,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,37 +29,33 @@ import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.R;
-
+/*********************************************************
+ * Profile page of a specific user.
+ * Opportunity to update user details, such as last name,
+ * first name or the profile picture.
+ *********************************************************/
 public class ProfileFragment extends Fragment {
 
     private TextInputEditText mFirstNameValue;
     private TextInputEditText mLastNameValue;
     private EditText mPhoneNumber;
     private CircleImageView mProfilePicture;
-
     private TextInputLayout mFirstNameInputLayout;
     private TextInputLayout mLastNameInputLayout;
     private TextInputLayout mPhoneNumberInputLayout;
-
     private Button mSaveButton;
     private FirebaseAuth mAuth;
-
     private DataHandler dataHandler;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseUser currentUser;
-
     private Boolean firstnameUpdated;
     private Boolean lastnameUpdated;
-
-
-
     private User mUser;
-
     private static final String TAG = "ProfileFragment";
 
     public ProfileFragment() {
-        // Required empty public constructor
+        //Required empty public constructor
     }
 
     @Override
@@ -78,24 +71,13 @@ public class ProfileFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        mProfilePicture = view.findViewById(R.id.profileImage);
-        mFirstNameInputLayout = view.findViewById(R.id.firstNameInputLayout);
-        mLastNameInputLayout = view.findViewById(R.id.lastNameInputLayout);
-        mPhoneNumberInputLayout = view.findViewById(R.id.phoneNumberLayout);
-
-        Log.d("TAG", "User: " + currentUser.getPhoneNumber());
-
-        mSaveButton = view.findViewById(R.id.saveButton);
-        mFirstNameValue = view.findViewById(R.id.firstNameValue);
-        mLastNameValue = view.findViewById(R.id.lastNameValue);
-        mPhoneNumber = view.findViewById(R.id.phoneNumber);
-
-
+        initView(view);
         getUserDetails();
 
+        /*********************************************************
+         * Check if a field is edited
+         *********************************************************/
         mFirstNameValue.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -132,6 +114,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+        /*********************************************************
+         * Edit the current user first name and last name if it's
+         * necesarry
+         *********************************************************/
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,6 +165,26 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    /*********************************************************
+     * Initialize the fargment view with attributes and data
+     *********************************************************/
+    private void initView(View view){
+        mProfilePicture = view.findViewById(R.id.profileImage);
+        mFirstNameInputLayout = view.findViewById(R.id.firstNameInputLayout);
+        mLastNameInputLayout = view.findViewById(R.id.lastNameInputLayout);
+        mPhoneNumberInputLayout = view.findViewById(R.id.phoneNumberLayout);
+
+        Log.d("TAG", "User: " + currentUser.getPhoneNumber());
+
+        mSaveButton = view.findViewById(R.id.saveButton);
+        mFirstNameValue = view.findViewById(R.id.firstNameValue);
+        mLastNameValue = view.findViewById(R.id.lastNameValue);
+        mPhoneNumber = view.findViewById(R.id.phoneNumber);
+    }
+
+    /*********************************************************
+     * Get current user details
+     *********************************************************/
     private void getUserDetails() {
         DataHandler.getDataHandlerInstance().getUser(currentUser.getPhoneNumber(), new RetrieveDataListener<User>(){
             @Override
@@ -201,6 +208,9 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /*********************************************************
+     * If user data update was successful a pop up shows up
+     *********************************************************/
     private void successfulUpdateDialog() {
         AlertDialog dialog;
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_DayNight_Dialog_Alert);
