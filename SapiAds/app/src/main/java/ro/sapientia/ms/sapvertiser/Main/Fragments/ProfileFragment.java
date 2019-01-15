@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,9 +28,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
+import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementRecyclerViewAdapter;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.R;
 /*********************************************************
@@ -44,6 +52,8 @@ public class ProfileFragment extends Fragment {
     private TextInputLayout mLastNameInputLayout;
     private TextInputLayout mPhoneNumberInputLayout;
     private Button mSaveButton;
+    private Button mMyAds;
+    private Button mHideMyAds;
     private FirebaseAuth mAuth;
     private DataHandler dataHandler;
     private DatabaseReference databaseReference;
@@ -52,6 +62,10 @@ public class ProfileFragment extends Fragment {
     private Boolean firstnameUpdated;
     private Boolean lastnameUpdated;
     private User mUser;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Advertisement> advertisements = new ArrayList<>();
+    private AdvertisementRecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
     private static final String TAG = "ProfileFragment";
 
     public ProfileFragment() {
@@ -73,6 +87,8 @@ public class ProfileFragment extends Fragment {
         currentUser = mAuth.getCurrentUser();
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         initView(view);
+        initRecyclerView(view);
+        downloadData();
         getUserDetails();
 
         /*********************************************************
@@ -157,6 +173,27 @@ public class ProfileFragment extends Fragment {
 
                 Log.d(TAG, "Update is ready");
                 successfulUpdateDialog();
+                downloadData();
+
+            }
+        });
+
+        mMyAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.VISIBLE);
+                mMyAds.setVisibility(View.GONE);
+                mHideMyAds.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        mHideMyAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.GONE);
+                mHideMyAds.setVisibility(View.GONE);
+                mMyAds.setVisibility(View.VISIBLE);
 
             }
         });
@@ -177,6 +214,9 @@ public class ProfileFragment extends Fragment {
         Log.d("TAG", "User: " + currentUser.getPhoneNumber());
 
         mSaveButton = view.findViewById(R.id.saveButton);
+        mMyAds = view.findViewById(R.id.my_ads);
+        mHideMyAds = view.findViewById(R.id.hide_my_ads);
+        mHideMyAds.setVisibility(View.GONE);
         mFirstNameValue = view.findViewById(R.id.firstNameValue);
         mLastNameValue = view.findViewById(R.id.lastNameValue);
         mPhoneNumber = view.findViewById(R.id.phoneNumber);
@@ -185,6 +225,76 @@ public class ProfileFragment extends Fragment {
     /*********************************************************
      * Get current user details
      *********************************************************/
+
+    private void initRecyclerView(View view) {
+        Log.d(TAG, "initRecyclerView method called");
+        recyclerView = view.findViewById(R.id.recycler_view);
+        adapter = new AdvertisementRecyclerViewAdapter((FragmentActivity) this.getContext(), users, advertisements, new RetrieveDataListener<String>() {
+            @Override
+            public void onSucces(String data) {
+                Toast.makeText(getContext(),"Successfull delete", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(getContext(),"Unsuccessfull delete", Toast.LENGTH_SHORT).show();
+            }
+        }, new RetrieveDataListener<String>(){
+
+            @Override
+            public void onSucces(String data) {
+                Toast.makeText(getContext(),"Successfull report", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(getContext(),"Unsuccessfull delete", Toast.LENGTH_SHORT).show();
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
+    }
+
+    /*****************************************************************************************************
+     The downloadData method of the Advertisement list fragment
+     - Getting the necessary collections of datas for realising the list: the advertisements and their publishers.
+     *****************************************************************************************************/
+    private void downloadData() {
+        Log.d(TAG, "downloadData method called");
+        DataHandler.getDataHandlerInstance().getUsers(new RetrieveDataListener<ArrayList<User>>() {
+            @Override
+            public void onSucces(ArrayList<User> data) {
+                Log.d(TAG, "Get users from database: success.");
+                if(users.size() != 0 ){
+                    users.clear();
+                }
+                users.addAll(data);
+                DataHandler.getDataHandlerInstance().getCurrentUserAdvertisements(currentUser.getPhoneNumber(), new RetrieveDataListener<ArrayList<Advertisement>>() {
+                    @Override
+                    public void onSucces(ArrayList<Advertisement> data) {
+                        Log.d(TAG, "Get advertisements from database: success.");
+                        if(advertisements.size() != 0 ){
+                            advertisements.clear();
+                        }
+                        advertisements.addAll(data);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Log.d(TAG, "Get advertisements from database: failure.");
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.d(TAG, "Get users from database: failure.");
+            }
+        });
+    }
+
     private void getUserDetails() {
         DataHandler.getDataHandlerInstance().getUser(currentUser.getPhoneNumber(), new RetrieveDataListener<User>(){
             @Override

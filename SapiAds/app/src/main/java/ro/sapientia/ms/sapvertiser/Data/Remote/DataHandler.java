@@ -154,6 +154,31 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
+    public void getCurrentUserAdvertisements(String key, final RetrieveDataListener<ArrayList<Advertisement>> callback) {
+        firebaseDatabase.getReference("ads").orderByChild("publishingUserId").equalTo(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            ArrayList<Advertisement> advertisements = new ArrayList<>();
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot adSnapshot : dataSnapshot.getChildren()) {
+                    if (adSnapshot.exists()) {
+                        if (hasToBeShown(adSnapshot)) {
+                            advertisements.add(getAdvertisementFromSnapshot(adSnapshot));
+                        }
+                    }
+                }
+                Collections.reverse(advertisements);
+                callback.onSucces(advertisements);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
     public void getAdvertisement(final long advertisementId, final RetrieveDataListener<Advertisement> callback) {
         firebaseDatabase.getReference("ads/" + advertisementId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
