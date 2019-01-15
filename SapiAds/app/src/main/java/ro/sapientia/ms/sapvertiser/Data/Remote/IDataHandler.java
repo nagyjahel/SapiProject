@@ -16,6 +16,7 @@ public interface IDataHandler {
     void getUser(String userId, RetrieveDataListener<User> callback);
 
     void getAdvertisements(RetrieveDataListener<ArrayList<Advertisement>> callback);
+    void getCurrentUserAdvertisements(String key, RetrieveDataListener<ArrayList<Advertisement>> callback);
     void getAdvertisement(long advertisementId, RetrieveDataListener<Advertisement> callback);
     void editUserLastName(String key, String lastname, RetrieveDataListener<String> callback);
     void editUserFirstName(String key, String firstname, RetrieveDataListener<String> callback);
