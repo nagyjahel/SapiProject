@@ -130,6 +130,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         viewHolder.userName.setText(currentUser.getLastName() + " " + currentUser.getFirstName());
         viewHolder.adTitle.setText(currentAd.getTitle());
         viewHolder.adContent.setText(currentAd.getContent());
+        viewHolder.adPrice.setText(currentAd.getPrice());
         viewHolder.nrViews.setText(String.valueOf( currentAd.getViewed()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +164,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
         TextView userName;
         TextView adTitle;
         TextView adContent;
+        TextView adPrice;
         ViewPager adImage;
         TextView nrViews;
 
@@ -173,6 +175,7 @@ public class AdvertisementRecyclerViewAdapter extends RecyclerView.Adapter<Adver
             userName = itemView.findViewById(R.id.ad_user_name);
             adTitle = itemView.findViewById(R.id.ad_title);
             adContent = itemView.findViewById(R.id.ad_content);
+            adPrice = itemView.findViewById(R.id.price_value);
             adImage = itemView.findViewById(R.id.ad_images);
             nrViews = itemView.findViewById(R.id.viewed_nr);
         }

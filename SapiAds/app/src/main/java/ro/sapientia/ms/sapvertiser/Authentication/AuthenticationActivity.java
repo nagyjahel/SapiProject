@@ -183,7 +183,6 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                mLoadingBar.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -362,6 +361,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             String code = s;
             mVerificationId = s;
             Log.d(TAG, "Code " + code);
+            mLoadingBar.setVisibility(View.INVISIBLE);
         }
     };
 

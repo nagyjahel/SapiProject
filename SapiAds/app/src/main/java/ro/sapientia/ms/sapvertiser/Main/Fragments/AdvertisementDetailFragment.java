@@ -50,7 +50,7 @@ public class AdvertisementDetailFragment extends Fragment {
     private RetrieveDataListener<String> onDeleteListener;
     private RetrieveDataListener<String> onReportListener;
     private ViewPager imageSlider;
-    private ImageView price;
+    private TextView price;
     public AdvertisementDetailFragment(){
 
     }
@@ -104,13 +104,14 @@ public class AdvertisementDetailFragment extends Fragment {
 
         title = view.findViewById(R.id.ad_title);
         content = view.findViewById(R.id.ad_content);
+        price = view.findViewById(R.id.price_value);
         //image = view.findViewById(R.id.ad_image);
         userImage = view.findViewById(R.id.ad_user_image);
         userName = view.findViewById(R.id.ad_user_name);
         viewed = view.findViewById(R.id.viewed_nr);
         imageSlider = view.findViewById(R.id.ad_images);
         imageSlider.setAdapter(imageAdapter);
-        price = view.findViewById(R.id.price_image);
+        price = view.findViewById(R.id.price_value);
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -132,6 +133,12 @@ public class AdvertisementDetailFragment extends Fragment {
         Log.d(TAG, "fillViewWithCorrespondingData method called.");
         title.setText(selectedAd.getTitle());
         content.setText(selectedAd.getContent());
+        if(selectedAd.getPrice() != null){
+            price.setText(selectedAd.getPrice());
+        }
+        else{
+            price.setText("12.5 $");
+        }
         selectedAd.incrementViewed();
         viewed.setText(String.valueOf(selectedAd.getViewed()));
 

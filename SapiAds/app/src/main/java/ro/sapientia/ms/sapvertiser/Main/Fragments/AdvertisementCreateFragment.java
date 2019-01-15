@@ -61,6 +61,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private FirebaseDatabase database;
     private TextInputEditText adTitle;
     private TextInputEditText adContent;
+    private TextInputEditText adPrice;
     private ImageView adImage;
     private TextView adImageText;
     private ImageView deleteImage;
@@ -142,6 +143,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         Log.d(TAG, "initView method called.");
         adTitle = view.findViewById(R.id.new_ad_title);
         adContent = view.findViewById(R.id.new_ad_content);
+        adPrice = view.findViewById(R.id.new_ad_price);
         addButton = view.findViewById(R.id.new_ad_button);
         adImage = view.findViewById(R.id.new_ad_image);
         adImageText = view.findViewById(R.id.new_ad_image_text);
@@ -237,6 +239,25 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             }
         });
 
+        adPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!adTitle.getText().toString().matches("")) {
+                    addButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -314,10 +335,12 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         Map<String, String> map = new HashMap<>();
         map.put("title", adTitle.getText().toString());
         map.put("content", adContent.getText().toString());
+        map.put("price", adPrice.getText().toString());
         map.put("isReported", "0");
         map.put("isVisible", "1");
-        map.put("publishingUserId", loggedUser.getPhoneNumber().toString());
+        map.put("publishingUserId", loggedUser.getPhoneNumber());
         map.put("viewed", "1");
+
         return map;
     }
 
@@ -430,6 +453,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             public void onSucces(Advertisement advertisement) {
                 adTitle.setText(advertisement.getTitle());
                 adContent.setText(advertisement.getContent());
+                adPrice.setText(advertisement.getPrice());
                 addButton.setText("Update");
                 imageUrls.addAll(advertisement.getImageUrl());
                 imageAdapter = new ImageAdapter(getActivity(), imageUrls);

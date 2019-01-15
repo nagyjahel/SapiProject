@@ -70,6 +70,7 @@ public class DataHandler implements IDataHandler {
             int isReported = Integer.parseInt((String) dataSnapshot.child("isReported").getValue());
             int isVisible = Integer.parseInt((String) dataSnapshot.child("isVisible").getValue());
             String title = (String) dataSnapshot.child("title").getValue();
+            String price = (String) dataSnapshot.child("price").getValue();
             ArrayList<String> photos = new ArrayList<>();
 
             for(DataSnapshot dataSnapshot1: dataSnapshot.child("imageUrl").getChildren()){
@@ -78,7 +79,7 @@ public class DataHandler implements IDataHandler {
 
             String content = (String) dataSnapshot.child("content").getValue();
             String publishingUserId = (String) dataSnapshot.child("publishingUserId").getValue();
-            return new Advertisement(id, title, photos, content, publishingUserId, isReported, isVisible, viewed);
+        return new Advertisement(id, title, photos, content, price, publishingUserId, isReported, isVisible, viewed);
 
     }
 

@@ -12,14 +12,15 @@ public class Advertisement {
     private int isReported;
     private int isVisible;
     private int viewed;
-    private double price;
+    private String price;
 
 
-    public Advertisement(long id, String title, ArrayList<String> imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {
+    public Advertisement(long id, String title, ArrayList<String> imageUrl, String content, String price, String publishingUserId, int isReported, int isVisible, int viewed) {
         this.id = id;
         this.title = title;
         this.imageUrls = imageUrl;
         this.content = content;
+        this.price = price;
         this.publishingUserId = publishingUserId;
         this.isReported = isReported;
         this.isVisible = isVisible;
@@ -40,6 +41,14 @@ public class Advertisement {
 
     public void setImageUrl(ArrayList<String> imageUrl) {
         this.imageUrls = imageUrl;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getContent() {
