@@ -1,5 +1,7 @@
 package ro.sapientia.ms.sapvertiser.Data.Remote;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public interface IDataHandler {
     void editUserLastName(String key, String lastname, RetrieveDataListener<String> callback);
     void editUserFirstName(String key, String firstname, RetrieveDataListener<String> callback);
     void uploadAdvertisement(String key, Map<String,String> values, RetrieveDataListener<String> callback);
-    void uploadAdvertisementWithPhotos(Map<String,String> values, RetrieveDataListener<Advertisement> callback, byte[] bytes, String path);
+    void uploadAdvertisementWithPhoto(long advertisementId,  Map<String,String> values, Uri newPhotoUri, RetrieveDataListener<Advertisement> callback);
     void reportAdvertisement(long advertisementId, RetrieveDataListener<String> callback);
     void deleteAdvertisement(long advertisementId, RetrieveDataListener<String> callback);
     void incrementViewedNumberOnAd(long advertisementId, int actualNumber,final RetrieveDataListener<String> callback);

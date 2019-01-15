@@ -15,6 +15,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.io.CharArrayReader;
 import java.util.ArrayList;
@@ -214,43 +215,25 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
-    public void uploadAdvertisementWithPhotos(final Map<String, String> values, final RetrieveDataListener<Advertisement> callback, byte[] bytes, String path) {
-        /*storageReference.putBytes(bytes)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        storageReference.getDownloadUrl()
-                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        uploadAdvertisement(values, new RetrieveDataListener<Advertisement>() {
-                                            @Override
-                                            public void onSucces(Advertisement data) {
-                                                callback.onSucces(data);
-                                            }
+    public void uploadAdvertisementWithPhoto(final long key, Map<String, String> values, final Uri newPhotoUri, final RetrieveDataListener<Advertisement> callback) {
+        getAdvertisement(key, new RetrieveDataListener<Advertisement>() {
+            @Override
+            public void onSucces(Advertisement data) {
+                data.getImageUrl().add(newPhotoUri.toString());
+                for(int i=0; i<  data.getImageUrl().size(); ++i){
+                    databaseReference.child("ads/"+key + "/imageUrl/").child(String.valueOf(i)).setValue( data.getImageUrl().get(i));
+                }
+                callback.onSucces(data);
+            }
 
-                                            @Override
-                                            public void onFailure(String message) {
-                                                callback.onFailure(message);
-                                            }
-                                        });
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        callback.onFailure("Error uploading the advertisement");
-                                    }
-                                });
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        //callback.onProgress();
-                    }*
-                });*/
+
+            @Override
+            public void onFailure(String message) {
+                callback.onFailure("Failure");
+            }
+        });
     }
+
 
     @Override
     public void reportAdvertisement(final long advertisementId, final RetrieveDataListener<String> callback) {
