@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import ro.sapientia.ms.sapvertiser.Authentication.AuthenticationActivity;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction fragmentTransaction;
     private BottomNavigationView navigation;
     private AdvertisementCreateFragment selectedFragment;
+    private FirebaseUser loggedUser;
     /*****************************************************************************************************
      The BottomNavigationView listener
      - Checks if the user clicked on one of the navigation buttons
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Plus item from the navigation bar selected.");
                     verifyPermissions();
                     mToolbar.setTitle("Create a new ad");
-                    Navigation.getNavigationInstance().changeFragment(fragmentManager, new AdvertisementCreateFragment(mToolbar), true, null, "AdCreateFragment");
+                    Navigation.getNavigationInstance().changeFragment(fragmentManager, new AdvertisementCreateFragment(mToolbar, loggedUser), true, null, "AdCreateFragment");
                     return true;
                 case R.id.navigation_profile:
                     mToolbar.setTitle("My profile page");
@@ -149,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "initMemberVariables method called.");
         mToolbar =  getSupportActionBar();
         fragmentManager = getSupportFragmentManager();
+        loggedUser = FirebaseAuth.getInstance().getCurrentUser();
+
     }
 
     /*****************************************************************************************************

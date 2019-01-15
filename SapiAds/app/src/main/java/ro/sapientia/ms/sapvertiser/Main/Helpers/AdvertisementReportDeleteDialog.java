@@ -1,6 +1,7 @@
 package ro.sapientia.ms.sapvertiser.Main.Helpers;
 
 import android.annotation.SuppressLint;
+import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,14 +66,13 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
     private FirebaseDatabase database;
     private TextView share;
     private ImageView shareIcon;
-
     private DatabaseReference databaseReference;
     private long currentAdId;
     private OnDialogButtonClicked mListener;
     private RetrieveDataListener<String> onDeleteListener;
     private RetrieveDataListener<String> onReportListener;
     private Advertisement currentAdvertisement;
-
+    private ActionBar toolbar;
     /*****************************************************************************************************
      The default constructor of the AdvertisementReportDeleteDialog class
      *****************************************************************************************************/
@@ -87,12 +87,10 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
      - initiates the member variables
      *****************************************************************************************************/
     @SuppressLint("ValidFragment")
-    public AdvertisementReportDeleteDialog(long adId, OnDialogButtonClicked listener, RetrieveDataListener<String> onDeleteListener, RetrieveDataListener<String> onReportListener) {
+    public AdvertisementReportDeleteDialog(long adId, OnDialogButtonClicked listener, RetrieveDataListener<String> onDeleteListener, RetrieveDataListener<String> onReportListener, FirebaseUser loggedUser) {
         mListener = listener;
         currentAdId = adId;
-        auth = FirebaseAuth.getInstance();
-
-        loggedUser = auth.getCurrentUser();
+        this.loggedUser = loggedUser;
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("ads/" + adId);
         this.onDeleteListener = onDeleteListener;
@@ -278,7 +276,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
         Bundle bundle = new Bundle();
         Log.d("AdRepDeleteDialog", "Advertisement id: " + currentAdId);
         bundle.putLong("adId", currentAdId);
-        Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementCreateFragment(), true, bundle, "AdCreateFragment");
+        Navigation.getNavigationInstance().changeFragment(getActivity().getSupportFragmentManager(), new AdvertisementCreateFragment(toolbar, loggedUser), true, bundle, "AdCreateFragment");
 
     }
 

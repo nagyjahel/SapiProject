@@ -87,6 +87,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private Long advertisementId;
     private ViewPager images;
     private ImageAdapter imageAdapter;
+   // private User loggedUser;
     public AdvertisementCreateFragment() {
 
     }
@@ -95,13 +96,13 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
      The constructor of the Advertisement create fragment
      *****************************************************************************************************/
     @SuppressLint("ValidFragment")
-    public AdvertisementCreateFragment(ActionBar toolbar) {
+    public AdvertisementCreateFragment(ActionBar toolbar, FirebaseUser loggedUser) {
         Log.d(TAG, "Constructor called.");
         database = FirebaseDatabase.getInstance();
         newKey = Long.toString(System.currentTimeMillis());
         advertisement = database.getReference("ads/" + newKey);
         auth = FirebaseAuth.getInstance();
-        loggedUser = auth.getCurrentUser();
+        this.loggedUser = loggedUser;
         this.toolbar = toolbar;
 
     }
@@ -358,7 +359,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
      *****************************************************************************************************/
     @Override
     public void getImageBitMap(Bitmap bitmap) {
-        adImage.setImageBitmap(bitmap);
         imageUrls.add(getImageUri(getActivity(),bitmap).toString());
         imageAdapter.notifyDataSetChanged();
         selectedImageBitmaps.add(bitmap);
