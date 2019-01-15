@@ -12,17 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
-import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementReportDeleteDialog;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.ImageAdapter;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.OnDialogButtonClicked;

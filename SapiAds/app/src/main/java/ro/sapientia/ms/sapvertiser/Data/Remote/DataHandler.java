@@ -168,6 +168,9 @@ public class DataHandler implements IDataHandler {
         });
     }
 
+    /*********************************************************
+     * Update the database with the current user edited first name.
+     *********************************************************/
     @Override
     public void editUserFirstName(final String key, String firstname, final RetrieveDataListener<String> callback) {
         databaseReference.child("users/"+key).child("firstName").setValue(firstname).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -184,6 +187,9 @@ public class DataHandler implements IDataHandler {
 
     }
 
+    /*********************************************************
+     * Update the database with the current user edited last name.
+     *********************************************************/
     @Override
     public void editUserLastName(final String key, String lastname, final RetrieveDataListener<String> callback) {
         databaseReference.child("users/"+key).child("lastName").setValue(lastname).addOnSuccessListener(new OnSuccessListener<Void>() {

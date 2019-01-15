@@ -1,31 +1,24 @@
 package ro.sapientia.ms.sapvertiser.Authentication;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 
-
-import ro.sapientia.ms.sapvertiser.Main.Fragments.ProfileFragment;
 import ro.sapientia.ms.sapvertiser.Main.MainActivity;
 import ro.sapientia.ms.sapvertiser.R;
 
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -34,7 +27,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -55,102 +47,58 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import ro.sapientia.ms.sapvertiser.Main.MainActivity;
-import ro.sapientia.ms.sapvertiser.R;
 
+/*********************************************************
+ * A login screen that offers authentication via phonenumber.
+ * Google and facebook sign in in progress.
+ * Registration of a new user or signing in an existing user
+ * Testnumber1: +16505553434 verification code: 123456
+ * Testnumber2: +16505551212 verification code: 123456
+ *********************************************************/
 
-/**
- * A login screen that offers login via email/password.
- */
 public class AuthenticationActivity extends AppCompatActivity {
 
-
-    ///+16505553434
-    //+40 774035590
-    private android.support.design.widget.TextInputEditText mPhoneNumber;
-    private android.support.design.widget.TextInputEditText mVerificationCode;
-
-     private android.support.design.widget.TextInputLayout mFirstName;
-     private android.support.design.widget.TextInputEditText mFirstNameValue;
-     private android.support.design.widget.TextInputEditText mLastNameValue;
-     private android.support.design.widget.TextInputLayout mLastName;
-     private TextView mOtherSignInOptions;
-
+    /*********************************************************
+     * Basic attributes that are required for signing in or signing up
+     *********************************************************/
+    private TextInputEditText mPhoneNumber;
+    private TextInputEditText mVerificationCode;
+    private TextInputLayout mFirstName;
+    private TextInputEditText mFirstNameValue;
+    private TextInputEditText mLastNameValue;
+    private TextInputLayout mLastName;
+    private TextView mOtherSignInOptions;
     private Button mGetCodeButton;
     private Button mSignInButton;
     private Button mRegisterButton;
-
     private ProgressBar mLoadingBar;
 
-
+    /*********************************************************
+     * Animations between sign in and register views
+     *********************************************************/
     private Animation slide_in_left, slide_out_left, slide_in_right, slide_out_right;
-
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private String sentCode;
     private String mVerificationId;
     private String phoneNumber;
     private String userInputCode;
-
     private ViewFlipper authenticationLayout, signInLayout, registerLayout;
     private PhoneAuthCredential phoneCredential;
-
-
     private static final String TAG = "AuthActivity";
-
-    private boolean mExist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_authentication);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         this.setTitle("Authentication");
-        slide_in_left = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        slide_out_left = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-        slide_in_right = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-        slide_out_right = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
-        authenticationLayout = findViewById(R.id.authenticationLayout);
-        signInLayout = findViewById(R.id.signInLayout);
-        registerLayout = findViewById(R.id.registerLayout);
-        mOtherSignInOptions = findViewById(R.id.other_signin_option);
-        mOtherSignInOptions.setVisibility(View.VISIBLE);
-        authenticationLayout.setInAnimation(slide_in_right);
-        signInLayout.setInAnimation(slide_in_right);
-        registerLayout.setInAnimation(slide_in_right);
-
-        authenticationLayout.setOutAnimation(slide_out_right);
-        signInLayout.setOutAnimation(slide_out_right);
-        registerLayout.setOutAnimation(slide_out_right);
-
-        authenticationLayout.showNext();
-
-
         Log.d(TAG, "Authentication layout called");
-        mAuth = FirebaseAuth.getInstance();
-        mPhoneNumber = findViewById(R.id.phoneNumber);
-        mPhoneNumber.setEnabled(true);
-        mGetCodeButton = findViewById(R.id.getCode);
-        mGetCodeButton.setEnabled(true);
-        mGetCodeButton.setVisibility(View.INVISIBLE);
-        mVerificationCode = findViewById(R.id.verificationCode);
-        mSignInButton = findViewById(R.id.signIn);
-        mSignInButton.setVisibility(View.INVISIBLE);
-        mRegisterButton = findViewById(R.id.register);
-        mRegisterButton.setVisibility(View.INVISIBLE);
-        mLoadingBar = findViewById(R.id.progress_loader);
-        mLoadingBar.setVisibility(View.INVISIBLE);
+        initView();
 
-
-        mFirstName = findViewById(R.id.firstNameInputLayout);
-        mFirstNameValue = findViewById(R.id.firstNameValue);
-        mFirstNameValue.setEnabled(true);
-        mLastNameValue = findViewById(R.id.lastNameValue);
-        mLastName = findViewById(R.id.lastNameInputLayout);
-        mLastNameValue.setEnabled(true);
-
+        /*********************************************************
+         * Filling required fields, first the phonenumber to
+         * get a verification code in order to sign in.
+         *********************************************************/
         mPhoneNumber.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -216,6 +164,9 @@ public class AuthenticationActivity extends AppCompatActivity {
         });
 
 
+        /*********************************************************
+         * Sending a verification code to the user
+         *********************************************************/
         mGetCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,6 +183,10 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
 
+        /*********************************************************
+         * After verification code is added, the next step is to
+         * sign in the user.
+         *********************************************************/
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,6 +197,10 @@ public class AuthenticationActivity extends AppCompatActivity {
                     if (userInputCode.equals(sentCode) || userInputCode.equals("123456")) {
                         Log.d(TAG, "The verification code is correct.");
                         mVerificationCode.setEnabled(false);
+
+                        /*********************************************************
+                         * Verifying if the current user already exists or is a new one.
+                         *********************************************************/
                         userAlreadyExists();
                     } else {
                         Toast.makeText(AuthenticationActivity.this, "Your verification code is NOT correct!",
@@ -256,6 +215,10 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
 
+        /*********************************************************
+         * If there was a new user, after filling all fields he
+         * can register to the app.
+         *********************************************************/
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,8 +226,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 Log.d(TAG, "Register button pressed");
                 if (mFirstNameValue.getText().toString() != null && mLastNameValue.getText().toString() != null) {
                     registerNewUser();
-                }
-                else{
+                } else {
                     Toast.makeText(AuthenticationActivity.this, "Firstname and lastname is required",
                             Toast.LENGTH_LONG).show();
                 }
@@ -274,25 +236,85 @@ public class AuthenticationActivity extends AppCompatActivity {
         });
     }
 
+
+    /*********************************************************
+     * Initialize the AuthenticationActivity view
+     *********************************************************/
+    private void initView() {
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        authenticationLayout = findViewById(R.id.authenticationLayout);
+        signInLayout = findViewById(R.id.signInLayout);
+        registerLayout = findViewById(R.id.registerLayout);
+        mOtherSignInOptions = findViewById(R.id.other_signin_option);
+        mOtherSignInOptions.setVisibility(View.VISIBLE);
+        initAnimations();
+        authenticationLayout.showNext();
+
+        mAuth = FirebaseAuth.getInstance();
+        mPhoneNumber = findViewById(R.id.phoneNumber);
+        mPhoneNumber.setEnabled(true);
+        mGetCodeButton = findViewById(R.id.getCode);
+        mGetCodeButton.setEnabled(true);
+        mGetCodeButton.setVisibility(View.INVISIBLE);
+        mVerificationCode = findViewById(R.id.verificationCode);
+        mSignInButton = findViewById(R.id.signIn);
+        mSignInButton.setVisibility(View.INVISIBLE);
+        mRegisterButton = findViewById(R.id.register);
+        mRegisterButton.setVisibility(View.INVISIBLE);
+        mLoadingBar = findViewById(R.id.progress_loader);
+        mLoadingBar.setVisibility(View.INVISIBLE);
+
+        mFirstName = findViewById(R.id.firstNameInputLayout);
+        mFirstNameValue = findViewById(R.id.firstNameValue);
+        mFirstNameValue.setEnabled(true);
+        mLastNameValue = findViewById(R.id.lastNameValue);
+        mLastName = findViewById(R.id.lastNameInputLayout);
+        mLastNameValue.setEnabled(true);
+    }
+
+    /*********************************************************
+     * Load animations and initialize their attributes.
+     *********************************************************/
+    private void initAnimations(){
+
+        slide_in_left = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        slide_out_left = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+        slide_in_right = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+        slide_out_right = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
+
+        authenticationLayout.setInAnimation(slide_in_right);
+        signInLayout.setInAnimation(slide_in_right);
+        registerLayout.setInAnimation(slide_in_right);
+
+        authenticationLayout.setOutAnimation(slide_out_right);
+        signInLayout.setOutAnimation(slide_out_right);
+        registerLayout.setOutAnimation(slide_out_right);
+    }
+
+    /*********************************************************
+     * Near the phone authentication the app allows you
+     * to sign in with google or facebook.
+     *********************************************************/
     private void otherSignInOptionsDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setTitle("Sign in with");
 
-        // set the custom dialog components - text, image and button
+        /** set the custom dialog components - text, image and button**/
         ImageButton googleSignin = dialog.findViewById(R.id.google_signin);
         ImageButton facebookSignin = dialog.findViewById(R.id.facebook_signin);
 
-        // if button is clicked, close the custom dialog
+        /**if button is clicked, close the custom dialog**/
         googleSignin.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //mVerificationButton.setClickable(false);
-            Log.d(TAG, "Google sign in button pressed");
-            signInWithGoogle();
-            dialog.dismiss();
-        }
-    });
+            @Override
+            public void onClick(View v) {
+                //mVerificationButton.setClickable(false);
+                Log.d(TAG, "Google sign in button pressed");
+                signInWithGoogle();
+                dialog.dismiss();
+            }
+        });
         facebookSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,19 +326,21 @@ public class AuthenticationActivity extends AppCompatActivity {
         });
 
         dialog.show();
-}
+    }
 
-    private void signInWithFacebook(){
+    private void signInWithFacebook() {
         Log.d(TAG, "Sign in with facebook");
     }
 
-    private void signInWithGoogle(){
+    private void signInWithGoogle() {
         Log.d(TAG, "Sign in with google");
 
     }
 
 
-
+    /*********************************************************
+     * Send verification code to current user.
+     *********************************************************/
     private void sendVerificationCode() {
 
         phoneNumber = mPhoneNumber.getText().toString();
@@ -334,20 +358,22 @@ public class AuthenticationActivity extends AppCompatActivity {
         }
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                this,               // Activity (for callback binding)
-                mCallbacks);        // OnVerificationStateChangedCallbacks
+                phoneNumber,       /** Phone number to verify **/
+                60,             /** Timeout duration **/
+                TimeUnit.SECONDS,  /**Unit of timeout **/
+                this,       /** Activity (for callback binding) **/
+                mCallbacks);       /** OnVerificationStateChangedCallbacks **/
     }
 
 
+    /*********************************************************
+     * Check the state of the verification process.
+     *********************************************************/
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             sentCode = phoneAuthCredential.getSmsCode();
             Log.d(TAG, "Verification completed " + sentCode);
-            //signInWithPhoneAuthCredential(phoneAuthCredential);
         }
 
         @Override
@@ -365,13 +391,20 @@ public class AuthenticationActivity extends AppCompatActivity {
         }
     };
 
+
+    /*********************************************************
+     * Check if the current user already exists or not.
+     *********************************************************/
     private void userAlreadyExists() {
 
         Log.d(TAG, "Check user state");
         databaseReference.child("users/" + mPhoneNumber.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getChildren() != null){
+                /*********************************************************
+                 * Case when there is an existing user.
+                 *********************************************************/
+                if (dataSnapshot.exists() && dataSnapshot.getChildren() != null) {
                     Log.d(TAG, "This user already exists");
                     Toast.makeText(getApplicationContext(),
                             "You have successfully logged in", Toast.LENGTH_LONG).show();
@@ -380,8 +413,10 @@ public class AuthenticationActivity extends AppCompatActivity {
                     Intent intent = new Intent(AuthenticationActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                }
-                else{
+                } else {
+                    /*********************************************************
+                     * Case when there is a new user.
+                     *********************************************************/
                     Log.d(TAG, "This is a new user");
                     registerLayout.setVisibility(View.VISIBLE);
                     signInLayout.setVisibility(View.GONE);
@@ -397,23 +432,28 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     }
 
-        public void registerNewUser(){
+    /*********************************************************
+     * Registration process of the new user.
+     *********************************************************/
+    public void registerNewUser() {
 
         Log.d(TAG, "User registration");
+        //get user details
         String firstName = mFirstNameValue.getText().toString();
         String lastName = mLastNameValue.getText().toString();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //String key = Long.toString(System.currentTimeMillis());
         final DatabaseReference users = database.getReference("users/" + mPhoneNumber.getText().toString());
         Log.d(TAG, "User details: " + firstName + " " + lastName);
-        Map<String,String > map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("firstName", firstName);
         map.put("lastName", lastName);
         map.put("photoUrl", "https://scontent.fotp3-2.fna.fbcdn.net/v/t1.0-9/45669376_2031047590289015_5687033769354067968_o.jpg?_nc_cat=106&_nc_ht=scontent.fotp3-2.fna&oh=0269a86d62af533fbc0e8dc1f3e627b5&oe=5C69F883");
 
+        //add user to Firabase database
         users.setValue(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override public void onSuccess(Void aVoid) {
+                    @Override
+                    public void onSuccess(Void aVoid) {
                         Toast.makeText(getApplicationContext(),
                                 "Your registration was successful!", Toast.LENGTH_LONG).show();
                         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(mVerificationId, userInputCode);
@@ -425,6 +465,9 @@ public class AuthenticationActivity extends AppCompatActivity {
                 });
     }
 
+    /*********************************************************
+     * Sign in the current user to app.
+     *********************************************************/
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         Log.d(TAG, "signInWithCredential called");
         Log.d(TAG, "Credential: " + credential.toString());
@@ -433,19 +476,19 @@ public class AuthenticationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success
+                            ///Sign in success
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
                             FirebaseUser currentUser = mAuth.getCurrentUser();
-                            if(currentUser != null){
+                            if (currentUser != null) {
                                 Log.d(TAG, "Current User: " + currentUser.getPhoneNumber());
                             }
                             Log.d(TAG, "User: " + user.getPhoneNumber());
                         } else {
-                            // Sign in failed, display a message and update the UI
+                            ///Sign in failed
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
+                                ///The verification code entered was invalid
                             }
                         }
                     }
