@@ -199,18 +199,65 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
-    public void uploadAdvertisement(final String key, Map<String, String> values, final RetrieveDataListener<String> callback) {
-        databaseReference.child("ads/"+key).setValue(values).addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void uploadAdvertisement(final long key, final Map<String, String> values, final RetrieveDataListener<String> callback) {
+        databaseReference.child("ads/"+key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onSuccess(Void aVoid) {
-                callback.onSucces(key);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildren() != null){
+                    getAdvertisement(key, new RetrieveDataListener<Advertisement>() {
+                        @Override
+                        public void onSucces(final Advertisement data) {
+                            databaseReference.child("ads/"+key).setValue(values).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    if(data.getImageUrl().size() == 0){
+                                        databaseReference.child("ads/"+key+"/imageUrl").setValue("").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        for(int i=0; i<  data.getImageUrl().size(); ++i){
+                                            databaseReference.child("ads/"+key + "/imageUrl/").child(String.valueOf(i)).setValue( data.getImageUrl().get(i));
+                                        }
+                                    }
+
+                                    callback.onSucces(String.valueOf(key));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    callback.onFailure(String.valueOf(key));
+                                }
+                            });
+
+                            callback.onSucces(String.valueOf(data.getId()));
+                        }
+
+
+                        @Override
+                        public void onFailure(String message) {
+                            callback.onFailure("Failure");
+                        }
+                    });
+                }
+                else{
+                    databaseReference.child("ads/"+key).setValue(values);
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception e) {
-                callback.onFailure(key);
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+
+
+
+
+
 
     }
 

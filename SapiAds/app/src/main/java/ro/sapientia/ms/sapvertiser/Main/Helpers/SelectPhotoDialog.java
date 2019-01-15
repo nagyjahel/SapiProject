@@ -70,7 +70,11 @@ public class SelectPhotoDialog extends DialogFragment {
         if(requestCode == PICK_FILE_REQUEST_CODE && resultCode== Activity.RESULT_OK){
 
             imagePathList = new ArrayList<>();
-
+            if(data.getData()!= null){
+                Uri imgUri = data.getData();
+                getImageFilePath(imgUri);
+                onPhotoSelectedListener.getImagePath(imgUri);
+            } else {
             if(data.getClipData() != null){
 
                 int count = data.getClipData().getItemCount();
@@ -80,16 +84,8 @@ public class SelectPhotoDialog extends DialogFragment {
                     getImageFilePath(imageUri);
                     onPhotoSelectedListener.getImagePath(imageUri);
                 }
-            }/*
-            else if(data.getData() != null){
-
-                Uri imgUri = data.getData();
-                getImageFilePath(imgUri);
-            }*/
-
-            Uri selectedImageUri = data.getData();
-            Log.d(TAG,"onActivityResult: selectedImageUri " + selectedImageUri);
-
+            }
+            }
             getDialog().dismiss();
         }
         else if(requestCode == TAKE_PHOTO_REQUEST_CODE && resultCode== Activity.RESULT_OK){

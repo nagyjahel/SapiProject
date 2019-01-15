@@ -149,7 +149,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         cancelButton = view.findViewById(R.id.cancel);
         addButton.setVisibility(View.INVISIBLE);
         images = view.findViewById(R.id.ad_images);
-        imageAdapter = new ImageAdapter(getActivity(), new ArrayList<String>());
+        imageAdapter = new ImageAdapter(getActivity(),imageUrls);
         images.setAdapter(imageAdapter);
 
         if (args != null && !args.isEmpty()) {
@@ -242,7 +242,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private void uploadAdvertisement(String key, View view) {
         if (allRequiredDataExist()) {
 
-                DataHandler.getDataHandlerInstance().uploadAdvertisement(key, prepareData(), new RetrieveDataListener<String>() {
+                DataHandler.getDataHandlerInstance().uploadAdvertisement(Long.valueOf(key), prepareData(), new RetrieveDataListener<String>() {
                     @Override
                     public void onSucces(String data) {
                         Toast.makeText(getContext(), "Your advertisement had been uploaded", Toast.LENGTH_SHORT).show();
@@ -262,7 +262,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                 uploadPhoto();
             }
 
-                Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+
 
 
         } else {
@@ -292,7 +292,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         Map<String, String> map = new HashMap<>();
         map.put("title", adTitle.getText().toString());
         map.put("content", adContent.getText().toString());
-        map.put("imageUrl", "");
         map.put("isReported", "0");
         map.put("isVisible", "1");
         map.put("publishingUserId", "+16505553434");
@@ -344,6 +343,8 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             BackgroundImageResize resize = new BackgroundImageResize(null);
             resize.execute(uri);
         }
+
+        Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
     }
 
     /*****************************************************************************************************
