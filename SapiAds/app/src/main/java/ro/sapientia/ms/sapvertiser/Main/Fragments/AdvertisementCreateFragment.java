@@ -2,6 +2,7 @@ package ro.sapientia.ms.sapvertiser.Main.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -308,8 +309,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     public void getImagePath(Uri imagePath) {
         imageUrls.add(imagePath.toString());
         imageAdapter.notifyDataSetChanged();
-       // adImage.setImageURI(null);
-        //adImage.setImageURI(imagePath);
         selectedUris.add(imagePath);
     }
 
@@ -321,10 +320,17 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     @Override
     public void getImageBitMap(Bitmap bitmap) {
         adImage.setImageBitmap(bitmap);
+        imageUrls.add(getImageUri(getActivity(),bitmap).toString());
+        imageAdapter.notifyDataSetChanged();
         selectedImageBitmaps.add(bitmap);
     }
 
-
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
     /*****************************************************************************************************
      The uploadPhoto method of the Advertisement create fragment
      - Will start the upload of the photo - even if it was selected, or taken with camera
@@ -374,28 +380,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
 
                             }
                         });
-                        /*
-                        advertisement.setValue(prepareData())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "advertisement uploaded.");
-                                        Toast toast = Toast.makeText(getActivity(), "Your advertisement has been successfully uploaded!", Toast.LENGTH_LONG);
-                                        toast.show();
-                                        progressDialog.dismiss();
-                                        Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, TAG);
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "failure during advertisement uploading.");
-                                        Toast toast = Toast.makeText(getActivity(), "An error occured during the upload of your advertisement. Please try again later!", Toast.LENGTH_LONG);
-                                        toast.show();
-                                        progressDialog.dismiss();
-                                    }
-                                });*/
 
                     }
                 });

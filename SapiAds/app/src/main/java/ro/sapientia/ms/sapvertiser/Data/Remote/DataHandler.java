@@ -142,7 +142,6 @@ public class DataHandler implements IDataHandler {
                 callback.onSucces(advertisements);
             }
 
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -214,7 +213,6 @@ public class DataHandler implements IDataHandler {
                                         databaseReference.child("ads/"+key+"/imageUrl").setValue("").addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-
                                             }
                                         });
                                     }
