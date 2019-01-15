@@ -8,14 +8,17 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:stackFromBottom="true"
-    android:transcriptMode="alwaysScroll" >
+    android:transcriptMode="alwaysScroll"
+   >
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:paddingTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <ProgressBar
             android:id="@+id/progress_loader"
@@ -146,21 +149,6 @@
                     app:layout_constraintHorizontal_bias="0.533"
                     app:layout_constraintStart_toStartOf="parent" />
                 />
-                <TextView
-                    android:id="@+id/other_signin_option"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="| Other sign in options |"
-                    android:textAlignment="center"
-                    android:textColor="@color/metalSaurus"
-                    android:textSize="15dp"
-                    android:textStyle=""
-                    app:fontFamily="@font/quicksand"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.533"
-                    app:layout_constraintStart_toStartOf="parent"/>
 
             </android.support.constraint.ConstraintLayout>
         </ViewFlipper>

@@ -56,17 +56,17 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     Log.d(TAG, "Home item from the navigation bar selected.");
-                    mToolbar.setTitle("News feed");
+                    mToolbar.setTitle("Advertisements");
                     Navigation.getNavigationInstance().changeFragment(fragmentManager, new AdvertisementListFragment(), true, null, "AdListFragment");
                     return true;
                 case R.id.navigation_new_ad:
                     Log.d(TAG, "Plus item from the navigation bar selected.");
                     verifyPermissions();
-                    mToolbar.setTitle("Create a new ad");
+                    mToolbar.setTitle("New advertisement");
                     Navigation.getNavigationInstance().changeFragment(fragmentManager, new AdvertisementCreateFragment(mToolbar, loggedUser), true, null, "AdCreateFragment");
                     return true;
                 case R.id.navigation_profile:
-                    mToolbar.setTitle("My profile page");
+                    mToolbar.setTitle("My profile");
                     Navigation.getNavigationInstance().changeFragment(fragmentManager, new ProfileFragment(), true, null, "ProfileFragment");
                     Log.d(TAG, "Profile item from the navigation bar selected.");
                     mToolbar.setTitle("Profile");

@@ -225,7 +225,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "opening dialog to choose new photo");
-                images.setVisibility(View.VISIBLE);
+                //images.setVisibility(View.VISIBLE);
                 SelectPhotoDialog selectPhotoDialog = new SelectPhotoDialog();
                 selectPhotoDialog.show(getFragmentManager(), getString(R.string.dialog_select_photo));
                 selectPhotoDialog.setTargetFragment(ProfileFragment.this, 1);

@@ -67,7 +67,6 @@ public class AuthenticationActivity extends AppCompatActivity {
     private TextInputEditText mFirstNameValue;
     private TextInputEditText mLastNameValue;
     private TextInputLayout mLastName;
-    private TextView mOtherSignInOptions;
     private Button mGetCodeButton;
     private Button mSignInButton;
     private Button mRegisterButton;
@@ -113,7 +112,6 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                mOtherSignInOptions.setVisibility(View.GONE);
             }
         });
 
@@ -153,15 +151,6 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
 
-        mOtherSignInOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "Other sign in options pressed");
-                otherSignInOptionsDialog();
-
-            }
-        });
 
 
         /*********************************************************
@@ -246,8 +235,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         authenticationLayout = findViewById(R.id.authenticationLayout);
         signInLayout = findViewById(R.id.signInLayout);
         registerLayout = findViewById(R.id.registerLayout);
-        mOtherSignInOptions = findViewById(R.id.other_signin_option);
-        mOtherSignInOptions.setVisibility(View.VISIBLE);
         initAnimations();
         authenticationLayout.showNext();
 
