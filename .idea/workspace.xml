@@ -9,127 +9,6 @@
     <list default="true" id="74f4c469-4e90-415d-b0e6-9a2203af6ec6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/google-services.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/proguard-rules.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/androidTest/java/ro/sapientia/ms/sapvertiser/ExampleInstrumentedTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/AndroidManifest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Authentication/AuthenticationActivity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Authentication/GoogleAuthenticationActivity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Data/Models/Advertisement.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Data/Models/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Data/Remote/DataHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Data/Remote/IDataHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Fragments/AdvertisementCreateFragment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Fragments/AdvertisementDetailFragment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Fragments/AdvertisementListFragment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Fragments/ProfileFragment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Helpers/AdvertisementRecyclerViewAdapter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Helpers/AdvertisementReportDeleteDialog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Helpers/ImageAdapter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Helpers/SelectPhotoDialog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Interfaces/OnAdvertisementManagingListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Interfaces/OnDialogButtonClicked.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Interfaces/OnPhotoSelectedListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Interfaces/RetrieveDataListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Interfaces/UploadListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/MainActivity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Main/Presenters/AdvertisementListPresenter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Navigation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/java/ro/sapientia/ms/sapvertiser/Splash/SplashScreenActivity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/anim/slide_in_left.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/anim/slide_in_right.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/anim/slide_out_left.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/anim/slide_out_right.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable-hdpi/splash_activity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable-mdpi/splash_activity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable-xhdpi/splash_activity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable-xxhdpi/splash_activity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable-xxxhdpi/splash_activity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/add_image.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/background.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/button.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/camera.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/delete.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/delete_image.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/edit.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/eye.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/facebook_sign_in.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/gallery.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/google_sign_in.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/ic_home_black_24dp.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/ic_notifications_black_24dp.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/img_155221.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/logout.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/price_shape.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/sapvertiser.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/share.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/sign_in.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/splash_screen.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/drawable/success_icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/font/quicksand.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/font/quicksand_light.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/activity_authentication.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/activity_google.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/activity_main.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/activity_splash.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/custom_dialog.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/dialog_advertisement_report_delete.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/dialog_select_photo.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/fragment_ad_create.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/fragment_item.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/fragment_item_list.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/layout/fragment_profile.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/menu/menu_tollbar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/menu/navigation.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/baseline_add_circle_outline_black_48dp.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/dots.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/image.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/login_screen.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-hdpi/profile.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xxxhdpi/eyes.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/colors.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/dialog_style.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/dimens.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/font_certs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/preloaded_fonts.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/strings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/values/styles.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/main/res/xml/provider_paths.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/app/src/test/java/ro/sapientia/ms/sapvertiser/ExampleUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/gradle.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SapiAds/settings.gradle" beforeDir="false" />
     </list>
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -172,6 +51,20 @@
             <path>
               <item name="SapiProject" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
+            </path>
+            <path>
+              <item name="SapiProject" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="manifests" type="f94875db:AndroidManifestsGroupNode" />
+            </path>
+            <path>
+              <item name="SapiProject" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+            </path>
+            <path>
+              <item name="SapiProject" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
             </path>
           </expand>
           <select />
@@ -327,8 +220,8 @@
       <window_info id="Captures" order="2" weight="0.25" />
       <window_info id="Capture Tool" />
       <window_info id="Designer" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966443" />
-      <window_info anchor="bottom" id="Build" visible="true" weight="0.32905984" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24966443" />
+      <window_info active="true" anchor="bottom" id="Build" visible="true" weight="0.32905984" />
       <window_info anchor="right" id="Gradle" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Theme Preview" />
