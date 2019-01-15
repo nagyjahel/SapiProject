@@ -121,7 +121,7 @@
                     android:padding="18dp"
                     android:text="get code  "
                     android:textColor="@android:color/white"
-                    android:textSize="18dp"
+                    android:textSize="15dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -184,7 +184,7 @@
                     android:layout_marginRight="8dp"
                     android:text="Please provide the verification code that was sent to your phone!"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:textStyle=""
                     app:fontFamily="@font/quicksand"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -208,7 +208,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/quicksand"
                         android:hint="Verification code"
-                        android:textSize="20dp" />
+                        android:textSize="15dp" />
                 </android.support.design.widget.TextInputLayout>
 
 
@@ -224,7 +224,7 @@
                     android:padding="18dp"
                     android:text="Next"
                     android:textColor="@android:color/white"
-                    android:textSize="18dp"
+                    android:textSize="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -272,7 +272,7 @@
                     android:layout_marginRight="8dp"
                     android:text="Please fill in these fields with your details."
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:textStyle=""
                     app:fontFamily="@font/quicksand"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -295,8 +295,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/quicksand"
-                        android:hint="Firstname"
-                        android:textSize="20dp" />
+                        android:hint="First name"
+                        android:textSize="15dp" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -315,8 +315,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/quicksand"
-                        android:hint="Lastname"
-                        android:textSize="20dp" />
+                        android:hint="Last name"
+                        android:textSize="15dp" />
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
@@ -331,7 +331,7 @@
                     android:padding="18dp"
                     android:text="Register"
                     android:textColor="@android:color/white"
-                    android:textSize="18dp"
+                    android:textSize="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"

@@ -50,6 +50,7 @@ public class AdvertisementDetailFragment extends Fragment {
     private RetrieveDataListener<String> onDeleteListener;
     private RetrieveDataListener<String> onReportListener;
     private ViewPager imageSlider;
+    private ImageView price;
     public AdvertisementDetailFragment(){
 
     }
@@ -109,6 +110,7 @@ public class AdvertisementDetailFragment extends Fragment {
         viewed = view.findViewById(R.id.viewed_nr);
         imageSlider = view.findViewById(R.id.ad_images);
         imageSlider.setAdapter(imageAdapter);
+        price = view.findViewById(R.id.price_image);
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
