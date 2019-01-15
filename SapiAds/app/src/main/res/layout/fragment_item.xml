@@ -113,27 +113,66 @@
 
     <TextView
         android:id="@+id/viewed_nr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="61dp"
+        android:layout_height="25dp"
         android:layout_below="@+id/ad_images"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="5dp"
+        android:gravity="right"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageView" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="29dp"
+        android:layout_height="39dp"
         android:layout_below="@+id/ad_images"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="4dp"
         android:layout_toStartOf="@+id/viewed_nr"
         android:layout_toLeftOf="@+id/viewed_nr"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@mipmap/eyes" />
+
+    <ImageView
+        android:id="@+id/price_image"
+        android:layout_width="104dp"
+        android:layout_height="41dp"
+        android:layout_below="@+id/ad_images"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        app:fontFamily="@font/quicksand"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ad_images"
+        app:srcCompat="@drawable/price_shape" />
+
+    <TextView
+        android:id="@+id/price_value"
+        android:layout_width="113dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/ad_images"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="12.4 $"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:fontFamily="@font/quicksand"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ad_images"
+        app:srcCompat="@drawable/price_shape" />
 </android.support.constraint.ConstraintLayout>

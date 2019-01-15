@@ -12,6 +12,7 @@ public class Advertisement {
     private int isReported;
     private int isVisible;
     private int viewed;
+    private double price;
 
 
     public Advertisement(long id, String title, ArrayList<String> imageUrl, String content, String publishingUserId, int isReported, int isVisible, int viewed) {

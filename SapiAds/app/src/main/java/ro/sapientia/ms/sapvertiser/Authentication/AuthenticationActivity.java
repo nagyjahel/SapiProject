@@ -1,15 +1,22 @@
 package ro.sapientia.ms.sapvertiser.Authentication;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
 
 
+import ro.sapientia.ms.sapvertiser.Main.Fragments.ProfileFragment;
 import ro.sapientia.ms.sapvertiser.Main.MainActivity;
 import ro.sapientia.ms.sapvertiser.R;
 
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -26,6 +34,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -194,6 +203,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Log.d(TAG, "Other sign in options pressed");
+                otherSignInOptionsDialog();
 
             }
         });
@@ -253,6 +263,49 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void otherSignInOptionsDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setTitle("Sign in with");
+
+        // set the custom dialog components - text, image and button
+        ImageButton googleSignin = dialog.findViewById(R.id.google_signin);
+        ImageButton facebookSignin = dialog.findViewById(R.id.facebook_signin);
+
+        // if button is clicked, close the custom dialog
+        googleSignin.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //mVerificationButton.setClickable(false);
+            Log.d(TAG, "Google sign in button pressed");
+            signInWithGoogle();
+            dialog.dismiss();
+        }
+    });
+        facebookSignin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mVerificationButton.setClickable(false);
+                Log.d(TAG, "Facebook sign in button pressed");
+                signInWithFacebook();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+}
+
+    private void signInWithFacebook(){
+        Log.d(TAG, "Sign in with facebook");
+    }
+
+    private void signInWithGoogle(){
+        Log.d(TAG, "Sign in with google");
+
+    }
+
+
 
     private void sendVerificationCode() {
 
