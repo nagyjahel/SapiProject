@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     private void initMemberVariables() {
         Log.d(TAG, "initMemberVariables method called.");
         mToolbar =  getSupportActionBar();
+        mToolbar.setTitle("Advertisements");
         fragmentManager = getSupportFragmentManager();
         loggedUser = FirebaseAuth.getInstance().getCurrentUser();
 
