@@ -15,7 +15,7 @@ public class ImageAdapter extends PagerAdapter {
 
     private Context mContext;
     private ArrayList<String> mImages;
-
+    private int currentPosition =0;
     public ImageAdapter(Context context, ArrayList<String> images) {
         mContext = context;
         mImages = images;
@@ -34,6 +34,7 @@ public class ImageAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        currentPosition = position;
         ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(mContext)
@@ -46,5 +47,14 @@ public class ImageAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
+    }
+
+    public void removePhoto(@NonNull ViewGroup container) {
+        container.removeView(container.getChildAt(currentPosition));
+        mImages.remove(currentPosition);
+    }
+
+    public int getCurrentPosition(){
+        return this.currentPosition;
     }
 }

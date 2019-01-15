@@ -237,6 +237,27 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             }
         });
 
+        deleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //imageUrls.remove(imageAdapter.getCurrentPosition());
+                String currentPhoto = imageUrls.get(imageAdapter.getCurrentPosition());
+                for(Uri uri:selectedUris){
+                    if(uri.toString() == currentPhoto){
+                        selectedUris.remove(uri);
+                    }
+                }
+
+                for(Bitmap bitmap:selectedImageBitmaps){
+                    if(getImageUri(getActivity(),bitmap).toString().equals(currentPhoto)){
+                        selectedImageBitmaps.remove(bitmap);
+                    }
+                }
+                imageAdapter.removePhoto(images);
+                imageAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
 
