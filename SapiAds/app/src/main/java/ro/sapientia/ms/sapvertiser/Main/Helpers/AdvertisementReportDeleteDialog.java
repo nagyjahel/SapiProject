@@ -4,10 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +30,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementCreateFragment;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementListFragment;
@@ -45,11 +57,15 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
     private FirebaseAuth auth;
     private FirebaseUser loggedUser;
     private FirebaseDatabase database;
+    private TextView share;
+    private ImageView shareIcon;
+
     private DatabaseReference databaseReference;
     private long currentAdId;
     private OnDialogButtonClicked mListener;
     private RetrieveDataListener<String> onDeleteListener;
     private RetrieveDataListener<String> onReportListener;
+    private Advertisement currentAdvertisement;
 
     /*****************************************************************************************************
      The default constructor of the AdvertisementReportDeleteDialog class
@@ -86,6 +102,24 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_advertisement_report_delete, container, false);
+        initView(view);
+        return view;
+    }
+
+
+    private void initView(View view) {
+
+        DataHandler.getDataHandlerInstance().getAdvertisement(currentAdId, new RetrieveDataListener<Advertisement>() {
+            @Override
+            public void onSucces(Advertisement data) {
+                currentAdvertisement = data;
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+            }
+        });
 
         reportAdvertisement = view.findViewById(R.id.dialog_report_ad);
         deleteAdvertisement = view.findViewById(R.id.dialog_delete_ad);
@@ -93,7 +127,21 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
         reportAdvertisementIcon = view.findViewById(R.id.dialog_report_ad_image);
         deleteAdvertisementIcon = view.findViewById(R.id.dialog_delete_ad_image);
         editAdvertisementIcon = view.findViewById(R.id.dialog_edit_ad_image);
+        shareIcon = view.findViewById(R.id.share_icon);
 
+        shareIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareAction();
+            }
+        });
+        share = view.findViewById(R.id.share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               shareAction();
+            }
+        });
         databaseReference.child("publishingUserId").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -159,11 +207,15 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
 
             }
         });
-
-
-        return view;
     }
 
+    private void shareAction(){
+         Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, currentAdvertisement.getTitle());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, currentAdvertisement.getContent());
+                startActivity(Intent.createChooser(shareIntent, "Share using"));
+    }
     private void editAction() {
         getDialog().dismiss();
         Bundle bundle = new Bundle();

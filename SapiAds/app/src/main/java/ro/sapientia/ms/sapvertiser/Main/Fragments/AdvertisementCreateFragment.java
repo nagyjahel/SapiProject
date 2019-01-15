@@ -212,7 +212,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!adContent.getText().toString().matches("")) {
+                if (!adContent.getText().toString().matches("") && !adPrice.getText().toString().matches("")) {
                     addButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -232,7 +232,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!adTitle.getText().toString().matches("")) {
+                if (!adTitle.getText().toString().matches("") && !adPrice.getText().toString().matches("")) {
                     addButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -252,7 +252,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!adTitle.getText().toString().matches("")) {
+                if (!adTitle.getText().toString().matches("") && !adContent.getText().toString().matches("")) {
                     addButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -269,10 +269,30 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private void uploadAdvertisement(String key, View view) {
         if (allRequiredDataExist()) {
 
+
+            if (selectedUris.size() != 0 || selectedImageBitmaps.size()!=0) {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setTitle("Uploading your advertisement ... ");
+                progressDialog.show();
+                DataHandler.getDataHandlerInstance().uploadAdvertisement(Long.valueOf(key), prepareData(), new RetrieveDataListener<String>() {
+                    @Override
+                    public void onSucces(String data) {
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                    }
+                });
+
+                uploadPhoto();
+            }
+            else{
                 DataHandler.getDataHandlerInstance().uploadAdvertisement(Long.valueOf(key), prepareData(), new RetrieveDataListener<String>() {
                     @Override
                     public void onSucces(String data) {
                         Toast.makeText(getContext(), "Your advertisement had been uploaded", Toast.LENGTH_SHORT).show();
+                        Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+
 
                     }
 
@@ -281,28 +301,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                         Toast.makeText(getContext(), "Something went wrong. Please, try again a bit later!", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-            if (selectedUris.size() != 0 || selectedImageBitmaps.size()!=0) {
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setTitle("Uploading your advertisement ... ");
-                progressDialog.show();
-                uploadPhoto();
             }
-/*
-            if(imagesToDelete.size() != 0){
-                DataHandler.getDataHandlerInstance().updateAdvertisementPhotos(advertisementId, imagesToDelete, new RetrieveDataListener<String>() {
-                    @Override
-                    public void onSucces(String data) {
-
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-
-                    }
-                });
-            }*/
-
 
         } else {
             Toast toast = Toast.makeText(view.getContext(), "Please, fill all the fields!", Toast.LENGTH_LONG);
@@ -390,7 +389,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             resize.execute(uri);
         }
 
-        Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
     }
 
     /*****************************************************************************************************
@@ -413,6 +411,9 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                             public void onSucces(Advertisement data) {
                                 Log.d(TAG, "Successful update: images: " +data.getImageUrl().size());
                                 //imageAdapter.notifyDataSetChanged();
+                                Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+
+                                progressDialog.dismiss();
                             }
 
                             @Override

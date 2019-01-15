@@ -101,13 +101,14 @@ public class AdvertisementDetailFragment extends Fragment {
         title = view.findViewById(R.id.ad_title);
         content = view.findViewById(R.id.ad_content);
         price = view.findViewById(R.id.price_value);
-        //image = view.findViewById(R.id.ad_image);
         userImage = view.findViewById(R.id.ad_user_image);
         userName = view.findViewById(R.id.ad_user_name);
         viewed = view.findViewById(R.id.viewed_nr);
         imageSlider = view.findViewById(R.id.ad_images);
         imageSlider.setAdapter(imageAdapter);
         price = view.findViewById(R.id.price_value);
+
+
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

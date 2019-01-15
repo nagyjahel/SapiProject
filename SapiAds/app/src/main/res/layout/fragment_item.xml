@@ -114,35 +114,37 @@
 
     <TextView
         android:id="@+id/viewed_nr"
-        android:layout_width="50dp"
-        android:layout_height="27dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/ad_images"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/quicksand"
         android:gravity="right"
         android:text="123"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="29dp"
-        android:layout_height="39dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_below="@+id/ad_images"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_toStartOf="@+id/viewed_nr"
         android:layout_toLeftOf="@+id/viewed_nr"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@mipmap/eyes" />
+        app:layout_constraintEnd_toStartOf="@+id/viewed_nr"
+        app:srcCompat="@drawable/eye" />
 
     <ImageView
         android:id="@+id/price_image"
-        android:layout_width="236dp"
+        android:layout_width="0dp"
         android:layout_height="49dp"
         android:layout_below="@+id/ad_images"
         android:layout_alignParentTop="true"
@@ -155,7 +157,7 @@
         android:textAlignment="center"
         app:fontFamily="@font/quicksand"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/viewed_nr"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ad_images"
         app:srcCompat="@drawable/price_shape" />
@@ -163,7 +165,7 @@
     <TextView
         android:id="@+id/price_value"
         android:layout_width="181dp"
-        android:layout_height="20dp"
+        android:layout_height="17dp"
         android:layout_below="@+id/ad_images"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="8dp"
@@ -174,7 +176,7 @@
         android:textStyle="bold"
         app:fontFamily="@font/quicksand"
         app:layout_constraintBottom_toBottomOf="@+id/price_image"
-        app:layout_constraintEnd_toEndOf="@+id/price_image"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/price_image"
         app:layout_constraintTop_toTopOf="@+id/price_image"
         app:srcCompat="@drawable/price_shape" />
