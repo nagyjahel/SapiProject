@@ -294,6 +294,24 @@ public class DataHandler implements IDataHandler {
 
     }
 
+    /*@Override
+    public void uploadProfilePicture(String key, Map<String, String> values, final Uri newPhotoUri, final RetrieveDataListener<Advertisement> callback) {
+        getUser(key, new RetrieveDataListener<Advertisement>() {
+            @Override
+            public void onSucces(User data) {
+                    databaseReference.child("ads/"+key + "/imageUrl/").child(String.valueOf(i)).setValue( data.getImageUrl().get(i));
+
+                callback.onSucces(data);
+            }
+
+
+            @Override
+            public void onFailure(String message) {
+                callback.onFailure("Failure");
+            }
+        });
+    }*/
+
     @Override
     public void uploadAdvertisementWithPhoto(final long key, Map<String, String> values, final Uri newPhotoUri, final RetrieveDataListener<Advertisement> callback) {
         getAdvertisement(key, new RetrieveDataListener<Advertisement>() {
