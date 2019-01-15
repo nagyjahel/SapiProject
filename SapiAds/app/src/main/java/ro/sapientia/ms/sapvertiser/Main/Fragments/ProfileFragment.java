@@ -1,14 +1,21 @@
 package ro.sapientia.ms.sapvertiser.Main.Fragments;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -23,19 +30,31 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Helpers.AdvertisementRecyclerViewAdapter;
+import ro.sapientia.ms.sapvertiser.Main.Helpers.SelectPhotoDialog;
 import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
+import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 /*********************************************************
  * Profile page of a specific user.
@@ -65,7 +84,10 @@ public class ProfileFragment extends Fragment {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Advertisement> advertisements = new ArrayList<>();
     private AdvertisementRecyclerViewAdapter adapter;
+    private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
+    private ViewPager images;
+    private Uri downloadUrl;
     private static final String TAG = "ProfileFragment";
 
     public ProfileFragment() {
@@ -198,6 +220,17 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        mProfilePicture.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "opening dialog to choose new photo");
+                images.setVisibility(View.VISIBLE);
+                SelectPhotoDialog selectPhotoDialog = new SelectPhotoDialog();
+                selectPhotoDialog.show(getFragmentManager(), getString(R.string.dialog_select_photo));
+                selectPhotoDialog.setTargetFragment(ProfileFragment.this, 1);
+            }
+        });
         return view;
     }
 
@@ -210,6 +243,7 @@ public class ProfileFragment extends Fragment {
         mFirstNameInputLayout = view.findViewById(R.id.firstNameInputLayout);
         mLastNameInputLayout = view.findViewById(R.id.lastNameInputLayout);
         mPhoneNumberInputLayout = view.findViewById(R.id.phoneNumberLayout);
+        progressDialog = new ProgressDialog(getActivity());
 
         Log.d("TAG", "User: " + currentUser.getPhoneNumber());
 
@@ -225,6 +259,7 @@ public class ProfileFragment extends Fragment {
     /*********************************************************
      * Get current user details
      *********************************************************/
+
 
     private void initRecyclerView(View view) {
         Log.d(TAG, "initRecyclerView method called");
@@ -344,6 +379,126 @@ public class ProfileFragment extends Fragment {
 
         dialog = alertDialog.create();
         dialog.show();
+    }
+
+    private Map<String, String> prepareData() {
+
+        Log.d(TAG, "prepareData method called.");
+        //Log.d("Preparedata", "Title: " + adTitle.getText().toString() + " Content: " + adContent.getText().toString());
+        Map<String, String> map = new HashMap<>();
+        map.put("photoUrl", downloadUrl.toString());
+        return map;
+    }
+
+    /*****************************************************************************************************
+     The executeUploadTask method of the Advertisement create fragment
+     - Will upload the advertisement to the database
+     *****************************************************************************************************/
+    /*private void executeUploadTask(byte[] bytes) {
+        progressDialog.incrementProgressBy(15);
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("users/" + currentUser.getPhoneNumber() + "/photoUrl"+Long.toString(System.currentTimeMillis()));
+        UploadTask uploadTask = storageReference.putBytes(bytes);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        downloadUrl = uri;
+                        DataHandler.getDataHandlerInstance().uploadProfilePicture(currentUser.getPhoneNumber(), prepareData(), uri, new RetrieveDataListener<Advertisement>() {
+                            @Override
+                            public void onSucces(Advertisement data) {
+                                Log.d(TAG, "Successful update: images: " +data.getImageUrl().size());
+                                //imageAdapter.notifyDataSetChanged();
+                                Navigation.getNavigationInstance().changeFragment(getFragmentManager(), new AdvertisementListFragment(), false, null, "AdListFragment");
+
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+
+                            }
+                        });
+
+                    }
+                });
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(), "Could not upload photo", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double currentProgess = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Log.d(TAG, "Current progress: " + currentProgess);
+                progressDialog.incrementProgressBy((int) currentProgess);
+            }
+        });
+
+
+    }*/
+
+    public static byte[] getBytesFromBitmap(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        return stream.toByteArray();
+    }
+
+
+    /*****************************************************************************************************
+     The BackgroundImageResize inner class of the Advertisement create fragment
+     - Will compress the image in the background
+     *****************************************************************************************************/
+    private class BackgroundImageResize extends AsyncTask<Uri, Integer, byte[]> {
+
+        private static final String TAG = "BackgroundImageResize";
+        private Bitmap bitmap;
+
+        public BackgroundImageResize(Bitmap bitmap) {
+            if (bitmap != null) {
+                this.bitmap = bitmap;
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.incrementProgressBy(5);
+            Toast.makeText(getActivity(), "Compressing image", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+        @Override
+        protected byte[] doInBackground(Uri... uris) {
+            Log.d(TAG, "DoInBackground: started");
+            if (bitmap == null) {
+                try {
+                    progressDialog.incrementProgressBy(10);
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uris[0]);
+                } catch (IOException e) {
+                    Log.e(TAG, "DoInBackground: IOException: " + e.getMessage());
+                }
+            }
+
+            byte[] bytes = null;
+            bytes = getBytesFromBitmap(bitmap, 100);
+            return bytes;
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+            progressDialog.incrementProgressBy(10);
+            //executeUploadTask(bytes);
+
+        }
     }
 
 }
