@@ -8,4 +8,6 @@
     <color name="lightGrey">#d1d1d1</color>
     <color name="ashGrey">#B2BEB5</color>
     <color name="metalSaurus">#6E7F80</color>
+    <color name="labelYellow">#FAD55C</color>
+    <color name="activityColor">#F2F3F4</color>
 </resources>
