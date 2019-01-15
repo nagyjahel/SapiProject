@@ -19,8 +19,10 @@ import com.nostra13.universalimageloader.utils.L;
 
 import java.io.CharArrayReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Models.User;
@@ -277,6 +279,14 @@ public class DataHandler implements IDataHandler {
                 callback.onFailure("Failure");
             }
         });
+    }
+
+    @Override
+    public void updateAdvertisementPhotos(long advertisementId, ArrayList<String> photos, RetrieveDataListener<String> callback) {
+        if(photos.size()!=0){
+
+        }
+        databaseReference.child( "ads/" + advertisementId + "/imageUrl").setValue(photos);
     }
 
 
