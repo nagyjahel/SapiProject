@@ -53,6 +53,8 @@ import ro.sapientia.ms.sapvertiser.Main.Interfaces.RetrieveDataListener;
 import ro.sapientia.ms.sapvertiser.Navigation;
 import ro.sapientia.ms.sapvertiser.R;
 
+import static android.view.View.GONE;
+
 public class AdvertisementCreateFragment extends DialogFragment implements OnPhotoSelectedListener {
 
     private static final String TAG = "AdCreateFragment";
@@ -74,6 +76,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     private ArrayList<Uri> selectedUris = new ArrayList<>();
     private ArrayList<Bitmap> selectedImageBitmaps = new ArrayList<>();
     private ArrayList<String> imageUrls = new ArrayList<>();
+    private ArrayList<Integer> imagesToDelete = new ArrayList<>();
     private ProgressDialog progressDialog;
     private Uri downloadUrl;
     private String photoToUpload;
@@ -145,8 +148,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         addButton = view.findViewById(R.id.new_ad_button);
         adImage = view.findViewById(R.id.new_ad_image);
         adImageText = view.findViewById(R.id.new_ad_image_text);
-        deleteImage = view.findViewById(R.id.delete_image);
-        deleteImageText = view.findViewById(R.id.delete_image_text);
         cancelButton = view.findViewById(R.id.cancel);
         addButton.setVisibility(View.INVISIBLE);
         images = view.findViewById(R.id.ad_images);
@@ -159,6 +160,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             addButton.setText("Update");
         } else {
             advertisementId= Long.valueOf(newKey);
+            images.setVisibility(GONE);
             addButton.setText("Save");
         }
 
@@ -175,6 +177,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "opening dialog to choose new photo");
+                images.setVisibility(View.VISIBLE);
                 SelectPhotoDialog selectPhotoDialog = new SelectPhotoDialog();
                 selectPhotoDialog.show(getFragmentManager(), getString(R.string.dialog_select_photo));
                 selectPhotoDialog.setTargetFragment(AdvertisementCreateFragment.this, 1);
@@ -185,6 +188,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
 
             @Override
             public void onClick(View v) {
+                images.setVisibility(View.VISIBLE);
                 Log.d(TAG, "opening dialog to choose new photo");
                 SelectPhotoDialog selectPhotoDialog = new SelectPhotoDialog();
                 selectPhotoDialog.show(getFragmentManager(), getString(R.string.dialog_select_photo));
@@ -237,27 +241,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
             }
         });
 
-        deleteImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //imageUrls.remove(imageAdapter.getCurrentPosition());
-                String currentPhoto = imageUrls.get(imageAdapter.getCurrentPosition());
-                for(Uri uri:selectedUris){
-                    if(uri.toString() == currentPhoto){
-                        selectedUris.remove(uri);
-                    }
-                }
-
-                for(Bitmap bitmap:selectedImageBitmaps){
-                    if(getImageUri(getActivity(),bitmap).toString().equals(currentPhoto)){
-                        selectedImageBitmaps.remove(bitmap);
-                    }
-                }
-                imageAdapter.removePhoto(images);
-                imageAdapter.notifyDataSetChanged();
-            }
-        });
-
     }
 
 
@@ -283,8 +266,20 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
                 progressDialog.show();
                 uploadPhoto();
             }
+/*
+            if(imagesToDelete.size() != 0){
+                DataHandler.getDataHandlerInstance().updateAdvertisementPhotos(advertisementId, imagesToDelete, new RetrieveDataListener<String>() {
+                    @Override
+                    public void onSucces(String data) {
 
+                    }
 
+                    @Override
+                    public void onFailure(String message) {
+
+                    }
+                });
+            }*/
 
 
         } else {
@@ -316,7 +311,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         map.put("content", adContent.getText().toString());
         map.put("isReported", "0");
         map.put("isVisible", "1");
-        map.put("publishingUserId", loggedUser.getPhoneNumber().toString());
+        map.put("publishingUserId", "+16505553434");
         map.put("viewed", "1");
         return map;
     }
@@ -490,7 +485,6 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         protected void onPostExecute(byte[] bytes) {
             super.onPostExecute(bytes);
             progressDialog.incrementProgressBy(10);
-            //uploadedBytes = bytes;
             executeUploadTask(bytes);
 
         }

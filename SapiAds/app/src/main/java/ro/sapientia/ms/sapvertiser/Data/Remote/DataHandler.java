@@ -21,6 +21,7 @@ import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -282,11 +283,25 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
-    public void updateAdvertisementPhotos(long advertisementId, ArrayList<String> photos, RetrieveDataListener<String> callback) {
+    public void updateAdvertisementPhotos(final long advertisementId, final ArrayList<Integer> photos, RetrieveDataListener<String> callback) {
         if(photos.size()!=0){
+            getAdvertisement(advertisementId, new RetrieveDataListener<Advertisement>() {
+                @Override
+                public void onSucces(Advertisement data) {
+                    for (Integer photo : photos) {
+                        databaseReference.child("ads/" + advertisementId + "/imageUrl/" + photo).removeValue();
+                        Log.d("Data handler", "found");
 
+                    }
+                }
+
+                @Override
+                public void onFailure(String message) {
+
+                }
+
+            });
         }
-        databaseReference.child( "ads/" + advertisementId + "/imageUrl").setValue(photos);
     }
 
 
