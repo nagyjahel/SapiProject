@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,11 +30,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import ro.sapientia.ms.sapvertiser.BuildConfig;
 import ro.sapientia.ms.sapvertiser.Data.Models.Advertisement;
 import ro.sapientia.ms.sapvertiser.Data.Remote.DataHandler;
 import ro.sapientia.ms.sapvertiser.Main.Fragments.AdvertisementCreateFragment;
@@ -132,7 +138,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
         shareIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareAction();
+                shareItem();
             }
         });
         share = view.findViewById(R.id.share);
@@ -210,12 +216,63 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
     }
 
     private void shareAction(){
-         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, currentAdvertisement.getTitle());
-                shareIntent.putExtra(Intent.EXTRA_TEXT, currentAdvertisement.getContent());
-                startActivity(Intent.createChooser(shareIntent, "Share using"));
+
     }
+
+
+    public ArrayList<Uri> getUris(){
+        final ArrayList<Uri> uris = new ArrayList<>();
+        for(String image: currentAdvertisement.getImageUrl()){
+            Picasso.get().load(image).into(new Target() {
+                @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    uris.add(getLocalBitmapUri(bitmap));
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+                @Override public void onPrepareLoad(Drawable placeHolderDrawable) { }
+            });
+        }
+        return uris;
+    }
+    public void shareItem() {
+
+        if (currentAdvertisement.getImageUrl().size() == 0) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, currentAdvertisement.getTitle());
+            shareIntent.putExtra(Intent.EXTRA_TEXT, currentAdvertisement.getTitle() + ": " + currentAdvertisement.getContent() + "(" + currentAdvertisement.getPrice() + ")");
+            startActivity(Intent.createChooser(shareIntent, "Share using"));
+
+        } else {
+            Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
+            i.setType("*/*");
+            i.putExtra(Intent.EXTRA_TEXT, currentAdvertisement.getTitle() + ": " + currentAdvertisement.getContent() + "(" + currentAdvertisement.getPrice() + ")");
+            i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, getUris());
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(i, "Share using"));
+        }
+    }
+
+
+    public Uri getLocalBitmapUri(Bitmap bmp) {
+        Uri bmpUri = null;
+        try {
+            File file =  new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            bmpUri = FileProvider.getUriForFile(getActivity(),
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
+    }
+
     private void editAction() {
         getDialog().dismiss();
         Bundle bundle = new Bundle();
