@@ -64,6 +64,7 @@ public class AdvertisementListFragment extends Fragment implements OnDialogButto
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Advertisements");
         Log.d(TAG, "onCreateView method called");
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         initRecyclerView(view);

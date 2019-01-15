@@ -75,6 +75,7 @@ public class AdvertisementDetailFragment extends Fragment {
         Log.d(TAG, "onCreateView method called.");
 
 
+        getActivity().setTitle("Details");
         getDataFromArguments(getArguments());
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         initView(view);

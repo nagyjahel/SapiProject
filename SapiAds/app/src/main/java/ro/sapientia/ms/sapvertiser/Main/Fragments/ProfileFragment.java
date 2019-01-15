@@ -110,6 +110,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         initView(view);
         initRecyclerView(view);
+        getActivity().setTitle("Profile");
         downloadData();
         getUserDetails();
 

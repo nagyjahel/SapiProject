@@ -120,6 +120,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate method called.");
         progressDialog = new ProgressDialog(getActivity());
+        getActivity().setTitle("New advertisement");
         super.onCreate(savedInstanceState);
     }
 
