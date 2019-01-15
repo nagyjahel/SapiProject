@@ -150,7 +150,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String publishingUserId = (String) dataSnapshot.getValue();
-                String loggedUserNumber = "+16505553434";
+                String loggedUserNumber = loggedUser.getPhoneNumber();
                 // if(loggedUser.getPhoneNumber().equals(publishingUserId)){
                 if (loggedUserNumber.equals(publishingUserId)) {
                     reportAdvertisementIcon.setVisibility(GONE);

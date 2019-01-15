@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate method called.");
+        this.setTitle("News feed");
         initMemberVariables();
         setContentView(R.layout.activity_main);
         Navigation.getNavigationInstance().showFragment(fragmentManager, new AdvertisementListFragment(), false);
