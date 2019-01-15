@@ -114,7 +114,7 @@ public class AdvertisementDetailFragment extends Fragment {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener, onDeleteListener, onReportListener);
+                AdvertisementReportDeleteDialog dialog = new AdvertisementReportDeleteDialog(selectedAd.getId(), listener, onDeleteListener, onReportListener, loggedUser);
                 dialog.show(getFragmentManager(),getString(R.string.dialog_manage_advertisement ));
                 dialog.setTargetFragment(AdvertisementDetailFragment.this,1);
                 return true;
