@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.util.Util;
@@ -65,6 +66,7 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
     private FirebaseDatabase database;
     private TextView share;
     private ImageView shareIcon;
+    private ProgressBar loadingBar;
 
     private DatabaseReference databaseReference;
     private long currentAdId;
@@ -134,6 +136,8 @@ public class AdvertisementReportDeleteDialog extends DialogFragment {
         deleteAdvertisementIcon = view.findViewById(R.id.dialog_delete_ad_image);
         editAdvertisementIcon = view.findViewById(R.id.dialog_edit_ad_image);
         shareIcon = view.findViewById(R.id.share_icon);
+        loadingBar = view.findViewById(R.id.progress_loader);
+        loadingBar.setVisibility(view.GONE);
 
         shareIcon.setOnClickListener(new View.OnClickListener() {
             @Override
