@@ -80,7 +80,8 @@ public class AuthenticationActivity extends AppCompatActivity {
     private Button mSignInButton;
     private Button mRegisterButton;
 
-    private android.widget.ProgressBar mProgressBar;
+    private ProgressBar mLoadingBar;
+
 
     private Animation slide_in_left, slide_out_left, slide_in_right, slide_out_right;
 
@@ -130,19 +131,25 @@ public class AuthenticationActivity extends AppCompatActivity {
         Log.d(TAG, "Authentication layout called");
         mAuth = FirebaseAuth.getInstance();
         mPhoneNumber = findViewById(R.id.phoneNumber);
+        mPhoneNumber.setEnabled(true);
         mGetCodeButton = findViewById(R.id.getCode);
+        mGetCodeButton.setEnabled(true);
         mGetCodeButton.setVisibility(View.INVISIBLE);
         mVerificationCode = findViewById(R.id.verificationCode);
         mSignInButton = findViewById(R.id.signIn);
         mSignInButton.setVisibility(View.INVISIBLE);
         mRegisterButton = findViewById(R.id.register);
         mRegisterButton.setVisibility(View.INVISIBLE);
+        mLoadingBar = findViewById(R.id.progress_loader);
+        mLoadingBar.setVisibility(View.INVISIBLE);
 
 
         mFirstName = findViewById(R.id.firstNameInputLayout);
         mFirstNameValue = findViewById(R.id.firstNameValue);
+        mFirstNameValue.setEnabled(true);
         mLastNameValue = findViewById(R.id.lastNameValue);
         mLastName = findViewById(R.id.lastNameInputLayout);
+        mLastNameValue.setEnabled(true);
 
         mPhoneNumber.addTextChangedListener(new TextWatcher() {
 
@@ -176,6 +183,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
+                mLoadingBar.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -218,6 +226,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                 authenticationLayout.setVisibility(View.GONE);
                 signInLayout.showNext();
                 Log.d(TAG, "Sign in layout called");
+                mPhoneNumber.setEnabled(false);
+                mLoadingBar.setVisibility(View.VISIBLE);
                 sendVerificationCode();
                 Log.d(TAG, "Phone: " + phoneNumber);
             }
@@ -232,6 +242,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 if (userInputCode != null) {
                     if (userInputCode.equals(sentCode) || userInputCode.equals("123456")) {
                         Log.d(TAG, "The verification code is correct.");
+                        mVerificationCode.setEnabled(false);
                         userAlreadyExists();
                     } else {
                         Toast.makeText(AuthenticationActivity.this, "Your verification code is NOT correct!",
@@ -338,8 +349,6 @@ public class AuthenticationActivity extends AppCompatActivity {
             sentCode = phoneAuthCredential.getSmsCode();
             Log.d(TAG, "Verification completed " + sentCode);
             //signInWithPhoneAuthCredential(phoneAuthCredential);
-
-
         }
 
         @Override

@@ -316,7 +316,7 @@ public class AdvertisementCreateFragment extends DialogFragment implements OnPho
         map.put("content", adContent.getText().toString());
         map.put("isReported", "0");
         map.put("isVisible", "1");
-        map.put("publishingUserId", "+16505553434");
+        map.put("publishingUserId", loggedUser.getPhoneNumber().toString());
         map.put("viewed", "1");
         return map;
     }
